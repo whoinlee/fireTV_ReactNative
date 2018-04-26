@@ -1,0 +1,3 @@
+rootProject.name = 'RN055FireTV'
+
+include ':app'
