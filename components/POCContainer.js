@@ -5,8 +5,9 @@
  */
 import React, { Component } from 'react';
 import { 
-  TVEventHandler,
-  View
+  View,
+  TouchableWithoutFeedback,
+  TVEventHandler
 } from 'react-native';
 import styles from './styles/styles';
 import GlobalNavPane from './GlobalNavPane';
@@ -17,34 +18,37 @@ import HomeShelvesPane from './HomeShelvesPane';
 export default class POCContainer extends Component {
   constructor(props) {
     super(props);
+    this._tvEventHandler = new TVEventHandler();
   }
 
-  _tvEventHandler: any;
-
   componentDidMount() {
-    console.log('componentDidMount');
+    console.log('INFO :: componentDidMount');
     this._enableTVEventHandler();
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount');
+    console.log('INFO :: componentWillUnmount');
     this._disableTVEventHandler();
   }
 
   _enableTVEventHandler() {
-    this._tvEventHandler = new TVEventHandler();
+    console.log('INFO :: _enableTVEventHandler');
+    //this._tvEventHandler = new TVEventHandler();
     this._tvEventHandler.enable(this, function(cmp, evt) {
+      console.log('INFO :: evt.eventType? : ' + evt.eventType);
       if (evt && evt.eventType === 'left') {
         //cmp.doLeft();
+        console.log('INFO :: left');
         this._doLeft();
       } else if (evt && evt.eventType === 'right') {
+        console.log('INFO :: right');
         //cmp.doRight();
         this._doRight();
       } else if(evt && evt.eventType === 'up') {
-        //cmp.doUp();
+        console.log('INFO :: up');
         this._doUp();
       } else if(evt && evt.eventType === 'down') {
-        //cmp.doDown();
+        console.log('INFO :: down');
         this._doDown();
       } 
       //else if(evt && evt.eventType === 'playPause') {
@@ -54,6 +58,7 @@ export default class POCContainer extends Component {
   }
 
   _disableTVEventHandler() {
+    console.log('INFO :: _disableTVEventHandler');
     if (this._tvEventHandler) {
       this._tvEventHandler.disable();
       delete this._tvEventHandler;
@@ -61,27 +66,31 @@ export default class POCContainer extends Component {
   }
 
   _doLeft = () => {
-    console.log('doLeft');
+    console.log('INFO :: doLeft ????');
   }
 
   _doRight = () => {
-    console.log('doRight');
+    console.log('INFO :: doRight ????');
   }
 
   _doUp = () => {
-    console.log('doUp');
+    console.log('INFO :: doUp');
   }
 
   _doDown = () => {
-    console.log('doDown');
+    console.log('INFO :: doDown');
+  }
+
+  _doSelect = () => {
+    console.log('INFO :: doSelect');
   }
 
   render() {
     return (
         <View style={styles.pocContainer}>
-          <GlobalNavPane />
-          <HomeHeroPane />
-          <HomeShelvesPane />
+            <GlobalNavPane />
+            <HomeHeroPane />
+            <HomeShelvesPane />
         </View>
     );
   }
