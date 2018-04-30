@@ -7,7 +7,8 @@ import React, { Component } from 'react';
 import { 
   View,
   TouchableWithoutFeedback,
-  TVEventHandler
+  TVEventHandler,
+  // RCTTVView
 } from 'react-native';
 import styles from './styles/styles';
 import GlobalNavPane from './GlobalNavPane';
@@ -18,6 +19,7 @@ import HomeShelvesPane from './HomeShelvesPane';
 export default class POCContainer extends Component {
   constructor(props) {
     super(props);
+    console.log('INFO :: constructor, this.constructor.name? : ' + this.constructor.name);
     this._tvEventHandler = new TVEventHandler();
   }
 
@@ -32,24 +34,28 @@ export default class POCContainer extends Component {
   }
 
   _enableTVEventHandler() {
-    console.log('INFO :: _enableTVEventHandler');
-    //this._tvEventHandler = new TVEventHandler();
+    //console.log('INFO :: _enableTVEventHandler');
     this._tvEventHandler.enable(this, function(cmp, evt) {
-      console.log('INFO :: evt.eventType? : ' + evt.eventType);
+      // console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
+      //select, blur, focus
+      console.log('INFO :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);  
+      cmp._doTest()
       if (evt && evt.eventType === 'left') {
-        //cmp.doLeft();
+        //cmp._doLeft();
         console.log('INFO :: left');
-        this._doLeft();
+        //this._doLeft()
       } else if (evt && evt.eventType === 'right') {
         console.log('INFO :: right');
         //cmp.doRight();
-        this._doRight();
+        //this._doRight();
       } else if(evt && evt.eventType === 'up') {
         console.log('INFO :: up');
-        this._doUp();
+        //cmp._doUp();
+        //this._doUp();
       } else if(evt && evt.eventType === 'down') {
         console.log('INFO :: down');
-        this._doDown();
+        //cmp._doDown();
+        //this._doDown();
       } 
       //else if(evt && evt.eventType === 'playPause') {
         //cmp.doPlayPause();
@@ -63,6 +69,10 @@ export default class POCContainer extends Component {
       this._tvEventHandler.disable();
       delete this._tvEventHandler;
     }
+  }
+
+  _doTest = () => {
+    console.log('INFO :: _doTest ????');
   }
 
   _doLeft = () => {
