@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import {
   Text,
-  TouchableHighlight,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
 import styles from './styles/styles';
@@ -21,7 +20,7 @@ export default class HomeShelvesPane extends Component {
 
   render() {
     return (
-      <TouchableNativeFeedback ref={node => this.node = node} onPress={(e) => this.getNodeInfo(e)} >
+      <TouchableWithoutFeedback ref={node => this.node = node} onPress={(e) => this.getNodeInfo(e)} >
         <View style={styles.homeShelvesContainer}>
 
             <Text style={styles.comment}>
@@ -29,12 +28,7 @@ export default class HomeShelvesPane extends Component {
             </Text>
 
         </View>
-      </TouchableNativeFeedback>
+      </TouchableWithoutFeedback>
     );
   }
 }
-
-/*
-  <TouchableHighlight>
-  </TouchableHighlight>
-*/

@@ -15,21 +15,24 @@ import GlobalNavPane from './GlobalNavPane';
 import HomeHeroPane from './HomeHeroPane';
 import HomeShelvesPane from './HomeShelvesPane';
 
-
+const ReactNative = require('ReactNative');
+const initGlobalNavY = 0;
+const initHomeHeroY = 0;
+const initHomeShelvesY = 0;
 export default class POCContainer extends Component {
   constructor(props) {
     super(props);
-    console.log('INFO :: constructor, this.constructor.name? : ' + this.constructor.name);
+    //console.log('INFO POCContainer :: constructor, this.constructor.name? : ' + this.constructor.name);  //POCContainer
     this._tvEventHandler = new TVEventHandler();
   }
 
   componentDidMount() {
-    console.log('INFO :: componentDidMount');
+    //console.log('INFO POCContainer :: componentDidMount');
     this._enableTVEventHandler();
   }
 
   componentWillUnmount() {
-    console.log('INFO :: componentWillUnmount');
+    //console.log('INFO POCContainer :: componentWillUnmount');
     this._disableTVEventHandler();
   }
 
@@ -37,63 +40,83 @@ export default class POCContainer extends Component {
     //console.log('INFO :: _enableTVEventHandler');
     this._tvEventHandler.enable(this, function(cmp, evt) {
       // console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
-      //select, blur, focus
-      console.log('INFO :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);  
-      cmp._doTest()
-      if (evt && evt.eventType === 'left') {
-        //cmp._doLeft();
-        console.log('INFO :: left');
-        //this._doLeft()
-      } else if (evt && evt.eventType === 'right') {
-        console.log('INFO :: right');
-        //cmp.doRight();
-        //this._doRight();
-      } else if(evt && evt.eventType === 'up') {
-        console.log('INFO :: up');
-        //cmp._doUp();
-        //this._doUp();
-      } else if(evt && evt.eventType === 'down') {
-        console.log('INFO :: down');
-        //cmp._doDown();
-        //this._doDown();
-      } 
-      //else if(evt && evt.eventType === 'playPause') {
-        //cmp.doPlayPause();
-      //}
+      /*
+      const myTag = ReactNative.findNodeHandle(cmp);
+      evt.dispatchConfig = {};
+      if (myTag === evt.tag) {
+        if (evt.eventType === 'focus') {
+          cmp.touchableHandleActivePressIn && cmp.touchableHandleActivePressIn(evt);
+        } else if (evt.eventType === 'blur') {
+          cmp.touchableHandleActivePressOut && cmp.touchableHandleActivePressOut(evt);
+        } else if (evt.eventType === 'select') {
+          cmp.touchableHandlePress && !cmp.props.disabled && cmp.touchableHandlePress(evt);
+        }
+      }*/
+
+      if (evt) {
+        switch (evt.eventType) {
+          case 'blur':
+            cmp._doBlur();
+            break;
+          case 'focus':
+            cmp._doFocus();
+            break;
+          case 'select':
+            cmp._doSelect();
+            break;
+          case 'left':
+            cmp._doLeft();
+            break;
+          case 'right':
+            cmp.doRight();
+            break;
+          case 'up':
+            cmp._doUp();
+            break;
+          case 'down':
+            cmp._doDown();
+            break;
+          case 'playPause':
+            cmp._doPlayPause();
+            break;
+          default:
+            console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
+        }
+      }
     });
   }
 
   _disableTVEventHandler() {
-    console.log('INFO :: _disableTVEventHandler');
+    //console.log('INFO :: _disableTVEventHandler');
     if (this._tvEventHandler) {
       this._tvEventHandler.disable();
       delete this._tvEventHandler;
     }
   }
 
-  _doTest = () => {
-    console.log('INFO :: _doTest ????');
+  _doBlur = () => {
+    console.log('INFO POCContainer :: _doBlur, this is ??' + this.constructor.name);
   }
 
-  _doLeft = () => {
-    console.log('INFO :: doLeft ????');
-  }
-
-  _doRight = () => {
-    console.log('INFO :: doRight ????');
-  }
-
-  _doUp = () => {
-    console.log('INFO :: doUp');
-  }
-
-  _doDown = () => {
-    console.log('INFO :: doDown');
+  _doFocus = () => {
+    console.log('INFO POCContainer :: _doFocus, this is ??' + this.constructor.name);
   }
 
   _doSelect = () => {
-    console.log('INFO :: doSelect');
+    console.log('INFO POCContainer :: _doSelect');
   }
+
+  _doLeft = () => {console.log('INFO POCContainer :: _doLeft');}
+
+  _doRight = () => {console.log('INFO POCContainer :: _doRight');}
+
+  _doUp = () => {console.log('INFO POCContainer :: _doUp');}
+
+  _doDown = () => {console.log('INFO POCContainer :: _doDown');}
+
+  _doPlayPause = () => { console.log('INFO POCContainer :: _doPlayPause');}
+
+  _doTest = () => {console.log('INFO :: _doTest ????');}
 
   render() {
     return (
