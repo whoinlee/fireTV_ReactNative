@@ -94,13 +94,15 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '27.0.3'
+    // 23, 27.0.3
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'  //27.0.3 :: The specified Android SDK Build Tools version (23.0.1) is ignored, as it is below the minimum supported version (27.0.3) for Android Gradle Plugin 3.1.2.
 
+    // 16, 22
     defaultConfig {
         applicationId "com.rn055firetv"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         ndk {
@@ -137,8 +139,9 @@ android {
 }
 
 dependencies {
+    //...-v7:23.0.1
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:23.0.1"
+    implementation "com.android.support:appcompat-v7:26.0.2"    //23.0.1
     implementation "com.facebook.react:react-native:+"  // From node_modules
 }
 

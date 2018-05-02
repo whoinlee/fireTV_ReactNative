@@ -29,7 +29,7 @@ export default class GlobalNavPane extends Component {
         <View style={styles.globalNavContainer}>
           
             <Text style={styles.comment}>
-              {'GlobalNavPane ' + "0" + (this.today.getMonth()+1) + " : " + (this.today.getDate()) + " : " + (this.today.getHours())}
+              {'GlobalNavPane - ' + "0" + (this.today.getMonth()+1) + " : " + (this.today.getDate()) + " : " + (this.today.getHours())}
             </Text>
           
         </View>

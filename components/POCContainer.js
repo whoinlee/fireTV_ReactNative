@@ -54,6 +54,7 @@ export default class POCContainer extends Component {
       }*/
 
       if (evt) {
+        console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
         switch (evt.eventType) {
           case 'blur':
             cmp._doBlur();
@@ -77,10 +78,19 @@ export default class POCContainer extends Component {
             cmp._doDown();
             break;
           case 'playPause':
-            cmp._doPlayPause();
+            console.log('INFO POCContainer :: playPause');
+            //cmp._doPlayPause();
+            break;
+          case 'rewind':
+            console.log('INFO POCContainer :: rewind');
+            //cmp._doPlayPause();
+            break;
+          case 'fastForward':
+            console.log('INFO POCContainer :: fastForward');
+            //cmp._doPlayPause();
             break;
           default:
-            console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
+            console.log('INFO POCContainer :: _enableTVEventHandler, default evt.eventType? : ' + evt.eventType);
         }
       }
     });
