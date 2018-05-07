@@ -27,7 +27,7 @@ export default class POCContainer extends Component {
   }
 
   componentDidMount() {
-    //console.log('INFO POCContainer :: componentDidMount');
+    console.log('INFO POCContainer :: componentDidMount');
     this._enableTVEventHandler();
   }
 
@@ -54,7 +54,7 @@ export default class POCContainer extends Component {
       }*/
 
       if (evt) {
-        console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
+        //console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
         switch (evt.eventType) {
           case 'blur':
             cmp._doBlur();
@@ -105,7 +105,7 @@ export default class POCContainer extends Component {
   }
 
   _doBlur = () => {
-    console.log('INFO POCContainer :: _doBlur, this is ??' + this.constructor.name);
+    //console.log('INFO POCContainer :: _doBlur, this is ??' + this.constructor.name);
   }
 
   _doFocus = () => {

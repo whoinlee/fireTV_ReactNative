@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {
   Text,
+  TouchableHighlight,
   TouchableWithoutFeedback,
+  TouchableNativeFeedback,
   View
 } from 'react-native';
 import styles from './styles/styles';
@@ -21,7 +23,7 @@ export default class GlobalNavPane extends Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback 
+      <TouchableNativeFeedback 
         ref={node => this.node = node} 
         onPress={(e) => this.getNodeInfo(e)} 
         onTouchableHandleActivePressIn={console.log('INFO GlobalNavPane :: test pressIn')} 
@@ -33,7 +35,11 @@ export default class GlobalNavPane extends Component {
             </Text>
           
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableNativeFeedback>
     );
   }
 }
+
+/*
+ // TouchableWithoutFeedback,
+*/
