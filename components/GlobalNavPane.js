@@ -18,7 +18,7 @@ export default class GlobalNavPane extends Component {
   } 
 
   getNodeInfo(e) {
-    console.log('INFO GlobalNavPane :: getNodeInfo, e.eventTypee is ', e.eventType)
+    console.log('INFO GlobalNavPane :: onPress - getNodeInfo, e.eventType is ', e.eventType)
   }
 
   render() {
@@ -31,7 +31,7 @@ export default class GlobalNavPane extends Component {
         <View style={styles.globalNavContainer}>
           
             <Text style={styles.comment}>
-              {'GlobalNavPane - ' + "0" + (this.today.getMonth()+1) + " : " + (this.today.getDate()) + " : " + (this.today.getHours())}
+              GlobalNavPane
             </Text>
           
         </View>
@@ -42,4 +42,5 @@ export default class GlobalNavPane extends Component {
 
 /*
  // TouchableWithoutFeedback,
+ {'GlobalNavPane - ' + "0" + (this.today.getMonth()+1) + " : " + (this.today.getDate()) + " : " + (this.today.getHours())}
 */

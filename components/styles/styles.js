@@ -3,8 +3,11 @@
 import {
 	Platform,
 	StyleSheet,
+	PixelRatio,
 } from 'react-native';
+import config from '../config/config';
 
+const ratio = PixelRatio.get();
 const styles = StyleSheet.create({
 	//-- POCContainer
 	pocContainer: {
@@ -31,48 +34,50 @@ const styles = StyleSheet.create({
 	
 	//-- GlobalNavPane
 	globalNavContainer: {
-	    flex: .25,
+	   // flex: .25,
+	   	//flex: 1,
 	    justifyContent: 'center',
 	    alignItems: 'center',
-	    backgroundColor: '#000',
+	    backgroundColor: '#444',
 	    position: 'absolute',
-	    top: 0,
+	    top: config.initGlobalNavY, 
 	    width: '100%',
-	    // height: 100,
+	    height: 100/ratio,
 	    opacity: 1,
 	    borderWidth: 1,
-	    borderColor: '#ff0000',
+	    borderColor: '#000000',
 	},
 
 
 	//-- HomeHeroPane
 	homeHeroContainer: {
-	    flex: 1,
+	    //flex: 1,
 	    justifyContent: 'center',
 	    alignItems: 'center',
 	    backgroundColor: '#333',
 	    position: 'absolute',
-	    top: 165,
+	    top: config.initHomeHeroY/ratio, 
 	    width: '100%',
-	    // height: 606,
+	    height: 606/2,
 	    opacity: .6,
     	borderWidth: 1,
-    	borderColor: '#ff0000',
+    	borderColor: '#000000',
 	},
 
 
 	//-- HomeShelvesPane
 	homeShelvesContainer: {
-	    flex: 1,
+	   // flex: 1,
 	    justifyContent: 'center',
 	    alignItems: 'center',
 	    backgroundColor: '#000',
 	    position: 'absolute',
 	    width: '100%',
+	    top: config.initHomeShelvesY/ratio, 
 	    opacity: .6,
 	    overflow: 'hidden',
 	    borderWidth: 1,
-    	borderColor: '#ff0000',
+    	borderColor: '#000000',
 	},
 });
 
