@@ -25,9 +25,10 @@ export default class GlobalNavPane extends Component {
     return (
       <TouchableNativeFeedback 
         ref={node => this.node = node} 
-        onPress={(e) => this.getNodeInfo(e)} 
-        onTouchableHandleActivePressIn={console.log('INFO GlobalNavPane :: test pressIn')} 
-        onTouchableHandleActivePressOut={console.log('INFO GlobalNavPane :: test pressOut')} >
+        //onPress={(e) => this.getNodeInfo(e)} 
+        //onTouchableHandleActivePressIn={console.log('INFO GlobalNavPane :: test pressIn')} 
+        //onTouchableHandleActivePressOut={console.log('INFO GlobalNavPane :: test pressOut')} 
+        >
         <View style={styles.globalNavContainer}>
           
             <Text style={styles.comment}>

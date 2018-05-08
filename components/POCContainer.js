@@ -19,16 +19,13 @@ import GlobalNavPane from './GlobalNavPane';
 import HomeHeroPane from './HomeHeroPane';
 import HomeShelvesPane from './HomeShelvesPane';
 
-const initGlobalNavY = config.initGlobalNavY;
-const initHomeHeroY = config.initHomeHeroY;
-const initHomeShelvesY = config.initHomeShelvesY;
-const stageW = config.stageW;
-const stageH = config.stageH;
-
-const focusLocationArr = ['globalNavPane', 'homeHeroPane', 'homeShelvesPane'];
-const GLOBAL_NAV_INDEX = 0;
-const HOME_HERO_INDEX = 1;
-const HOME_SHELVES_INDEX = 2;
+const INIT_GLOBAL_NAV_Y   = config.initGlobalNavY;
+const INIT_HOME_HERO_Y    = config.initHomeHeroY;
+const INIT_HOME_SHELVES_Y = config.initHomeShelvesY;
+const FOCUS_LOC_ARR       = ['globalNavPane', 'homeHeroPane', 'homeShelvesPane'];
+const GLOBAL_NAV_INDEX    = 0;
+const HOME_HERO_INDEX     = 1;
+const HOME_SHELVES_INDEX  = 2;
 
 export default class POCContainer extends Component {
   constructor(props) {
@@ -38,22 +35,22 @@ export default class POCContainer extends Component {
     this.state = {
       isGuideVisible: false,
       focusLocationIndex: GLOBAL_NAV_INDEX,
-      shelvesTopY: initHomeShelvesY + 'px'
+      //shelvesTopY: INIT_HOME_SHELVES_Y + 'px'
     };
 
     this.elts = [];
     this.shelvesShiftOffsetY = 0;   //this.containerShiftOffsetY = 0
 
    // this.initGlobalNavY = initGlobalNavY;
-    this.upGlobalNavY = initGlobalNavY;
+    this.upGlobalNavY = INIT_GLOBAL_NAV_Y;
    // this.initHomeHeroY = initHomeHeroY
-    this.upHomeHeroY = initHomeHeroY   
-    this.upMidHomeHeroY = initHomeHeroY      
-    this.upOffHomeHeroY = initHomeHeroY
+    this.upHomeHeroY = INIT_HOME_HERO_Y   
+    this.upMidHomeHeroY = INIT_HOME_HERO_Y      
+    this.upOffHomeHeroY = INIT_HOME_HERO_Y
     // this.initHomeShelvesY = initHomeShelvesY
-    this.upHomeShelvesY = initHomeShelvesY  
-    this.upOffHomeShelvesY = initHomeShelvesY 
-    this.currHomeShelvesY = initHomeShelvesY  
+    this.upHomeShelvesY = INIT_HOME_SHELVES_Y  
+    this.upOffHomeShelvesY = INIT_HOME_SHELVES_Y 
+    this.currHomeShelvesY = INIT_HOME_SHELVES_Y  
 
     //this._tvEventHandler = new TVEventHandler();
     this._doUp = this._doUp.bind(this);
@@ -108,10 +105,45 @@ export default class POCContainer extends Component {
 
   _doUp = () => {
     console.log('INFO POCContainer :: _doUp');
+
+    let {focusLocationIndex} = this.state
+    switch (focusLocationIndex) {
+      //console.log('INFO POCContainer :: _doDown, focusLocationIndex is ' + focusLocationIndex);
+      case HOME_SHELVES_INDEX:
+        console.log("homeShelves to homeHero")
+        focusLocationIndex = HOME_HERO_INDEX
+        break;
+      case HOME_HERO_INDEX:
+        console.log("homeHero to homeShelves")
+        focusLocationIndex = GLOBAL_NAV_INDEX
+        break;
+      case GLOBAL_NAV_INDEX: 
+        console.log("globalNav")
+      default: 
+    }
+    this.setState({focusLocationIndex : focusLocationIndex})
   }
 
   _doDown = () => {
     console.log('INFO POCContainer :: _doDown');
+
+    let {focusLocationIndex} = this.state
+
+    switch (focusLocationIndex) {
+      //console.log('INFO POCContainer :: _doDown, focusLocationIndex is ' + focusLocationIndex);
+      case GLOBAL_NAV_INDEX: 
+        console.log("globalNav to homeHero")
+        focusLocationIndex = HOME_HERO_INDEX
+        break;
+      case HOME_HERO_INDEX:
+        console.log("homeHero to homeShelves")
+        focusLocationIndex = HOME_SHELVES_INDEX
+        break;
+      case HOME_SHELVES_INDEX:
+      default:
+        console.log("homeShelves")
+    }
+    this.setState({focusLocationIndex : focusLocationIndex})
   }
 
   _doLeft = () => {
