@@ -96,9 +96,8 @@ export default class POCContainer extends Component {
             break;
           default:
             console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyCode);
-        }
-
-    });
+        }//switch
+    });//onKeyDownListener
     // KeyEvent.onKeyUpListener((keyEvent) => {
     //   console.log(`INFO POCContainer :: componentDidMount, onKeyUpListener keyCode: ${keyEvent.keyCode}`);
     //   console.log(`INFO POCContainer :: componentDidMount, onKeyUpListener Action: ${keyEvent.action}`);
