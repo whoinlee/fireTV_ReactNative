@@ -29,12 +29,10 @@ export default class GlobalNavPane extends Component {
         //onTouchableHandleActivePressIn={console.log('INFO GlobalNavPane :: test pressIn')} 
         //onTouchableHandleActivePressOut={console.log('INFO GlobalNavPane :: test pressOut')} 
         >
-        <View style={styles.globalNavContainer}>
-          
+        <View>
             <Text style={styles.comment}>
               GlobalNavPane
             </Text>
-          
         </View>
       </TouchableNativeFeedback>
     );

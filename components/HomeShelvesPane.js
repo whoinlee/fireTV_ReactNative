@@ -21,14 +21,15 @@ export default class HomeShelvesPane extends Component {
   render() {
     return (
       <TouchableWithoutFeedback ref={node => this.node = node} onPress={(e) => this.getNodeInfo(e)} >
-        <View style={styles.homeShelvesContainer}>
-
+        <View>
             <Text style={styles.comment}>
               HomeShelvesPane
             </Text>
-
         </View>
       </TouchableWithoutFeedback>
     );
   }
 }
+
+//<View style={styles.homeShelvesContainer}>
+//

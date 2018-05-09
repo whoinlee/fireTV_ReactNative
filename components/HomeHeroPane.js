@@ -21,14 +21,14 @@ export default class HomeHeroPane extends Component {
   render() {
     return (
       <TouchableWithoutFeedback ref={node => this.node = node} onPress={(e) => this.getNodeInfo(e)} >
-        <View style={styles.homeHeroContainer}>
-
+        <View>
             <Text style={styles.comment}>
               HomeHeroPane
             </Text>
-
         </View>
       </TouchableWithoutFeedback>
     );
   }
 }
+
+//
