@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import POCContainer from './components/POCContainer';
+import POCContainer from './src/POCContainer';
 
 
 export default class App extends Component {
