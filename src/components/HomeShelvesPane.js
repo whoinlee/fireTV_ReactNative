@@ -139,18 +139,21 @@ const SHELVES_DATA_ARR    = [
   //     ]
   // }
 ];//SHELVES_DATA_ARR
-//
+const TOTAL_SHELVES       = SHELVES_DATA_ARR.length;
+const MAX_INDEX           = TOTAL_SHELVES - 1;
 const INIT_SHELF_Y        = 62;         //-- from container top to the shelf title
 //
+const BASE_TILE_H         = 180;        
+const FOCUSED_TILE_H      = 332;        
+//
 const BASE_TITLE_H        = 28;         //-- title height for Helvetica Light 28px
-const BASE_TILE_H         = 180;        //-- tile(ShelfTile) height for Helvetica Light 28px
 const TITLE_N_TILE_OFFSET = 10;         //-- offset between title & tiles
 const BASE_SHELF_OFFSET   = 106;        //-- offset between shelves: from the bottom of previous shelf image to the top of next shelf title
 const BASE_SHELF_H        = BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET;     //-- distance between unselected shelves
 //
-//-- from here
-// const FOCUSED_SHELF_SHIFT_Y     = 76;   //-- 76 = (332-180)/2 (focusedH - baseH)
-// const SHELF_BASE_TILE_H   = 28;
+const FOCUSED_SHELF_SHIFT = (FOCUSED_TILE_H - BASE_TITLE_H)/2;    //-- how much unselected shelves shift on selected shelf's being focused
+const FOCUSED_SHELF_OFFSET= BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT;
+const BLOOMED_SHELF_SHIFT = 131;
 
 
 export default class HomeShelvesPane extends Component {
@@ -160,18 +163,16 @@ export default class HomeShelvesPane extends Component {
       selectedShelfIndex: -1,
       //shelvesTopY: initContainerY + 'px',
     }
-    this.shelves = [];
 
-    // //-- distance between unselected shelves
-    // const baseShelfOffsetY      = shelfBaseTitleHeight + shelfTitleTileOffset + shelfBaseTileHeight + shelfBaseOffset;
-    // //-- distance between the focused(selected) shelf and the next unselected shelf
-    // const focusedShelfShiftY    = 76;       //76 = (332-180)/2 (focusedH - baseH)
-    // const focusedShelfOffsetY   = baseShelfOffsetY + focusedShelfShiftY;  
-    // const bloomedShelfShiftY    = 131;
+    this.containerShiftOffsetY = 0
 
-    // const totalShelves = SHELVES_DATA_ARR.length;
-    // const maxIndex = totalShelves - 1;
-
+    this.shelves = []
+    this.prevShelf = null
+    this.currShelf = null
+    this.nextShelf = null
+    this.isPrevMoved = false
+    this.isNextMoved = false
+    this.totalMenu = 3  //?????
 
     //let node;
     //this.getNodeInfo = this.getNodeInfo.bind(this);
