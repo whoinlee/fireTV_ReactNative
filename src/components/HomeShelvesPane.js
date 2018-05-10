@@ -140,14 +140,16 @@ const SHELVES_DATA_ARR    = [
   // }
 ];//SHELVES_DATA_ARR
 //
-const INIT_SHELF_Y        = 62;   //-- from container top to the shelf title
-const SHELF_BASE_TITLE_H  = 28;   //-- title height for Helvetica Light 28px
-const SHELF_BASE_TILE_H   = 180;  //-- tile(ShelfTile) height for Helvetica Light 28px
-const SHELF_TITLE_N_TILE_OFFSET = 10;   //-- offset between title & tiles
-const SHELF_BASE_OFFSET   = 106;  //-- offset between shelves: from the bottom of previous shelf image to the top of next shelf title
-
-// const SHELF_BASE_TILE_H   = 28;
-// const SHELF_BASE_TILE_H   = 28;
+const INIT_SHELF_Y        = 62;         //-- from container top to the shelf title
+//
+const BASE_TITLE_H        = 28;         //-- title height for Helvetica Light 28px
+const BASE_TILE_H         = 180;        //-- tile(ShelfTile) height for Helvetica Light 28px
+const TITLE_N_TILE_OFFSET = 10;         //-- offset between title & tiles
+const BASE_SHELF_OFFSET   = 106;        //-- offset between shelves: from the bottom of previous shelf image to the top of next shelf title
+const BASE_SHELF_H        = BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET;     //-- distance between unselected shelves
+//
+//-- from here
+// const FOCUSED_SHELF_SHIFT_Y     = 76;   //-- 76 = (332-180)/2 (focusedH - baseH)
 // const SHELF_BASE_TILE_H   = 28;
 
 
