@@ -5,7 +5,7 @@ import {
 	StyleSheet,
 	PixelRatio,
 } from 'react-native';
-import config from '../config/config';
+import config from '../config';
 
 
 const RATIO = PixelRatio.get();

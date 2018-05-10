@@ -9,12 +9,8 @@
   },
   "dependencies": {
     "eslint": "^3.19.0",
-    "gsap": "^1.20.4",
-    "gsap-react-plugin": "^1.0.2",
-    "install": "^0.11.0",
-    "npm": "^6.0.0",
     "react": "16.3.1",
-    "react-native": "0.55.3",
+    "react-native": "^0.55.3",
     "react-native-keyevent": "^0.1.1"
   },
   "devDependencies": {

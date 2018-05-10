@@ -1,7 +1,9 @@
-/**
- * POC for fireTV in React Native
- * https://github.com/whoinlee/fireTV_ReactNative
- * by WhoIN Lee :: whoin.lee@nbcuni.com
+/** 
+ * ================================================
+ *  POC for fireTV in React Native
+ *  https://github.com/whoinlee/fireTV_ReactNative
+ *  by WhoIN Lee :: whoin.lee@nbcuni.com
+ * ================================================
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -14,22 +16,21 @@ import {
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
-// import {TweenLite, Power3} from 'gsap';
-import config from './config/config';
-import keyCodes from './config/keyCodes';
+
+import config from './config';
+import keyCodes from './keyCodes';
 import styles from './styles/styles';
 import GlobalNavPane from './components/GlobalNavPane';
 import HomeHeroPane from './components/HomeHeroPane';
 import HomeShelvesPane from './components/HomeShelvesPane';
 
 
-// const TL = TweenLite;     // eslint-disable-line
+const STD_DURATION        = config.stdDuration;
+const SHORT_DURATION      = config.shortDuration;
+//
 const INIT_GLOBAL_NAV_Y   = config.initGlobalNavY;
 const INIT_HOME_HERO_Y    = config.initHomeHeroY;
 const INIT_HOME_SHELVES_Y = config.initHomeShelvesY;
-//
-const STD_DURATION        = config.stdDuration;
-const SHORT_DURATION      = config.shortDuration;
 //
 const FOCUS_LOC_ARR       = ['globalNavPane', 'homeHeroPane', 'homeShelvesPane'];
 const GLOBAL_NAV_INDEX    = 0;
@@ -48,8 +49,9 @@ export default class POCContainer extends Component {
     };
 
     this.elts = [];
+
     this.shelvesShiftOffsetY = 0;       //-- this.containerShiftOffsetY = 0
-    this.focusLocationIndex = GLOBAL_NAV_INDEX
+    this._currFocusLocIndex = GLOBAL_NAV_INDEX
 
     this.upGlobalNavY = INIT_GLOBAL_NAV_Y;
     //
@@ -59,8 +61,7 @@ export default class POCContainer extends Component {
     //
     this.upHomeShelvesY = INIT_HOME_SHELVES_Y  
     this.upOffHomeShelvesY = INIT_HOME_SHELVES_Y 
-    this.currHomeShelvesY = INIT_HOME_SHELVES_Y  
-
+    this._currHomeShelvesY = INIT_HOME_SHELVES_Y  
 
     // this._tvEventHandler = new TVEventHandler()
     // this._doUp = this._doUp.bind(this)
@@ -73,8 +74,7 @@ export default class POCContainer extends Component {
 
   componentDidMount() {
     KeyEvent.onKeyDownListener((keyEvent) => {
-      let keyCode = keyEvent.keyCode;
-      switch (keyCode) {
+      switch (keyEvent.keyCode) {
           case keyCodes.up:
             this._doUp();
             break;
@@ -91,9 +91,10 @@ export default class POCContainer extends Component {
             this._doSelect();
             break;
           default:
-            console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyCode);
+            console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
         }//switch
     });//onKeyDownListener
+
     // KeyEvent.onKeyUpListener((keyEvent) => {
     //   console.log(`INFO POCContainer :: componentDidMount, onKeyUpListener keyCode: ${keyEvent.keyCode}`);
     //   console.log(`INFO POCContainer :: componentDidMount, onKeyUpListener Action: ${keyEvent.action}`);
@@ -101,7 +102,6 @@ export default class POCContainer extends Component {
     // KeyEvent.onKeyMultipleListener((keyEvent) => {
     //   console.log(`INFO POCContainer :: componentDidMount, Characters: ${keyEvent.characters}`);
     // });
-
     //this._enableTVEventHandler();
   }//componentDidMount
 
@@ -112,64 +112,71 @@ export default class POCContainer extends Component {
 
   _doUp = () => {
     console.log("---")
-    console.log("INFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.focusLocationIndex])
-    switch (this.focusLocationIndex) {
+    console.log("INFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this._currFocusLocIndex])
+
+    switch (this._currFocusLocIndex) {
       case HOME_SHELVES_INDEX:
-        //console.log("INFO POCContainer :: _doUp, homeShelves to homeHero")
         //-- TODO: do this only if the 1st shelf is selected inside of HomeShelvesPane
-        this.focusLocationIndex -= 1
+        this._currFocusLocIndex -= 1
         this._changeOpacity(HOME_HERO_INDEX, 1)
         this._changeOpacity(HOME_SHELVES_INDEX, .6)
         break;
       case HOME_HERO_INDEX:
-        // console.log("INFO POCContainer :: _doUp, homeHero to homeShelves")
-        this.focusLocationIndex -= 1
+        this._currFocusLocIndex -= 1
         this._changeOpacity(GLOBAL_NAV_INDEX, 1)
         this._changeOpacity(HOME_HERO_INDEX, .6)
         break;
       case GLOBAL_NAV_INDEX: 
-        //console.log("INFO POCContainer :: _doUp, globalNav")
     }//switch
-    console.log("INFO POCContainer :: _doUp, to " + FOCUS_LOC_ARR[this.focusLocationIndex])
+
+    console.log("INFO POCContainer :: _doUp, to " + FOCUS_LOC_ARR[this._currFocusLocIndex])
     console.log(" ")
   }//_doUp
 
   _doDown = () => {
     console.log("---")
-    console.log("INFO POCContainer :: _doDown, from " + FOCUS_LOC_ARR[this.focusLocationIndex])
-    switch (this.focusLocationIndex) {
-      case GLOBAL_NAV_INDEX: 
-        // console.log("INFO POCContainer :: _doDown, globalNav to homeHero")
-        this.focusLocationIndex += 1
+    console.log("INFO POCContainer :: _doDown, from " + FOCUS_LOC_ARR[this._currFocusLocIndex])
+
+    switch (this._currFocusLocIndex) {
+      case GLOBAL_NAV_INDEX:
+        this._currFocusLocIndex += 1
         this._changeOpacity(GLOBAL_NAV_INDEX, .6)
         this._changeOpacity(HOME_HERO_INDEX, 1)
         this._changeOpacity(HOME_SHELVES_INDEX, .6)
         //-- TODO: reset homeShelves y location
         break;
       case HOME_HERO_INDEX:
-        // console.log("INFO POCContainer :: _doDown, homeHero to homeShelves")
-        this.focusLocationIndex += 1
+        this._currFocusLocIndex += 1
         this._changeOpacity(HOME_HERO_INDEX, .6)
         this._changeOpacity(HOME_SHELVES_INDEX, 1)
         break;
       case HOME_SHELVES_INDEX:
-        //console.log("INFO POCContainer :: _doDown, homeShelves")
         //-- handle inside of homeShelves pane
     }//switch
-    console.log("INFO POCContainer :: _doDown, to " + FOCUS_LOC_ARR[this.focusLocationIndex])
+
+    console.log("INFO POCContainer :: _doDown, to " + FOCUS_LOC_ARR[this._currFocusLocIndex])
     console.log(" ")
   }//_doDown
 
-  _doLeft = () => { 
+  _doLeft = () => {
     console.log('INFO POCContainer :: _doLeft');
+    if (this._currFocusLocIndex == HOME_SHELVES_INDEX) {
+      console.log('INFO POCContainer :: do _doLeft in the HomeShelvesPane');
+    }
   }
 
   _doRight = () => {
     console.log('INFO POCContainer :: _doRight');
+    if (this._currFocusLocIndex == HOME_SHELVES_INDEX) {
+      console.log('INFO POCContainer :: do _doRight in the HomeShelvesPane');
+    }
   }
 
   _doSelect = () => {
     console.log('INFO POCContainer :: _doSelect');
+    if (this._currFocusLocIndex == HOME_SHELVES_INDEX) {
+      console.log('INFO POCContainer :: do _doSelect in the HomeShelvesPane');
+    }
   }
 
   _toggleGuides = () => {
@@ -259,23 +266,24 @@ export default class POCContainer extends Component {
   }//_disableTVEventHandler
 
   render() {
+    console.log("INFO POCContainer :: render")
     let { fadeAnim0, fadeAnim1, fadeAnim2 } = this.state
     return (
         <View style={styles.pocContainer}>
-            <Animated.View  style={ {  ...this.props.globalNavStyle,
+            <Animated.View  style={ { ...this.props.globalNavStyleObj,
                                       opacity: fadeAnim0  } }
                             ref={node => this.elts.push(node)} >
-              <GlobalNavPane />
+                      <GlobalNavPane />
             </Animated.View>
-            <Animated.View  style={ {  ...this.props.homeHeroStyle,
+            <Animated.View  style={ { ...this.props.homeHeroStyleObj,
                                       opacity: fadeAnim1  } }
                             ref={node => this.elts.push(node)} >
-              <HomeHeroPane />
+                      <HomeHeroPane />
             </Animated.View>
-            <Animated.View  style={ {  ...this.props.homeShelvesStyle,
+            <Animated.View  style={ { ...this.props.homeShelvesStyleObj,
                                       opacity: fadeAnim2  } }
                             ref={node => this.elts.push(node)} >
-              <HomeShelvesPane />
+                      <HomeShelvesPane />
             </Animated.View>
         </View>
     );
@@ -284,13 +292,13 @@ export default class POCContainer extends Component {
 
 
 POCContainer.propTypes = {
-  globalNavStyle: PropTypes.object,
-  homeHeroStyle: PropTypes.object,
-  homeShelvesStyle: PropTypes.object
+  globalNavStyleObj: PropTypes.object,
+  homeHeroStyleObj: PropTypes.object,
+  homeShelvesStyleObj: PropTypes.object
 }
 
 POCContainer.defaultProps = {
-  globalNavStyle: StyleSheet.flatten(styles.globalNavContainer),
-  homeHeroStyle: StyleSheet.flatten(styles.homeHeroContainer),
-  homeShelvesStyle: StyleSheet.flatten(styles.homeShelvesContainer)
+  globalNavStyleObj: StyleSheet.flatten(styles.globalNavContainer),
+  homeHeroStyleObj: StyleSheet.flatten(styles.homeHeroContainer),
+  homeShelvesStyleObj: StyleSheet.flatten(styles.homeShelvesContainer)
 }
