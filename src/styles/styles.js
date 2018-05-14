@@ -1,14 +1,10 @@
 'use strict';
 
-import {
-	Platform,
-	StyleSheet,
-	PixelRatio,
-} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import config from '../config';
 
 
-const RATIO = PixelRatio.get();
+const RATIO = config.density;
 const styles = StyleSheet.create({
 	//-- comment, for testing
 	comment: {
@@ -23,7 +19,7 @@ const styles = StyleSheet.create({
 	pocContainer: {
 	    backgroundColor: Platform.isTV ? '#676767': '#F5FCFF',
 	    width: '100%',
-	    height: '100%'
+	    height: '100%',
 	},
 
 	
@@ -55,13 +51,13 @@ const styles = StyleSheet.create({
 
 	//-- HomeShelvesPane
 	homeShelvesContainer: {
-	    backgroundColor: '#444',
+	    backgroundColor: '#676767',
 	    position: 'absolute',
 	    width: '100%',
-	    top: config.initHomeShelvesY/RATIO, 
+	    top: config.initHomeShelvesY/RATIO,
 	    overflow: 'hidden',
 	    borderWidth: 1,
-    	borderColor: '#000000',
+    	borderColor: '#ff0000',
 	},
 });
 

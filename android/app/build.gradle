@@ -101,7 +101,7 @@ android {
     // 16, 22
     defaultConfig {
         applicationId "com.rn055firetv"
-        minSdkVersion 22        //22 working with 22 Emulator
+        minSdkVersion 21        //22 working with 22 Emulator
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"

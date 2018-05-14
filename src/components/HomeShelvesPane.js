@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Animated,
+  Easing,
   Text,
   TouchableNativeFeedback,
   View
 } from 'react-native';
-import HomeShelf from './ui/HomeShelf';
 import KeyEvent from 'react-native-keyevent';
+import HomeShelf from './ui/HomeShelf';
 
 import config from '../config';
 import keyCodes from '../keyCodes';
@@ -14,35 +16,35 @@ import styles from '../styles/styles';
 import homeShelvesStyle from '../styles/homeShelvesStyle';
 
 
-const STD_DURATION        = config.stdDuration;
-const SHORT_DURATION      = config.shortDuration;
+const RATIO                 = config.density;
+const STD_DURATION          = config.stdDuration;
+const SHORT_DURATION        = config.shortDuration;
 //
-//-- hardcoded test data
-const SHELVES_DATA_ARR    = [
+const SHELVES_DATA_ARR      = [
   {
     title:'up next',
     shows:[
-        {showTitle: "Top Chef", episodeTitle: "Now That's a lot of Schnitzel", episode: 'S15 E6', 
-        episodeDesc: "For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks. For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks.",
-        imageURL: '../assets/images/shows/topChef-s15e06-1056x594.jpg'}
-        // , {showTitle: "Top Chef", episodeTitle: "Something Old, Something New", episode: 'S14 E1', 
-        // episodeDesc: "Episode Description for S14 E1 goes here",
-        // imageURL: '../assets/images/shows/topChef-s14e01-1056x594.jpg'}
-        // , {showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
-        // episodeDesc: "Episode Description for S5 E11 goes here",
-        // imageURL: '../assets/images/shows/belowDeck-s05e11-1056x594.jpg'}
-        // , {showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
-        // episodeDesc: "Episode Description for S8 E9 goes here",
-        // imageURL: '../assets/images/shows/rhofNJ-s08e09-1056x594.jpg'}
-        // , {showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
-        // episodeDesc: "Episode Description for S1 E10 goes here",
-        // imageURL: '../assets/images/shows/imposters-s01e10-1056x594.jpg'}
-        // , {showTitle: "Real Housewives", episodeTitle: "Another Spin Around the Block", episode: 'S9 E4', 
-        // episodeDesc: "Episode Description for S9 E4 goes here",
-        // imageURL: '../assets/images/shows/rhofAT-s09e04-1056x594.jpg'}
-        // , {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-        // episodeDesc: "Episode Description for S14 E10 goes here",
-        // imageURL: '../assets/images/shows/topChef-s14e10-1056x594.jpg'}
+          { showTitle: "Top Chef", episodeTitle: "Now That's a lot of Schnitzel", episode: 'S15 E6', 
+            episodeDesc: "For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks. For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks.",
+            imageURL: '../../assets/images/shows/topChef-s15e06-1056x594.jpg' }
+          ,{ showTitle: "Top Chef", episodeTitle: "Something Old, Something New", episode: 'S14 E1', 
+            episodeDesc: "Episode Description for S14 E1 goes here",
+            imageURL: '../../assets/images/shows/topChef-s14e01-1056x594.jpg' }
+          ,{ showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
+            episodeDesc: "Episode Description for S5 E11 goes here",
+            imageURL: '../../assets/images/shows/belowDeck-s05e11-1056x594.jpg' }
+          ,{ showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
+            episodeDesc: "Episode Description for S8 E9 goes here",
+            imageURL: '../../assets/images/shows/rhofNJ-s08e09-1056x594.jpg' }
+          ,{ showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
+            episodeDesc: "Episode Description for S1 E10 goes here",
+            imageURL: '../../assets/images/shows/imposters-s01e10-1056x594.jpg' }
+          ,{ showTitle: "Real Housewives", episodeTitle: "Another Spin Around the Block", episode: 'S9 E4', 
+            episodeDesc: "Episode Description for S9 E4 goes here",
+            imageURL: '../../assets/images/shows/rhofAT-s09e04-1056x594.jpg' }
+          ,{ showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
+            episodeDesc: "Episode Description for S14 E10 goes here",
+            imageURL: '../../assets/images/shows/topChef-s14e10-1056x594.jpg' }
       ]
   }
   // ,{
@@ -50,22 +52,22 @@ const SHELVES_DATA_ARR    = [
   //   shows:[
   //       {showTitle: "Top Chef", episodeTitle: "Now That's a lot of Schnitzel", episode: 'S15 E6', 
   //       episodeDesc: "For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks.",
-  //       imageURL: '../assets/images/shows/topChef-s15e06-1056x594.jpg'},
+  //       imageURL: 'images/shows/topChef-s15e06-1056x594.jpg'},
   //       {showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
   //       episodeDesc: "Episode Description for S15 E6 goes here",
-  //       imageURL: '../assets/images/shows/belowDeck-s05e11-1056x594.jpg'},
+  //       imageURL: 'images/shows/belowDeck-s05e11-1056x594.jpg'},
   //       {showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
   //       episodeDesc: "Episode Description for S15 E6 goes here",
-  //       imageURL: '../assets/images/shows/rhofNJ-s08e09-1056x594.jpg'},
+  //       imageURL: 'images/shows/rhofNJ-s08e09-1056x594.jpg'},
   //       {showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
   //       episodeDesc: "Episode Description for S15 E6 goes here",
-  //       imageURL: '../assets/images/shows/imposters-s01e10-1056x594.jpg'},
+  //       imageURL: 'images/shows/imposters-s01e10-1056x594.jpg'},
   //       {showTitle: "Real Housewives", episodeTitle: "Another Spin Around the Block", episode: 'S9 E4', 
   //       episodeDesc: "Episode Description for S9 E4 goes here",
-  //       imageURL: '../assets/images/shows/rhofAT-s09e04-1056x594.jpg'},
+  //       imageURL: 'images/shows/rhofAT-s09e04-1056x594.jpg'},
   //       {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
   //       episodeDesc: "Episode Description for S14 E10 goes here",
-  //       imageURL: '../assets/images/shows/topChef-s14e10-1056x594.jpg'}
+  //       imageURL: 'images/shows/topChef-s14e10-1056x594.jpg'}
   //     ]
   // }
   // ,{
@@ -73,19 +75,19 @@ const SHELVES_DATA_ARR    = [
   //   shows:[
   //       {showTitle: "Top Chef", episodeTitle: "Episode Title", episode: 'S00 E0', 
   //       episodeDesc: "Episode Description for S00 E0 goes here",
-  //       imageURL: '../assets/images/shows/topChef-general-1056x594.jpg'},
+  //       imageURL: 'images/shows/topChef-general-1056x594.jpg'},
   //       {showTitle: "Top Chef", episodeTitle: "The Curse of the Bambino", episode: 'S12 E3', 
   //       episodeDesc: "Episode Description for S12 E3 goes here",
-  //       imageURL: '../assets/images/shows/topChef-s12e03-1056x594.jpg'},
+  //       imageURL: 'images/shows/topChef-s12e03-1056x594.jpg'},
   //       {showTitle: "Real Housewives", episodeTitle: "House of Shade and Dust", episode: 'S9 E1', 
   //       episodeDesc: "Episode Description for S9 E1 goes here",
-  //       imageURL: '../assets/images/shows/rhofAT-s09e01-1056x594.jpg'},
+  //       imageURL: 'images/shows/rhofAT-s09e01-1056x594.jpg'},
   //       {showTitle: "Real Housewives", episodeTitle: "Reunion, Part 3", episode: 'S9 E23', 
   //       episodeDesc: "Episode Description for S9 E23 goes here",
-  //       imageURL: '../assets/images/shows/rhofAT-s09e23-1056x594.jpg'},
+  //       imageURL: 'images/shows/rhofAT-s09e23-1056x594.jpg'},
   //       {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
   //       episodeDesc: "Episode Description for S14 E10 goes here",
-  //       imageURL: '../assets/images/shows/topChef-s14e10-1056x594.jpg'}
+  //       imageURL: 'images/shows/topChef-s14e10-1056x594.jpg'}
   //     ]
   // }
   // ,{
@@ -93,16 +95,16 @@ const SHELVES_DATA_ARR    = [
   //   shows:[
   //       {showTitle: "Top Chef", episodeTitle: "The Curse of the Bambino", episode: 'S12 E3', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/topChef-s12e03-1056x594.jpg'},
+  //       imageURL: 'images/shows/topChef-s12e03-1056x594.jpg'},
   //       {showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/imposters-s01e10-1056x594.jpg'},
+  //       imageURL: 'images/shows/imposters-s01e10-1056x594.jpg'},
   //       {showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/rhofNJ-s08e09-1056x594.jpg'},
+  //       imageURL: 'images/shows/rhofNJ-s08e09-1056x594.jpg'},
   //       {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/topChef-s14e10-1056x594.jpg'}
+  //       imageURL: 'images/shows/topChef-s14e10-1056x594.jpg'}
   //     ]
   // }
   // ,{
@@ -110,13 +112,13 @@ const SHELVES_DATA_ARR    = [
   //   shows:[
   //       {showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/belowDeck-s05e11-1056x594.jpg'},
+  //       imageURL: 'images/shows/belowDeck-s05e11-1056x594.jpg'},
   //       {showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/rhofNJ-s08e09-1056x594.jpg'},
+  //       imageURL: 'images/shows/rhofNJ-s08e09-1056x594.jpg'},
   //       {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/topChef-s14e10-1056x594.jpg'}
+  //       imageURL: 'images/shows/topChef-s14e10-1056x594.jpg'}
   //     ]
   // }
   // ,{
@@ -124,10 +126,10 @@ const SHELVES_DATA_ARR    = [
   //   shows:[
   //       {showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/rhofNJ-s08e09-1056x594.jpg'},
+  //       imageURL: 'images/shows/rhofNJ-s08e09-1056x594.jpg'},
   //       {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
   //       episodeDesc: "Episode Description goes here",
-  //       imageURL: '../assets/images/shows/topChef-s14e10-1056x594.jpg'}
+  //       imageURL: 'images/shows/topChef-s14e10-1056x594.jpg'}
   //     ]
   // }
   // ,{
@@ -135,25 +137,26 @@ const SHELVES_DATA_ARR    = [
   //   shows:[
   //      {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
   //      episodeDesc: "Episode Description goes here",
-  //      imageURL: '../assets/images/shows/topChef-s14e10-1056x594.jpg'}
+  //      imageURL: 'images/shows/topChef-s14e10-1056x594.jpg'}
   //     ]
   // }
-];//SHELVES_DATA_ARR
-const TOTAL_SHELVES       = SHELVES_DATA_ARR.length;
-const MAX_INDEX           = TOTAL_SHELVES - 1;
-const INIT_SHELF_Y        = 62;         //-- from container top to the shelf title
+];//SHELVES_DATA_ARR: hardcoded test data
 //
-const BASE_TILE_H         = 180;        
-const FOCUSED_TILE_H      = 332;        
+const TOTAL_SHELVES         = SHELVES_DATA_ARR.length;
+const MAX_INDEX             = TOTAL_SHELVES - 1;
+const INIT_SHELF_Y          = 62/RATIO;         //-- from container top to the 1st shelf title
 //
-const BASE_TITLE_H        = 28;         //-- title height for Helvetica Light 28px
-const TITLE_N_TILE_OFFSET = 10;         //-- offset between title & tiles
-const BASE_SHELF_OFFSET   = 106;        //-- offset between shelves: from the bottom of previous shelf image to the top of next shelf title
-const BASE_SHELF_H        = BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET;     //-- distance between unselected shelves
+const BASE_TILE_H           = 180/RATIO;        
+const FOCUSED_TILE_H        = 332/RATIO;        
 //
-const FOCUSED_SHELF_SHIFT = (FOCUSED_TILE_H - BASE_TITLE_H)/2;    //-- how much unselected shelves shift on selected shelf's being focused
-const FOCUSED_SHELF_OFFSET= BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT;
-const BLOOMED_SHELF_SHIFT = 131;
+const BASE_TITLE_H          = 28/RATIO;         //-- title height for Helvetica Light 28px
+const TITLE_N_TILE_OFFSET   = 10/RATIO;         //-- offset between title & tiles
+const BASE_SHELF_OFFSET     = 106/RATIO;        //-- offset between shelves: from the bottom of previous shelf image to the top of next shelf title
+const BASE_SHELF_H          = (BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET);     //-- distance between unselected shelves
+//
+const FOCUSED_SHELF_SHIFT   = (FOCUSED_TILE_H - BASE_TITLE_H)/2;    //-- (332-180)/2 = 76: how much unselected shelves shift on selected shelf's being focused
+const FOCUSED_SHELF_OFFSET  = BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT;
+const BLOOMED_SHELF_SHIFT   = Math.floor(131/RATIO);
 
 
 export default class HomeShelvesPane extends Component {
@@ -167,15 +170,13 @@ export default class HomeShelvesPane extends Component {
     this.containerShiftOffsetY = 0
 
     this.shelves = []
+    this.animsArr = []
     this.prevShelf = null
     this.currShelf = null
     this.nextShelf = null
     this.isPrevMoved = false
     this.isNextMoved = false
     this.totalMenu = 3  //?????
-
-    //let node;
-    //this.getNodeInfo = this.getNodeInfo.bind(this);
 
     console.log("INFO HomeShelvesPane :: INIT_SHELF_Y ?? " + INIT_SHELF_Y)
   }
@@ -259,15 +260,15 @@ export default class HomeShelvesPane extends Component {
 
   _doLeft = () => {
     console.log('INFO HomeShelvesPane :: _doLeft');
-  }
+  }//_doLeft
 
   _doRight = () => {
     console.log('INFO HomeShelvesPane :: _doRight');
-  }
+  }//_doRight
 
   _doSelect = () => {
     console.log('INFO HomeShelvesPane :: _doSelect');
-  }
+  }//_doSelect
 
   _onLargeBloomStart = () => {
     //console.log("INFO HomeShelvesPane :: onLargeBloomStart")
@@ -298,38 +299,45 @@ export default class HomeShelvesPane extends Component {
     // }
   }//_onLargeBloomStart
 
-  _getNodeInfo(e) {
-    //console.log('INFO HomeShelvesPane :: getNodeInfo, ever??? event is ', e)
-    //console.log('INFO HomeShelvesPane :: getNodeInfo, node is ', this.node)
-  }
+  _moveBackAdjacentShelves = () => {
+    console.log("INFO HomeShelvesPane :: _moveBackAdjacentShelves, callBackOnBackToFocused")
+    // this.moveBackPrevShelf()
+    // this.moveBackNextShelf()
+  }//_moveBackAdjacentShelves
 
-  _eachHomeShelf = (shelfObj, i) => {
+  // _getNodeInfo(e) {
+  //   //console.log('INFO HomeShelvesPane :: getNodeInfo, ever??? event is ', e)
+  //   //console.log('INFO HomeShelvesPane :: getNodeInfo, node is ', this.node)
+  // }
+
+  _renderEachHomeShelf = (shelfObj, i) => {
+    console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
     return (
-      <HomeShelf  key={(i + 1).toString()}
-                  index={i}
-                  id={"HomeShelf" + i} 
-                  title={shelfObj.title}
-                  shows={shelfObj.shows}
-                  y={initShelfY + i*focusedShelfOffsetY}
-                  ref={node => this.shelves.push(node)}
-                  callBackOnLargeBloomStart={this.onLargeBloomStart}
-                  callBackOnBackToFocused={this.moveBackAdjacentShelves}>
-      </HomeShelf>
+        <HomeShelf  
+              key={(i + 1).toString()}
+              index={i}
+              id={"HomeShelf" + i} 
+              title={shelfObj.title}
+              shows={shelfObj.shows}
+              topY={INIT_SHELF_Y + i*FOCUSED_SHELF_OFFSET}
+              ref={node => this.shelves.push(node)}
+              callBackOnLargeBloomStart={this._onLargeBloomStart}
+              callBackOnBackToFocused={this._moveBackAdjacentShelves} >
+        </HomeShelf>
+      // </View>
     )
-  }//_eachHomeShelf
+  }//_renderEachHomeShelf
 
   render() {
     return (
       <TouchableNativeFeedback 
-            ref={node => this.node = node} 
+            //ref={node => this.node = node} 
             // onPress={(e) => this._getNodeInfo(e)} 
             // onTouchableHandleActivePressIn={console.log('INFO HomeShelvesPane :: test pressIn')} 
             // onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
-            >
+      >
         <View>
-            <Text style={styles.comment}>
-
-            </Text>
+            {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
         </View>
       </TouchableNativeFeedback>
     );

@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import { 
   Animated,
   Easing,
-  PixelRatio,
   StyleSheet,
   TVEventHandler,
   View
@@ -25,6 +24,7 @@ import HomeHeroPane from './components/HomeHeroPane';
 import HomeShelvesPane from './components/HomeShelvesPane';
 
 
+const RATIO               = config.density;
 const STD_DURATION        = config.stdDuration;
 const SHORT_DURATION      = config.shortDuration;
 //
@@ -36,16 +36,17 @@ const FOCUS_LOC_ARR       = ['globalNavPane', 'homeHeroPane', 'homeShelvesPane']
 const GLOBAL_NAV_INDEX    = 0;
 const HOME_HERO_INDEX     = 1;
 const HOME_SHELVES_INDEX  = 2;
+
 export default class POCContainer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isGuideVisible: false,
-      fadeAnim0: new Animated.Value(1), //-- initial opacity value for fadeAnimation for globalNav
-      fadeAnim1: new Animated.Value(1), //-- for homeHero
-      fadeAnim2: new Animated.Value(1), //-- for homeShelves
-      shelvesTopY: INIT_HOME_SHELVES_Y,
+      anim0: new Animated.Value(1), //-- animation instance for 'globalNav' with initial opacity value of '1'
+      anim1: new Animated.Value(1), //-- for 'homeHero'
+      anim2: new Animated.Value(1), //-- for 'homeShelves'
+      //shelvesTopY: INIT_HOME_SHELVES_Y,
     };
 
     this.elts = [];
@@ -124,7 +125,7 @@ export default class POCContainer extends Component {
       case HOME_HERO_INDEX:
         this._currFocusLocIndex -= 1
         this._changeOpacity(GLOBAL_NAV_INDEX, 1)
-        this._changeOpacity(HOME_HERO_INDEX, .6)
+        this._changeOpacity(HOME_SHELVES_INDEX, 1)
         break;
       case GLOBAL_NAV_INDEX: 
     }//switch
@@ -141,7 +142,6 @@ export default class POCContainer extends Component {
       case GLOBAL_NAV_INDEX:
         this._currFocusLocIndex += 1
         this._changeOpacity(GLOBAL_NAV_INDEX, .6)
-        this._changeOpacity(HOME_HERO_INDEX, 1)
         this._changeOpacity(HOME_SHELVES_INDEX, .6)
         //-- TODO: reset homeShelves y location
         break;
@@ -185,8 +185,9 @@ export default class POCContainer extends Component {
 
   _changeOpacity = (targetIndex, targetValue, pDuration=SHORT_DURATION) => {
     console.log("INFO POCContainer :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
+
     Animated.timing(
-      this.state["fadeAnim" + targetIndex], 
+      this.state["anim" + targetIndex], 
       {
         toValue: targetValue,
         duration: pDuration,
@@ -267,21 +268,22 @@ export default class POCContainer extends Component {
 
   render() {
     console.log("INFO POCContainer :: render")
-    let { fadeAnim0, fadeAnim1, fadeAnim2 } = this.state
+    let { anim0, anim1, anim2 } = this.state
     return (
         <View style={styles.pocContainer}>
             <Animated.View  style={ { ...this.props.globalNavStyleObj,
-                                      opacity: fadeAnim0  } }
+                                      opacity: anim0  } }   /* for binding an animation instance */
                             ref={node => this.elts.push(node)} >
                       <GlobalNavPane />
             </Animated.View>
             <Animated.View  style={ { ...this.props.homeHeroStyleObj,
-                                      opacity: fadeAnim1  } }
+                                      opacity: anim1  } }
                             ref={node => this.elts.push(node)} >
                       <HomeHeroPane />
             </Animated.View>
-            <Animated.View  style={ { ...this.props.homeShelvesStyleObj,
-                                      opacity: fadeAnim2  } }
+            <Animated.View  style={ { ...this.props.homeShelvesStyleObj, 
+                                      top: 200,             /* for testing */
+                                      opacity: anim2  } }
                             ref={node => this.elts.push(node)} >
                       <HomeShelvesPane />
             </Animated.View>
