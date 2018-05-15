@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 	    position: 'relative',	/* 'absolute' */
 	    width: '100%',
 	    height: config.initGlobalNavH/RATIO,
-	    top: config.initGlobalNavY, 
+	    //top: config.initGlobalNavY, 
 	    borderWidth: 1,
 	    borderColor: '#000000',
 	},
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 	    position: 'absolute',
 	    width: '100%',
 	  	height: config.initHomeHeroH/RATIO,
-	    top: config.initHomeHeroY/RATIO, 
+	    //top: config.initHomeHeroY/RATIO, 
     	borderWidth: 1,
     	borderColor: '#000000',
 	},
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 	    position: 'absolute',
 	    width: '100%',
 	    height: '100%',
-	    top: config.initHomeShelvesY/RATIO,
+	    //top: config.initHomeShelvesY/RATIO,
 	    // overflow: 'hidden',
 
 	    //-- for testing --//
