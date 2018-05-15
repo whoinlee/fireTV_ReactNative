@@ -56,14 +56,13 @@ export default class POCContainer extends Component {
     super(props);
 
     this.state = {
-      isGuideVisible: false,
+      // isGuideVisible: false,
       animOpacity0: new Animated.Value(1), //-- animation instance for 'globalNav' with initial opacity value of '1'
       animOpacity1: new Animated.Value(1), //-- for 'homeHero'
       animOpacity2: new Animated.Value(1), //-- for 'homeShelves'
-      animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y), //-- animation instance for 'globalNav' with initial opacity value of '1'
-      animLocation1: new Animated.Value(INIT_HOME_HERO_Y), //-- for 'homeHero'
+      animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- animation instance for 'globalNav' with initial location value of INIT_GLOBAL_NAV_Y
+      animLocation1: new Animated.Value(INIT_HOME_HERO_Y),    //-- for 'homeHero'
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
-      //shelvesTopY: INIT_HOME_SHELVES_Y,
     }
 
     this._currFocusLocIndex = GLOBAL_NAV_INDEX
@@ -147,6 +146,11 @@ export default class POCContainer extends Component {
         this._currFocusLocIndex -= 1
         this._changeOpacity(HOME_HERO_INDEX, 1)
         this._changeOpacity(HOME_SHELVES_INDEX, .6)
+        //
+        this._changeLocation(GLOBAL_NAV_INDEX, this.initGlobalNavY)
+        this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
+        this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
+        this._currHomeShelvesY = this.initHomeShelvesY
         break;
       case HOME_HERO_INDEX:
         this._currFocusLocIndex -= 1
@@ -170,33 +174,30 @@ export default class POCContainer extends Component {
     switch (this._currFocusLocIndex) {
       case GLOBAL_NAV_INDEX:
         this._currFocusLocIndex += 1
+        //
         this._changeOpacity(GLOBAL_NAV_INDEX, .6)
         this._changeOpacity(HOME_SHELVES_INDEX, .6)
         break;
       case HOME_HERO_INDEX:
         this._currFocusLocIndex += 1
+        //
         this._changeOpacity(HOME_HERO_INDEX, .6)
         this._changeOpacity(HOME_SHELVES_INDEX, 1)
-        this._selectedShelfIndex = 0  //-- the 1st shelf, CHECK!!!
-
-        //  nextShelfIndex = 1
-        //  this._selectTheFirstShelf()  //-- inside of the homeShelvesPane??
+        //
+        this._changeLocation(GLOBAL_NAV_INDEX, this.upGlobalNavY)
+        this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
+        this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
+        this._currHomeShelvesY = this.upHomeShelvesY
+        // TODO::
+        // this._selectedShelfIndex = 0  //-- the 1st shelf, CHECK!!!
+        // nextShelfIndex = 1
+        // this._selectTheFirstShelf()  //-- inside of the homeShelvesPane??
         // selectedShelfIndex = 0  //the first shelf selected
         // nextShelfIndex = 1
         // this.prevShelf = null
         // this.currShelf = this.shelves[0]
         // this.nextShelf = (nextShelfIndex < totalShelves) ? this.shelves[nextShelfIndex] : null
         // this.selectTheFirstShelf() 
-
-        // TL.to(this.elts[globalNav], stdDuration, {top: this.upGlobalNavY+'px', ease:Power3.easeOut})              
-        // TL.to(this.elts[homeHero], stdDuration, {top: this.upHomeHeroY+'px', opacity: .6, ease:Power3.easeOut}) 
-        // TL.to(this.elts[homeShelves], stdDuration, {top: this.upHomeShelvesY+'px', opacity: 1, ease:Power3.easeOut})
-
-        this._changeLocation(GLOBAL_NAV_INDEX, this.upGlobalNavY)
-        this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
-        this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
-
-        this._currHomeShelvesY = this.upHomeShelvesY
         break;
       case HOME_SHELVES_INDEX:
         //-- handle inside of homeShelves pane
@@ -231,7 +232,7 @@ export default class POCContainer extends Component {
 
   }
 
-  _changeOpacity = (targetIndex, targetValue, pDuration=SHORT_DURATION) => {
+  _changeOpacity = (targetIndex, targetValue, pDuration=STD_DURATION) => {
     console.log("INFO POCContainer :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
 
     Animated.timing(
