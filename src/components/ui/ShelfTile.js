@@ -12,7 +12,7 @@ import ImageButton from './ImageButton';
 import config from '../../config';
 import keyCodes from '../../keyCodes';
 import styles from '../../styles/styles';
-import homeShelvesStyle from '../../styles/homeShelvesStyle';
+// import homeShelvesStyle from '../../styles/homeShelvesStyle';
 
 
 const RATIO                 = config.density;
@@ -279,73 +279,44 @@ class ShelfTile extends Component {
 	}//renderContent
 
 	render() {
-		console.log("INFO ShelfTile :: render, this.props.imageURL ? " + this.props.imageURL)
-		console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
-		const imageSRC = this.props.imageURL;
-		const imageURL = '../../assets/images/shows/topChef-s15e06-1056x594.jpg'
-		// const imageURL = require(imageSRC);
-		//<Image source={require(imageURL)} style={{width: 320/RATIO, height: 180/RATIO}}/>	/*working*/
-		//<Image source={require(imageURL)} style={{width: 320/RATIO, height: 180/RATIO}}/>	/*working*/
-		// let pWidth = (this.props.index == 0)? 640/RATIO : 320/RATIO;
-		let pWidth = (this.props.index == 0)? 640/RATIO : 320/RATIO;
-		/*
-						<Image 	source={	require(imageURL)	} 
-						style={{	
-									width: 	320/RATIO, 				
-									height: 180/RATIO,	
-									borderColor: '#000000', borderWidth: 1	
-						}}	/>	
-		*/
-		let pPosition = (this.props.index == 0)? 'relative' : 'absolute'
+		// console.log("INFO ShelfTile :: render, this.props.imageURL ? " + this.props.imageURL)
+		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
+		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		// <Text style={styles.comment}>{this.props.index}</Text>	
 		return (
 			<View style={{	
 							backgroundColor: 'green', 
 							position: pPosition,
 							width: 320/RATIO, 
-							height: 180/RATIO,  
-							//left: 0, 
+							height: 180,  
 							left: this.props.leftX, 
-							// top: 0,
-							// display: 'none'
-							borderColor: '#000000', borderWidth: .5	
+							// borderColor: '#000000', borderWidth: .5		/* for testing */
 						}}	>
-				<Text style={styles.comment}>{this.props.index}</Text>		
+				<Image 	source={this.props.imageURL} 
+						style={{	
+							width: 320/RATIO, 
+							height: 180/RATIO
+						}} />
 			</View>
 		)
 	}//render
 }
 
-/*
-<ShelfTile 	ref={node => this.tiles.push(node)}
-						key={(i + 1).toString()}
-				  		index={i}
-				  		homeShelfIndex={this.props.index}
-				  		leftX={leftX}
-				  		showTitle={tileObj.showTitle}
-				  		episodeTitle={tileObj.episodeTitle}
-				  		episodeID={tileObj.episode}
-				  		episodeDesc={" " + tileObj.episodeDesc}
-				  		imageURL={tileObj.imageURL}
-				  		callBackOnLargeBloomStart={this._onLargeBloomStart}
-				  		callBackOnNoMenuLeft={this._backToFocused}>
-</ShelfTile>
-*/
 
 ShelfTile.propTypes = {
 	index:  PropTypes.number,
 	homeShelfIndex: PropTypes.number,
-	//leftX: PropTypes.number,
+	leftX: PropTypes.number,
 	showTitle: PropTypes.string,
 	episodeTitle: PropTypes.string,
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
-	imageURL: PropTypes.string,
+	imageURL: PropTypes.number,	/*	number!!!	*/
 	callBackOnLargeBloomStart: PropTypes.func,
 	callBackOnNoMenuLeft: PropTypes.func
 };
 
 ShelfTile.defaultProps = {
-	//leftX: 200,
 	callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
 	callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")}
 };

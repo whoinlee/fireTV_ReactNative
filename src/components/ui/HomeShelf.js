@@ -12,7 +12,7 @@ import ShelfTile from './ShelfTile';
 
 import config from '../../config';
 import keyCodes from '../../keyCodes';
-import homeShelvesStyle from '../../styles/homeShelvesStyle';
+// import homeShelvesStyle from '../../styles/homeShelvesStyle';
 
 
 const RATIO                 = config.density;
@@ -463,26 +463,24 @@ export default class HomeShelf extends Component {
 	}//_renderEachShelfTile
 
 	render() {
-		if (this.props.index === 0) {
-			console.log("INFO HomeShelf :: render ", this.props.index)
-			console.log("INFO HomeShelf :: render, tileIndexQueue : ", this.tileIndexQueue)
-			//console.log("INFO HomeShelf :: render, INIT_X : ", INIT_X)
-		}
+		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
 		return (
 			<View 
-					style={ homeShelfStyles.homeShelfContainer }
-			>
-				<View 
-					style={ homeShelfStyles.homeShelfTitleContainer }
-				>
+				style={{ 
+					position: pPosition,
+					top: this.props.topY,
+					borderWidth: 1,
+    				borderColor: 'black',
+    				backgroundColor: '#ff0000'
+    		}} >
+				<View style={ homeShelfStyles.homeShelfTitleContainer }>
 					<Text style={ homeShelfStyles.shelfTitle }>
 						{this.props.title}
 					</Text>
 				</View>
 
-				<View 
-					style={ homeShelfStyles.homeShelfTilesContainer }
-				>
+				<View style={ homeShelfStyles.homeShelfTilesContainer }>
 					{this.props.shows.map(this._renderEachShelfTile)}
 				</View>
 			</View>
@@ -492,47 +490,33 @@ export default class HomeShelf extends Component {
 
 
 const homeShelfStyles = StyleSheet.create({
-  	homeShelfContainer: {
-		borderWidth: 1,
-    	borderColor: 'red',
-    	//relative
-	},
-
-	//-- "title"
+	//-- "title" ----------------------//
 	homeShelfTitleContainer: {
-		//left: INIT_X,
-		//
 	    borderWidth: 1.5,
     	borderColor: 'green',
 	},
 		shelfTitle: {
 			left: INIT_X,
-			//
 			fontSize: 28/RATIO,
 		    fontFamily: 'Helvetica-Light',
 		    fontWeight: '100',	/*HelveticaLight*/
 		    textAlign: 'left',
 		    color: '#fff',
 		},
+	//---------------------------------//
 
-	//-- "tiles"
+
+	//-- "tiles" ----------------------//
 	homeShelfTilesContainer: {
 		top: TITLE_N_TILE_OFFSET,
-		// borderWidth: .5,
-  //   	borderColor: 'blue',
-  //   	backgroundColor: 'grey',
-    	
-    	//
     	flex: 1,
-    	// flexDirection: 'row',
-    	// justifyContent: 'space-evenly'
-    	//relative
 	},
+	//---------------------------------//
 });
 
 HomeShelf.propTypes = {
 	index: PropTypes.number,
-	id: PropTypes.string,
+	// id: PropTypes.string,
 	topY: PropTypes.number,
 	title: PropTypes.string,
 	shows: PropTypes.array,

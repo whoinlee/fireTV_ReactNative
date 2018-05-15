@@ -282,7 +282,7 @@ export default class POCContainer extends Component {
                       <HomeHeroPane />
             </Animated.View>
             <Animated.View  style={ { ...this.props.homeShelvesStyleObj, 
-                                      top: 200,             /* for testing */
+                                      top: 200,             /* adjusted for testing */
                                       opacity: anim2  } }
                             ref={node => this.elts.push(node)} >
                       <HomeShelvesPane />

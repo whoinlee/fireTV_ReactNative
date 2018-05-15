@@ -10,7 +10,7 @@ const homeShelvesStyle = StyleSheet.create({
 	//* -- HomeShelf ---------- *//
 	homeShelfContainer: {
 		borderWidth: 1,
-    	borderColor: 'red',
+    	borderColor: 'pink',
 	},
 
 	homeShelfTitleContainer: {

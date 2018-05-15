@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 	//-- GlobalNavPane
 	globalNavContainer: {
 	    backgroundColor: '#444',
-	    position: 'absolute',
+	    position: 'relative',	/* 'absolute' */
 	    width: '100%',
 	    height: config.initGlobalNavH/RATIO,
 	    top: config.initGlobalNavY, 
@@ -51,13 +51,14 @@ const styles = StyleSheet.create({
 
 	//-- HomeShelvesPane
 	homeShelvesContainer: {
-	    backgroundColor: '#676767',
+	    // backgroundColor: '#676767',
+	    // backgroundColor: '#000000',
 	    position: 'absolute',
 	    width: '100%',
 	    top: config.initHomeShelvesY/RATIO,
 	    overflow: 'hidden',
 	    borderWidth: 1,
-    	borderColor: '#ff0000',
+    	borderColor: '#000000',
 	},
 });
 
