@@ -68,6 +68,7 @@ export default class POCContainer extends Component {
     this._currFocusLocIndex = GLOBAL_NAV_INDEX
     this._selectedShelfIndex = -1  
     this._currHomeShelvesY = INIT_HOME_SHELVES_Y
+    this._isFirstShelfSelected = false
 
     this.elts = []
 
@@ -143,14 +144,20 @@ export default class POCContainer extends Component {
     switch (this._currFocusLocIndex) {
       case HOME_SHELVES_INDEX:
         //-- TODO: do this only if the 1st shelf is selected inside of HomeShelvesPane
-        this._currFocusLocIndex -= 1
-        this._changeOpacity(HOME_HERO_INDEX, 1)
-        this._changeOpacity(HOME_SHELVES_INDEX, .6)
-        //
-        this._changeLocation(GLOBAL_NAV_INDEX, this.initGlobalNavY)
-        this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
-        this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
-        this._currHomeShelvesY = this.initHomeShelvesY
+        if (this._isFirstShelfSelected) {
+          this._currFocusLocIndex -= 1
+          this._changeOpacity(HOME_HERO_INDEX, 1)
+          this._changeOpacity(HOME_SHELVES_INDEX, .6)
+          //
+          this._changeLocation(GLOBAL_NAV_INDEX, this.initGlobalNavY)
+          this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
+          this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
+          this._currHomeShelvesY = this.initHomeShelvesY
+          //
+          this._isFirstShelfSelected = false
+        } else {
+          //-- handle inside of the shelvesPane
+        }
         break;
       case HOME_HERO_INDEX:
         this._currFocusLocIndex -= 1
@@ -188,6 +195,8 @@ export default class POCContainer extends Component {
         this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
         this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
         this._currHomeShelvesY = this.upHomeShelvesY
+
+        this._isFirstShelfSelected = true
         // TODO::
         // this._selectedShelfIndex = 0  //-- the 1st shelf, CHECK!!!
         // nextShelfIndex = 1
@@ -200,7 +209,12 @@ export default class POCContainer extends Component {
         // this.selectTheFirstShelf() 
         break;
       case HOME_SHELVES_INDEX:
-        //-- handle inside of homeShelves pane
+        if (this._isFirstShelfSelected) {
+          //-- TODO: unless there's only one shelf
+          this._isFirstShelfSelected = false
+        } else {
+          //-- handle inside of homeShelves pane
+        }
     }//switch
 
     console.log("INFO POCContainer :: _doDown, to " + FOCUS_LOC_ARR[this._currFocusLocIndex])
@@ -264,6 +278,11 @@ export default class POCContainer extends Component {
   //   //   target.opacityChange(.6)
   //   // }
   // }//_selectTheFirstShelf
+
+  _onFirstShelfSelected = () => {
+    console.log("INFO POCContainer :: _onFirstShelfSelected")
+    this._isFirstShelfSelected = true
+  }
 
   _enableTVEventHandler() {
     console.log('INFO :: _enableTVEventHandler, this._tvEventHandler ? ' + this._tvEventHandler);
@@ -332,32 +351,38 @@ export default class POCContainer extends Component {
     // }
   }//_disableTVEventHandler
 
+  _onShelvesPanePressCallBack() {
+    console.log("INFO POCContainer :: _onShelvesPanePressCallBack")
+  }
+
+  _onPressCallBack() {
+    console.log("INFO POCContainer :: _onPressCallBack")
+  }
+
   render() {
     console.log("INFO POCContainer :: render")
     let { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2 } = this.state
     return (
         <View style={styles.pocContainer}>
             <Animated.View  style={ { ...this.props.globalNavStyleObj,
-                                      // top: INIT_GLOBAL_NAV_Y,
                                       top: animLocation0,
                                       opacity: animOpacity0  } }   /* for binding an animation instance */
                             ref={node => this.elts.push(node)} >
                       <GlobalNavPane />
             </Animated.View>
             <Animated.View  style={ { ...this.props.homeHeroStyleObj,
-                                      // top: INIT_HOME_HERO_Y,
                                       top: animLocation1,
                                       opacity: animOpacity1  } }
                             ref={node => this.elts.push(node)} >
                       <HomeHeroPane />
             </Animated.View>
             <Animated.View  style={ { ...this.props.homeShelvesStyleObj, 
-                                      // top: 200,             /* adjusted for testing */
-                                      // top: INIT_HOME_SHELVES_Y,
                                       top: animLocation2,
                                       opacity: animOpacity2  } }
                             ref={node => this.elts.push(node)} >
-                      <HomeShelvesPane />
+                      <HomeShelvesPane  onPressCallBack={this._onShelvesPanePressCallBack}
+                                        onFirstShelfSelected={this._onFirstShelfSelected}
+                      />
             </Animated.View>
         </View>
     );

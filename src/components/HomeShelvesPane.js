@@ -183,7 +183,9 @@ export default class HomeShelvesPane extends Component {
   }
 
   componentDidMount() {
+    console.log("INFO HomeShelvesPane :: componentDidMount ")
     KeyEvent.onKeyDownListener((keyEvent) => {
+      console.log("INFO HomeShelvesPane :: componentDidMount, keyEvent.keyCode ? " + keyEvent.keyCode)
       switch (keyEvent.keyCode) {
           case keyCodes.up:
             this._doUp();
@@ -334,9 +336,9 @@ export default class HomeShelvesPane extends Component {
     return (
       <TouchableNativeFeedback 
             //ref={node => this.node = node} 
-            // onPress={(e) => this._getNodeInfo(e)} 
-            // onTouchableHandleActivePressIn={console.log('INFO HomeShelvesPane :: test pressIn')} 
-            // onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
+            onPress={this.props.onPressCallBack} 
+            onTouchableHandleActivePressIn={console.log('INFO HomeShelvesPane :: test pressIn')} 
+            onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
       >
         <View>
             {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
