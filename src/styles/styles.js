@@ -55,10 +55,14 @@ const styles = StyleSheet.create({
 	    // backgroundColor: '#000000',
 	    position: 'absolute',
 	    width: '100%',
+	    height: '100%',
 	    top: config.initHomeShelvesY/RATIO,
-	    overflow: 'hidden',
-	    borderWidth: 1,
-    	borderColor: '#000000',
+	    // overflow: 'hidden',
+
+	    //-- for testing --//
+	    // borderWidth: 1,
+    	// borderColor: '#000000',
+    	//-----------------//
 	},
 });
 

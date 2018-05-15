@@ -282,15 +282,18 @@ class ShelfTile extends Component {
 		// console.log("INFO ShelfTile :: render, this.props.imageURL ? " + this.props.imageURL)
 		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
 		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
+		let colorIndex = Math.floor(Math.random() * 4);
+		let pColor = colorArr[colorIndex]
 		// <Text style={styles.comment}>{this.props.index}</Text>	
 		return (
 			<View style={{	
-							backgroundColor: 'green', 
 							position: pPosition,
-							width: 320/RATIO, 
-							height: 180,  
-							left: this.props.leftX, 
-							// borderColor: '#000000', borderWidth: .5		/* for testing */
+							left: this.props.leftX,
+							// backgroundColor: pColor, 
+							// width: 320/RATIO, 
+							// height: (180)/RATIO, 
+							// borderColor: 'black', borderWidth: .5		/* for testing */
 						}}	>
 				<Image 	source={this.props.imageURL} 
 						style={{	

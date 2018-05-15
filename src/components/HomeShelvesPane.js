@@ -51,24 +51,24 @@ const SHELVES_DATA_ARR      = [
   ,{
     title:'recently added (6)',
     shows:[
-        {showTitle: "Top Chef", episodeTitle: "Now That's a lot of Schnitzel", episode: 'S15 E6', 
-        episodeDesc: "For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks.",
-        imageURL: require('../assets/images/shows/topChef-s15e06-1056x594.jpg') },
-        {showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
-        episodeDesc: "Episode Description for S15 E6 goes here",
-        imageURL: require('../assets/images/shows/belowDeck-s05e11-1056x594.jpg') },
-        {showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
-        episodeDesc: "Episode Description for S15 E6 goes here",
-        imageURL: require('../assets/images/shows/rhofNJ-s08e09-1056x594.jpg') },
-        {showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
-        episodeDesc: "Episode Description for S15 E6 goes here",
-        imageURL: require('../assets/images/shows/imposters-s01e10-1056x594.jpg') },
-        {showTitle: "Real Housewives", episodeTitle: "Another Spin Around the Block", episode: 'S9 E4', 
-        episodeDesc: "Episode Description for S9 E4 goes here",
-        imageURL: require('../assets/images/shows/rhofAT-s09e04-1056x594.jpg') },
-        {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-        episodeDesc: "Episode Description for S14 E10 goes here",
-        imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
+        { showTitle: "Top Chef", episodeTitle: "Now That's a lot of Schnitzel", episode: 'S15 E6', 
+          episodeDesc: "For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks.",
+          imageURL: require('../assets/images/shows/topChef-s15e06-1056x594.jpg') }
+        ,{ showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
+          episodeDesc: "Episode Description for S15 E6 goes here",
+          imageURL: require('../assets/images/shows/belowDeck-s05e11-1056x594.jpg') }
+        ,{ showTitle: "Real Housewives", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
+          episodeDesc: "Episode Description for S15 E6 goes here",
+          imageURL: require('../assets/images/shows/rhofNJ-s08e09-1056x594.jpg') }
+        ,{ showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
+          episodeDesc: "Episode Description for S15 E6 goes here",
+          imageURL: require('../assets/images/shows/imposters-s01e10-1056x594.jpg') }
+        ,{ showTitle: "Real Housewives", episodeTitle: "Another Spin Around the Block", episode: 'S9 E4', 
+          episodeDesc: "Episode Description for S9 E4 goes here",
+          imageURL: require('../assets/images/shows/rhofAT-s09e04-1056x594.jpg') }
+        ,{ showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
+          episodeDesc: "Episode Description for S14 E10 goes here",
+          imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
   // ,{
@@ -156,7 +156,7 @@ const BASE_SHELF_OFFSET     = 106/RATIO;        //-- offset between shelves: fro
 const BASE_SHELF_H          = (BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET);     //-- distance between unselected shelves
 //
 const FOCUSED_SHELF_SHIFT   = (FOCUSED_TILE_H - BASE_TITLE_H)/2;    //-- (332-180)/2 = 76: how much unselected shelves shift on selected shelf's being focused
-const FOCUSED_SHELF_OFFSET  = BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT;
+const FOCUSED_SHELF_H       = BASE_SHELF_H + FOCUSED_SHELF_SHIFT;
 const BLOOMED_SHELF_SHIFT   = Math.floor(131/RATIO);
 
 
@@ -313,6 +313,7 @@ export default class HomeShelvesPane extends Component {
 
   _renderEachHomeShelf = (shelfObj, i) => {
     console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
+    console.log("INFO HomeShelvesPane :: _eachHomeShelf, topY ? " + (INIT_SHELF_Y + i*FOCUSED_SHELF_H))
     return (
         <HomeShelf  
               key={(i + 1).toString()}
@@ -320,7 +321,7 @@ export default class HomeShelvesPane extends Component {
               // id={"HomeShelf" + i} 
               title={shelfObj.title}
               shows={shelfObj.shows}
-              topY={INIT_SHELF_Y + i*FOCUSED_SHELF_OFFSET}
+              topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
               ref={node => this.shelves.push(node)}
               callBackOnLargeBloomStart={this._onLargeBloomStart}
               callBackOnBackToFocused={this._moveBackAdjacentShelves} >

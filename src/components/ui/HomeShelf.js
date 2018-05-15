@@ -465,14 +465,23 @@ export default class HomeShelf extends Component {
 	render() {
 		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
+
+		//-- for testing
+		const colorArr = ['darkcyan', 'darkred', 'darkorchid']
+		let colorIndex = Math.floor(Math.random() * 3);
+		let pColor = colorArr[colorIndex]
+		//--------------
 		return (
 			<View 
 				style={{ 
 					position: pPosition,
 					top: this.props.topY,
-					borderWidth: 1,
-    				borderColor: 'black',
-    				backgroundColor: '#ff0000'
+					width: '100%',
+					height: '100%',
+					// borderWidth: 1,
+    				// borderColor: 'red',
+    				// backgroundColor: pColor,
+    				// backgroundColor: 'darkgreen'
     		}} >
 				<View style={ homeShelfStyles.homeShelfTitleContainer }>
 					<Text style={ homeShelfStyles.shelfTitle }>
@@ -492,8 +501,8 @@ export default class HomeShelf extends Component {
 const homeShelfStyles = StyleSheet.create({
 	//-- "title" ----------------------//
 	homeShelfTitleContainer: {
-	    borderWidth: 1.5,
-    	borderColor: 'green',
+	    borderWidth: .5,
+    	borderColor: 'darkgreen',
 	},
 		shelfTitle: {
 			left: INIT_X,
@@ -510,6 +519,8 @@ const homeShelfStyles = StyleSheet.create({
 	homeShelfTilesContainer: {
 		top: TITLE_N_TILE_OFFSET,
     	flex: 1,
+    	borderWidth: .5,
+    	borderColor: 'darkgreen',
 	},
 	//---------------------------------//
 });
