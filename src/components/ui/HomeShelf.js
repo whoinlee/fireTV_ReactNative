@@ -99,7 +99,7 @@ export default class HomeShelf extends Component {
 		// this.clearBloomTimer()
 	}//_reset
 
-	_select = () => {
+	select = () => {
 		console.log("INFO HomeShelf :: _select, shelf", this.props.index)
 		// this.clearBloomTimer()
 
@@ -152,7 +152,7 @@ export default class HomeShelf extends Component {
 		//console.log("INFO HomeShelf :: select, nextTileIndex is ", nextTileIndex)
 	}//_select
 
-	_unselect = () => {
+	unselect = () => {
 		console.log("INFO HomeShelf :: unselect, shelf", this.props.index)
 		// this.clearBloomTimer()
 
@@ -196,8 +196,8 @@ export default class HomeShelf extends Component {
 		// }
 	}//_unselect
 
-	_doLeft = () => {
-		console.log("INFO HomeShelf :: _doLeft/moveToRight, shelf", this.props.index)
+	doLeft = () => {
+		console.log("INFO HomeShelf :: doLeft/moveToRight, shelf", this.props.index)
 		//console.log("INFO HomeShelf :: doLeft/moveToRight, this.state.shelfKind ? ", this.state.shelfKind)
 		// this.clearBloomTimer()
 
@@ -297,8 +297,8 @@ export default class HomeShelf extends Component {
 		// }
 	}//_doLeft
 
-	_doRight = () => {
-		console.log("\nINFO HomeShelf :: _doRight, shelf", this.props.index)
+	doRight = () => {
+		console.log("\nINFO HomeShelf :: doRight, shelf", this.props.index)
 		//console.log("INFO HomeShelf :: doRight, this.state.shelfKind ? ", this.state.shelfKind)
 
 		// this.clearBloomTimer()
@@ -435,12 +435,12 @@ export default class HomeShelf extends Component {
 	}//_backToFocused
 
 	_renderEachShelfTile = (tileObj, i) => {
-		console.log("INFO HomeShelf :: _renderEachShelfTile")
+		// console.log("INFO HomeShelf :: _renderEachShelfTile")
 		const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		// const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		// const leftX = (i==0)? INIT_X : 0;
 		//const leftX = INIT_X;
-		console.log("INFO HomeShelf :: _renderEachShelfTile, i: " + i + ", leftX ? " + leftX)
+		// console.log("INFO HomeShelf :: _renderEachShelfTile, i: " + i + ", leftX ? " + leftX)
 		return (
 			// <View 	key={(i + 1).toString()}
 			// 		style={ { left: leftX, width: (320/RATIO+2), borderColor: '#000000', borderWidth: 1} } >
@@ -464,7 +464,7 @@ export default class HomeShelf extends Component {
 
 	render() {
 		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
-		console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
+		// console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
 
 		//-- for testing
 		const colorArr = ['darkcyan', 'darkred', 'darkorchid']

@@ -22,18 +22,15 @@ const styles = StyleSheet.create({
 	    height: '100%',
 	},
 
-	
 	//-- GlobalNavPane
 	globalNavContainer: {
 	    backgroundColor: '#444',
 	    position: 'relative',	/* 'absolute' */
 	    width: '100%',
 	    height: config.initGlobalNavH/RATIO,
-	    //top: config.initGlobalNavY, 
 	    borderWidth: 1,
 	    borderColor: '#000000',
 	},
-
 
 	//-- HomeHeroPane
 	homeHeroContainer: {
@@ -43,22 +40,16 @@ const styles = StyleSheet.create({
 	    position: 'absolute',
 	    width: '100%',
 	  	height: config.initHomeHeroH/RATIO,
-	    //top: config.initHomeHeroY/RATIO, 
     	borderWidth: 1,
     	borderColor: '#000000',
 	},
 
-
 	//-- HomeShelvesPane
 	homeShelvesContainer: {
-	    // backgroundColor: '#676767',
-	    // backgroundColor: '#000000',
+	    backgroundColor: '#676767',
 	    position: 'absolute',
 	    width: '100%',
 	    height: '100%',
-	    //top: config.initHomeShelvesY/RATIO,
-	    // overflow: 'hidden',
-
 	    //-- for testing --//
 	    // borderWidth: 1,
     	// borderColor: '#000000',
