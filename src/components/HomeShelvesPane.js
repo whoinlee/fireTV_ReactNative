@@ -164,6 +164,7 @@ export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
     this.state = {
+      onFocusShelf: null,
       selectedShelfIndex: -1,
       isFirstShelfSelected: false,
       //shelvesTopY: initContainerY + 'px',
@@ -180,7 +181,7 @@ export default class HomeShelvesPane extends Component {
     this.isNextMoved = false
     this.totalMenu = 3  //?????
 
-    console.log("INFO HomeShelvesPane :: INIT_SHELF_Y ?? " + INIT_SHELF_Y)
+    // console.log("INFO HomeShelvesPane :: INIT_SHELF_Y ?? " + INIT_SHELF_Y)
   }
 
   componentDidMount() {
@@ -223,20 +224,9 @@ export default class HomeShelvesPane extends Component {
     console.log("---")
     console.log("INFO HomeShelvesPane :: doUp, from ")
 
-    // switch (this._currFocusLocIndex) {
-    //   case HOME_SHELVES_INDEX:
-    //     //-- TODO: do this only if the 1st shelf is selected inside of HomeShelvesPane
-    //     this._currFocusLocIndex -= 1
-    //     this._changeOpacity(HOME_HERO_INDEX, 1)
-    //     this._changeOpacity(HOME_SHELVES_INDEX, .6)
-    //     break;
-    //   case HOME_HERO_INDEX:
-    //     this._currFocusLocIndex -= 1
-    //     this._changeOpacity(GLOBAL_NAV_INDEX, 1)
-    //     this._changeOpacity(HOME_HERO_INDEX, .6)
-    //     break;
-    //   case GLOBAL_NAV_INDEX: 
-    // }//switch
+    let {selectedShelfIndex} = this.state
+    selectedShelfIndex--
+
 
     //console.log("INFO HomeShelvesPane :: doUp, to ")
     //console.log(" ")
@@ -338,15 +328,19 @@ export default class HomeShelvesPane extends Component {
     )
   }//_renderEachHomeShelf
 
+  _onPress = () => {
+    console.log("INFO HomeShelvesPane :: _onPress")
+    this.props.onPressCallBack()
+  }
+
   render() {
     //let pPosition = (this.props.index == 0)? 'relative' : 'absolute'
+    //            //onTouchableHandleActivePressIn={this.props.onPressCallBack()} 
+            // onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
     return (
       <TouchableNativeFeedback 
             //ref={node => this.node = node} 
-            onPress={this.props.onPressCallBack} 
-            onTouchableHandleActivePressIn={this.props.onPressCallBack} 
-            onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
-      >
+            onPress={this._onPress()}>
         <View>
             {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
         </View>
@@ -357,8 +351,10 @@ export default class HomeShelvesPane extends Component {
 
 HomeShelvesPane.propTypes = {
   onPressCallBack : PropTypes.func,
+  onFirstShelfSelected : PropTypes.func,
 }
 
 HomeShelvesPane.defaultProps = {
   onPressCallBack: () => {console.log("INFO HomeShelvesPane :: please pass a function for onPressCallBack")},
+  onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
 }

@@ -66,14 +66,12 @@ export default class POCContainer extends Component {
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
     }
 
+    this._selectablePanes = []
     this._currFocusLocIndex = GLOBAL_NAV_INDEX
     this._selectedShelfIndex = -1  
     this._currHomeShelvesY = INIT_HOME_SHELVES_Y
     this._isFirstShelfSelected = false
-    this._selectablePanes = []
-
-    // this.elts = []
-
+    
     this.initGlobalNavY = INIT_GLOBAL_NAV_Y
     this.initHomeHeroY = INIT_HOME_HERO_Y   
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
@@ -223,7 +221,7 @@ export default class POCContainer extends Component {
         } else {
           //-- handle inside of the shelvesPane
           console.log("INFO POCContainer :: _doUp, calling this.state.onFocusPane.doUp()")
-          this.state.onFocusPane.doUp()
+          this.state.onFocusPane.doUp()  //CHECK, wrong way?????
         }
         break;
       case HOME_HERO_INDEX:
@@ -280,7 +278,7 @@ export default class POCContainer extends Component {
         }
         //-- handle inside of homeShelves pane
         console.log("INFO POCContainer :: _doUp, calling this.state.onFocusPane.doDown()")
-        this.state.onFocusPane.doDown()
+        this.state.onFocusPane.doDown() //CHECK, wrong way?????
     }//switch
     this.setState({onFocusPane: this._selectablePanes[this._currFocusLocIndex]})
     //console.log("INFO POCContainer :: _doDown, to " + FOCUS_LOC_ARR[this._currFocusLocIndex] + "\n")
@@ -349,6 +347,9 @@ export default class POCContainer extends Component {
 
   _onShelvesPanePressCallBack() {
     console.log("INFO POCContainer :: _onShelvesPanePressCallBack, onPressCallBack")
+    if (this._currFocusLocIndex === HOME_SHELVES_INDEX) {
+      //do something
+    }
   }
 
   _onFirstShelfSelected = () => {
