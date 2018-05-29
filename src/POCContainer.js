@@ -363,27 +363,38 @@ export default class POCContainer extends Component {
     return (
         <View style={styles.pocContainer}>
             <Animated.View  
-                            // ref={node => this.elts.push(node)} 
-                            style={ { ...this.props.globalNavStyleObj,
-                                      top: animLocation0,
-                                      opacity: animOpacity0  } } >
-                      <GlobalNavPane ref={node => this._selectablePanes[GLOBAL_NAV_INDEX] = node}/>
+                      // ref={node => this.elts.push(node)} 
+                      style={ { ...this.props.globalNavStyleObj,
+                                top: animLocation0,
+                                opacity: animOpacity0  } } >
+                      <GlobalNavPane  ref={node => this._selectablePanes[GLOBAL_NAV_INDEX] = node}
+                                      touchableHandleActivePressIn={console.log("touchableHandleActivePressIn for GlobalNavPane")}
+                                      touchableHandleActivePressOut={console.log("touchableHandleActivePressOut for GlobalNavPane")}
+                                      touchableHandlePress={console.log("touchableHandlePress for GlobalNavPane")}
+                      />
             </Animated.View>
             <Animated.View  
-                            // ref={node => this.elts.push(node)}
-                            style={ { ...this.props.homeHeroStyleObj,
-                                      top: animLocation1,
-                                      opacity: animOpacity1  } } >
-                      <HomeHeroPane ref={node => this._selectablePanes[HOME_HERO_INDEX] = node}/>
+                      // ref={node => this.elts.push(node)}
+                      style={ { ...this.props.homeHeroStyleObj,
+                                top: animLocation1,
+                                opacity: animOpacity1  } } >
+                      <HomeHeroPane   ref={node => this._selectablePanes[HOME_HERO_INDEX] = node}
+                                      touchableHandleActivePressIn={console.log("touchableHandleActivePressIn for HomeHeroPane")}
+                                      touchableHandleActivePressOut={console.log("touchableHandleActivePressOut for HomeHeroPane")}
+                                      touchableHandlePress={console.log("touchableHandlePress for HomeHeroPane")}
+                      />
             </Animated.View>
             <Animated.View  
-                            // ref={node => this.elts.push(node)} 
-                            style={ { ...this.props.homeShelvesStyleObj, 
-                                      top: animLocation2,
-                                      opacity: animOpacity2  } } >
-                      <HomeShelvesPane  onPressCallBack={this._onShelvesPanePressCallBack}
-                                        onFirstShelfSelected={this._onFirstShelfSelected}
-                                        ref={node => this._selectablePanes[HOME_SHELVES_INDEX] = node}
+                      // ref={node => this.elts.push(node)} 
+                      style={ { ...this.props.homeShelvesStyleObj, 
+                                top: animLocation2,
+                                opacity: animOpacity2  } } >
+                      <HomeShelvesPane  ref={node => this._selectablePanes[HOME_SHELVES_INDEX] = node}
+                                      onPressCallBack={this._onShelvesPanePressCallBack}
+                                      onFirstShelfSelected={this._onFirstShelfSelected}
+                                      touchableHandleActivePressIn={console.log("touchableHandleActivePressIn for HomeShelvesPane")}
+                                      touchableHandleActivePressOut={console.log("touchableHandleActivePressOut for HomeShelvesPane")}
+                                      touchableHandlePress={console.log("touchableHandlePress for HomeShelvesPane")}
                       />
             </Animated.View>
         </View>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
   Text,
-  TouchableWithoutFeedback,
+  // TouchableWithoutFeedback,
+  TouchableNativeFeedback,
   View
 } from 'react-native';
 import styles from '../styles/styles';
@@ -16,14 +17,14 @@ export default class HomeHeroPane extends Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback>
+      <TouchableNativeFeedback>
         <View>
             <Text style={styles.comment}>
               {this.constructor.name}
               {"\n\n" + this.today}
             </Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableNativeFeedback>
     );
   }
 }
