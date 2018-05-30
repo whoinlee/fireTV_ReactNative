@@ -15,7 +15,6 @@ import {
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
-
 import config from './config';
 import keyCodes from './keyCodes';
 import styles from './styles/styles';
