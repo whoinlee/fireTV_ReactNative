@@ -14,7 +14,6 @@ import HomeShelf from './ui/HomeShelf';
 import config from '../config';
 import keyCodes from '../keyCodes';
 import styles from '../styles/styles';
-// import homeShelvesStyle from '../styles/homeShelvesStyle';
 
 
 const RATIO                 = config.density;
@@ -185,44 +184,49 @@ export default class HomeShelvesPane extends Component {
   }
 
   componentDidMount() {
-    console.log("INFO HomeShelvesPane :: componentDidMount ")
-    KeyEvent.onKeyDownListener((keyEvent) => {
-      console.log("INFO HomeShelvesPane :: componentDidMount, keyEvent.keyCode ? " + keyEvent.keyCode)
-      switch (keyEvent.keyCode) {
-          case keyCodes.up:
-            this.doUp();
-            break;
-          case keyCodes.down:
-            this.doDown();
-            break;
-          case keyCodes.left:
-            this.doLeft();
-            break;
-          case keyCodes.right:
-            this.doRight();
-            break;
-          case keyCodes.center:
-            this.doSelect();
-            break;
-          default:
-            console.log('INFO HomeShelvesPane :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
-        }//switch
-    });//onKeyDownListener
+    // console.log("INFO HomeShelvesPane :: componentDidMount ")
+    // KeyEvent.onKeyDownListener((keyEvent) => {
+    //   console.log("INFO HomeShelvesPane :: componentDidMount, keyEvent.keyCode ? " + keyEvent.keyCode)
+    //   switch (keyEvent.keyCode) {
+    //       case keyCodes.up:
+    //         this.doUp();
+    //         break;
+    //       case keyCodes.down:
+    //         this.doDown();
+    //         break;
+    //       case keyCodes.left:
+    //         this.doLeft();
+    //         break;
+    //       case keyCodes.right:
+    //         this.doRight();
+    //         break;
+    //       case keyCodes.center:
+    //         this.doSelect();
+    //         break;
+    //       default:
+    //         console.log('INFO HomeShelvesPane :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
+    //     }//switch
+    // });//onKeyDownListener
   }//componentDidMount
 
   componentWillUnmount() {
     KeyEvent.removeKeyDownListener();
   }//componentWillUnmount
 
-  onFocus = () => {
+  _onFocus = () => {
     console.log("INFO HomeShelvesPane :: onFocus, ")
     this.setState({selectedShelfIndex : 0})
     this._selectTheFirstShelf()
+    this.props.onFocus()
   }
 
-  doUp = () => {
+  onBlur = () => {
+    console.log("INFO HomeShelvesPane :: onBlur, ")
+  }
+
+  onUp = () => {
     console.log("---")
-    console.log("INFO HomeShelvesPane :: doUp, from ")
+    console.log("INFO HomeShelvesPane :: onUp, from ")
 
     let {selectedShelfIndex} = this.state
     selectedShelfIndex--
@@ -232,9 +236,9 @@ export default class HomeShelvesPane extends Component {
     //console.log(" ")
   }//_doUp
 
-  doDown = () => {
+  onDown = () => {
     console.log("---")
-    console.log("INFO HomeShelvesPane :: doDown, from ")
+    console.log("INFO HomeShelvesPane :: onDown, from ")
 
     // switch (this._currFocusLocIndex) {
     //   case GLOBAL_NAV_INDEX:
@@ -258,16 +262,16 @@ export default class HomeShelvesPane extends Component {
     //console.log(" ")
   }//_doDown
 
-  doLeft = () => {
-    console.log('INFO HomeShelvesPane :: doLeft');
+  onLeft = () => {
+    console.log('INFO HomeShelvesPane :: onLeft');
   }//_doLeft
 
-  doRight = () => {
-    console.log('INFO HomeShelvesPane :: doRight');
+  onRight = () => {
+    console.log('INFO HomeShelvesPane :: onRight');
   }//_doRight
 
-  doSelect = () => {
-    console.log('INFO HomeShelvesPane :: doSelect');
+  onSelect = () => {
+    console.log('INFO HomeShelvesPane :: onSelect');
   }//_doSelect
 
   _onLargeBloomStart = () => {
@@ -330,17 +334,65 @@ export default class HomeShelvesPane extends Component {
 
   _onPress = () => {
     console.log("INFO HomeShelvesPane :: _onPress")
-    this.props.onPressCallBack()
+    this.props.onPress()
   }
+
+  _onPressIn = () => {
+    console.log("INFO HomeShelvesPane :: _onPressIn")
+    //this.props.onPressCallBack()
+  }
+
+  _onPressOut = () => {
+    console.log("INFO HomeShelvesPane :: _onPressOut")
+    //this.props.onPressCallBack()
+  }
+
+  //---- both onTouchableHanldePress and touchableHandlePress are working ----//
+  _onTouchableHandlePress = () => {
+    console.log("INFO HomeShelvesPane :: _onTouchableHandlePress")
+    //this.props.onPressCallBack()
+  }
+
+  _onTouchableHandleActivePressIn = () => {
+    console.log("INFO HomeShelvesPane :: _onTouchableHandleActivePressIn")
+    //this.props.onPressCallBack()
+  }
+
+  _onTouchableHandleActivePressOut = () => {
+    console.log("INFO HomeShelvesPane :: _onTouchableHandleActivePressOut")
+    //this.props.onPressCallBack()
+  }
+
+  // _touchableHandlePress = () => {
+  //   console.log("INFO HomeShelvesPane :: _touchableHandlePress")
+  //   //this.props.onPressCallBack()
+  // }
+
+  // _touchableHandleActivePressIn = () => {
+  //   console.log("INFO HomeShelvesPane :: _touchableHandleActivePressIn")
+  //   //this.props.onPressCallBack()
+  // }
+
+  // _touchableHandleActivePressOut = () => {
+  //   console.log("INFO HomeShelvesPane :: _touchableHandleActivePressOut")
+  //   //this.props.onPressCallBack()
+  // }
+  //--------------------------------------------------------------------------//
 
   render() {
     //let pPosition = (this.props.index == 0)? 'relative' : 'absolute'
-    //            //onTouchableHandleActivePressIn={this.props.onPressCallBack()} 
-            // onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
+            //onTouchableHandleActivePressIn={this.props.onPressCallBack()} 
+            //onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
     return (
       <TouchableNativeFeedback 
             //ref={node => this.node = node} 
-            onPress={this._onPress()}>
+            onPress={this._onPress()}
+            //onPressIn={this._onPressIn()}
+            //onPressOut={this._onPressOut()}
+            //onTouchableHandlePress={this._onTouchableHandlePress()}
+            //onTouchableHandleActivePressIn={this._onTouchableHandleActivePressIn()}
+            //onTouchableHandleActivePressOut={this._onTouchableHandleActivePressOut()}
+      >
         <View>
             {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
         </View>
@@ -355,6 +407,6 @@ HomeShelvesPane.propTypes = {
 }
 
 HomeShelvesPane.defaultProps = {
-  onPressCallBack: () => {console.log("INFO HomeShelvesPane :: please pass a function for onPressCallBack")},
+  onPress: () => {console.log("INFO HomeShelvesPane :: please pass a function for onPress")},
   onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
 }

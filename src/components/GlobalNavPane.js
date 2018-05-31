@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   Text,
-  // TouchableHighlight,
   // TouchableWithoutFeedback,
   TouchableNativeFeedback,
   View
@@ -14,9 +13,42 @@ export default class GlobalNavPane extends Component {
     super(props);
   } 
 
+  onFocus = () => {
+    console.log("INFO GlobalNavPane :: onFocus")
+  }
+
+  onBlur = () => {
+    console.log("INFO GlobalNavPane :: onBlur")
+  }
+
+  onLeft = () => {
+    console.log("INFO GlobalNavPane :: onLeft")
+  }
+
+  onRight = () => {
+    console.log("INFO GlobalNavPane :: onRight")
+  }
+
+  onDown = () => {
+    console.log("INFO GlobalNavPane :: onDown")
+  }
+
+  onUp = () => {
+    console.log("INFO GlobalNavPane :: onUp")
+  }
+
+  // onSelect = () => {
+  //   console.log("INFO GlobalNavPane :: onBlur")
+  // }
+
   render() {
     return (
-      <TouchableNativeFeedback>
+      <TouchableNativeFeedback
+        // onPress={console.log("INFO GlobalNavPane :: onPress")}
+        // onTouchableHandleActivePressIn={console.log("INFO GlobalNavPane :: onTouchableHandleActivePressIn")}
+        // onTouchableHandleActivePressOut={console.log("INFO GlobalNavPane :: onTouchableHandleActivePressOut")}
+        // onTouchableHandlePress={console.log("INFO GlobalNavPane :: onTouchableHandleActivePress")}
+      >
         <View>
             <Text style={styles.comment}>
               {this.constructor.name}
@@ -29,7 +61,9 @@ export default class GlobalNavPane extends Component {
 
 /*
  // TouchableWithoutFeedback,
-         //onPress={(e) => this.getNodeInfo(e)} 
+        //onPress={(e) => this.getNodeInfo(e)} 
         //onTouchableHandleActivePressIn={console.log('INFO GlobalNavPane :: test pressIn')} 
         //onTouchableHandleActivePressOut={console.log('INFO GlobalNavPane :: test pressOut')} 
+        //onPressIn
+        //onPressOut
 */
