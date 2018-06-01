@@ -19,7 +19,7 @@ import KeyEvent from 'react-native-keyevent';
 import config from './config';
 import keyCodes from './keyCodes';
 import styles from './styles/styles';
-import toControllable from './components/toControllable'
+// import toControllable from './components/toControllable';
 import GlobalNavPane from './components/GlobalNavPane';
 import HomeHeroPane from './components/HomeHeroPane';
 import HomeShelvesPane from './components/HomeShelvesPane';
@@ -49,17 +49,17 @@ const BASE_TILE_H         = 180/RATIO;
 const FOCUSED_TILE_H      = 332/RATIO; 
 /* ------------------------------------------ */
 
-const ControllableGlobalNav = toControllable(GlobalNavPane)
-const ControllableHomeHero = toControllable(HomeHeroPane)
-const ControllableHomeShelves = toControllable(HomeShelvesPane)
+// const ControllableGlobalNav = toControllable(GlobalNavPane)
+// const ControllableHomeHero = toControllable(HomeHeroPane)
+// const ControllableHomeShelves = toControllable(HomeShelvesPane)
 
 export default class POCContainer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeControllable: null,
-      controllables: [],
+      //activeControllable: null,
+      //controllables: [],
       animOpacity0: new Animated.Value(1), //-- animation instance for 'globalNav' with initial opacity value of '1'
       animOpacity1: new Animated.Value(1), //-- for 'homeHero'
       animOpacity2: new Animated.Value(1), //-- for 'homeShelves'
@@ -69,7 +69,7 @@ export default class POCContainer extends Component {
     }
 
     this.selectablePanes = []
-    this.currFocusLocIndex = GLOBAL_NAV_INDEX
+    this.currFocusLocIndex = GLOBAL_NAV_INDEX //CHECK : needs to move to the state
     this.selectedShelfIndex = -1  
     this.currHomeShelvesY = INIT_HOME_SHELVES_Y
     this.isFirstShelfSelected = false
@@ -92,29 +92,44 @@ export default class POCContainer extends Component {
     this.tvEventHandler = new TVEventHandler()
   }
 
-  _registerControllable = (
-    onFocus,
-    onBlur,
-    onLeft,
-    onRight,
-    onUp,
-    onDown,
-    onPress,
-  ) => {
-    this.state.controllables.push({
-      onFocus,
-      onBlur,
-      onLeft,
-      onRight,
-      onUp,
-      onDown,
-      onPress,
-    });
+  // _registerControllable = (
+  //   onFocus,
+  //   onBlur,
+  //   onLeft,
+  //   onRight,
+  //   onUp,
+  //   onDown,
+  //   onPress,
+  // ) => {
+  //   this.state.controllables.push({
+  //     onFocus,
+  //     onBlur,
+  //     onLeft,
+  //     onRight,
+  //     onUp,
+  //     onDown,
+  //     onPress,
+  //   });
 
-    this.setState({ controllables: this.state.controllables });
-  }
+  //   this.setState({ controllables: this.state.controllables });
+  // }
 
   componentDidMount() {
+    this._setKeyListener()
+
+    //-- temporarily disabled
+    //this._enableTVEventHandler();
+  }//componentDidMount
+
+  componentWillUnmount() {
+    //KeyEvent.removeKeyDownListener()
+    this._removeKeyListener()
+    //this._disableTVEventHandler()
+  }//componentWillUnmount
+
+  _setKeyListener = () => {
+    console.log('INFO POCContainer :: _setKeyListener')
+
     KeyEvent.onKeyDownListener((keyEvent) => {
       console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
       switch (keyEvent.keyCode) {
@@ -137,15 +152,12 @@ export default class POCContainer extends Component {
             //console.log('INFO POCContainer :: componentDidMount, default - keyCode ? : ' + keyEvent.keyCode);
         }//switch
     });//onKeyDownListener
+  }
 
-    //-- temporarily disabled
-    //this._enableTVEventHandler();
-  }//componentDidMount
-
-  componentWillUnmount() {
-    KeyEvent.removeKeyDownListener()
-    this._disableTVEventHandler();
-  }//componentWillUnmount
+  _removeKeyListener = () => {
+    console.log('INFO POCContainer :: _removeKeyListener')
+    KeyEvent.removeKeyDownListener();
+  }
 
   _enableTVEventHandler() {
     console.log('INFO :: _enableTVEventHandler, this.tvEventHandler ? ' + this.tvEventHandler);
@@ -157,7 +169,7 @@ export default class POCContainer extends Component {
         console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
         switch (evt.eventType) {
           case 'blur':
-            console.log('INFO POCContainer :: _doBlur');
+            console.log('INFO POCContainer :: blur');
           //   //cmp._doBlur();
             break;
           case 'focus':
@@ -211,8 +223,8 @@ export default class POCContainer extends Component {
           //-- focus moves to the homeHero
           this.currFocusLocIndex -= 1
           //
-          this._changeOpacity(HOME_HERO_INDEX, 1)
-          this._changeOpacity(HOME_SHELVES_INDEX, .6)
+          // this._changeOpacity(HOME_HERO_INDEX, 1)
+          // this._changeOpacity(HOME_SHELVES_INDEX, .6)
           this._changeLocation(GLOBAL_NAV_INDEX, this.initGlobalNavY)
           this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
           this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
@@ -228,8 +240,8 @@ export default class POCContainer extends Component {
       case HOME_HERO_INDEX:
         //-- focus moves to the globalNav
         this.currFocusLocIndex -= 1
-        this._changeOpacity(GLOBAL_NAV_INDEX, 1)
-        this._changeOpacity(HOME_SHELVES_INDEX, 1)
+        // this._changeOpacity(GLOBAL_NAV_INDEX, 1)
+        // this._changeOpacity(HOME_SHELVES_INDEX, 1)
         //-- homeShelvesPane moves to the location, upHomeShelvesY, where the first shelf tiles' vertical center is located at V_CENTER_Y
         break;
       case GLOBAL_NAV_INDEX:
@@ -248,14 +260,14 @@ export default class POCContainer extends Component {
       case GLOBAL_NAV_INDEX:
         //-- focus moves to the homeHero
         this.currFocusLocIndex += 1
-        this._changeOpacity(GLOBAL_NAV_INDEX, .6)
-        this._changeOpacity(HOME_SHELVES_INDEX, .6)
+        // this._changeOpacity(GLOBAL_NAV_INDEX, .6)
+        // this._changeOpacity(HOME_SHELVES_INDEX, .6)
         break;
       case HOME_HERO_INDEX:
         //-- focus moves to the homeShelves
         this.currFocusLocIndex += 1
-        this._changeOpacity(HOME_HERO_INDEX, .6)
-        this._changeOpacity(HOME_SHELVES_INDEX, 1)
+        // this._changeOpacity(HOME_HERO_INDEX, .6)
+        // this._changeOpacity(HOME_SHELVES_INDEX, 1)
         this._changeLocation(GLOBAL_NAV_INDEX, this.upGlobalNavY)
         this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
         this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
@@ -314,8 +326,6 @@ export default class POCContainer extends Component {
 
   }
 
-  
-
   _changeOpacity = (targetIndex, targetValue, pDuration=STD_DURATION) => {
     //console.log("INFO POCContainer :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
     Animated.timing(
@@ -349,13 +359,55 @@ export default class POCContainer extends Component {
   // }//_selectTheFirstShelf
 
 
+  _onGlobalNavPaneFocus = () => {
+    if (this.currFocusLocIndex !== GLOBAL_NAV_INDEX) return
 
-
-
-  _onShelvesPanePressed() {
-    console.log("INFO POCContainer :: _onShelvesPanePressed, onPressCallBack")
-    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
+    console.log("INFO POCContainer :: _onGlobalNavPaneFocus, onPressCallBack")
     //do something
+    this._changeOpacity(GLOBAL_NAV_INDEX, 1)
+    this._changeOpacity(HOME_HERO_INDEX, 1)
+    this._changeOpacity(HOME_SHELVES_INDEX, 1)
+  }
+
+  _onHomeHeroPaneFocus = () => {
+    if (this.currFocusLocIndex !== HOME_HERO_INDEX) return
+
+    console.log("INFO POCContainer :: _onHomeHeroPaneFocus, onPressCallBack")
+    //do something
+    this._changeOpacity(GLOBAL_NAV_INDEX, .6)
+    this._changeOpacity(HOME_HERO_INDEX, 1)
+    this._changeOpacity(HOME_SHELVES_INDEX, .6)
+  }
+
+  _onShelvesPaneFocus = () => {
+    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
+
+    console.log("INFO POCContainer :: _onShelvesPaneFocus, onFocusCallBack")
+    //do something
+    this._changeOpacity(GLOBAL_NAV_INDEX, .6)
+    this._changeOpacity(HOME_HERO_INDEX, .6)
+    this._changeOpacity(HOME_SHELVES_INDEX, 1)
+  }
+
+  _onShelvesPaneBlur = () => {
+    // if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
+
+    console.log("INFO POCContainer :: _onShelvesPaneBlur, onBlurCallBack")
+
+    this.currFocusLocIndex === HOME_HERO_INDEX
+    // //do something
+    // this._changeOpacity(GLOBAL_NAV_INDEX, .6)
+    // this._changeOpacity(HOME_HERO_INDEX, .6)
+    // this._changeOpacity(HOME_SHELVES_INDEX, 1)
+
+    //-- focus moves to homeHero
+    this._changeLocation(GLOBAL_NAV_INDEX, this.initGlobalNavY)
+    this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
+    this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
+    this.currHomeShelvesY = this.initHomeShelvesY
+    this.isFirstShelfSelected = false
+
+    this._setKeyListener()
   }
 
   _onFirstShelfSelected = () => {
@@ -364,64 +416,41 @@ export default class POCContainer extends Component {
   }
 
   render() {
-    console.log("INFO POCContainer :: render")
+    //console.log("INFO POCContainer :: render")
     let { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
     return (
         <View style={styles.pocContainer}>
-            <Animated.View  
+            <Animated.View
                       // ref={node => this.elts.push(node)} 
                       style={ { ...this.props.globalNavStyleObj,
                                 top: animLocation0,
                                 opacity: animOpacity0  } } >
                       <GlobalNavPane  
-                          // onFocus={()=> {console.log("INFO POCCOntainer :: CGN, onFocus")}}
-                          // onBlur={()=> {console.log("INFO POCCOntainer :: CGN, onBlur")}}
-                          // onLeft={()=> {console.log("INFO POCCOntainer :: CGN, onLeft")}}
-                          // onRight={()=> {console.log("INFO POCCOntainer :: CGN, onRight")}}
-                          // onUp={()=> {console.log("INFO POCCOntainer :: CGN, onUp")}}
-                          // onDown={()=> {console.log("INFO POCCOntainer :: CGN, onDown")}}
-                          // onPress={()=> {console.log("INFO POCCOntainer :: CGN, onPress")}}
+                                      ref={node => this.selectablePanes[GLOBAL_NAV_INDEX] = node}
+                                      isFocused={this.currFocusLocIndex === GLOBAL_NAV_INDEX}
+                                      onFocus={this._onGlobalNavPaneFocus}
                       />
             </Animated.View>
-            <Animated.View  
-                      // ref={node => this.elts.push(node)}
+            <Animated.View
                       style={ { ...this.props.homeHeroStyleObj,
                                 top: animLocation1,
                                 opacity: animOpacity1  } } >
                       <HomeHeroPane   
                                       ref={node => this.selectablePanes[HOME_HERO_INDEX] = node}
-                                      onPress={this._onGlobalNavPanePressed}
-                                      // onFocus={()=> {console.log("INFO POCCOntainer :: CHP, onFocus")}}
-                                      // onBlur={()=> {console.log("INFO POCCOntainer :: CHP, onBlur")}}
-                                      // onLeft={()=> {console.log("INFO POCCOntainer :: CHP, onLeft")}}
-                                      // onRight={()=> {console.log("INFO POCCOntainer :: CHP, onRight")}}
-                                      // onUp={()=> {console.log("INFO POCCOntainer :: CHP, onUp")}}
-                                      // onDown={()=> {console.log("INFO POCCOntainer :: CHP, onDown")}}
-                                      // onPress={()=> {console.log("INFO POCCOntainer :: CHP, onPress")}}
-                                      //onTouchableHandleActivePressIn={console.log("touchableHandleActivePressIn for HomeHeroPane")}
-                                      //onTouchableHandleActivePressOut={console.log("touchableHandleActivePressOut for HomeHeroPane")}
-                                      //onTouchableHandlePress={console.log("touchableHandlePress for HomeHeroPane")}
+                                      isFocused={this.currFocusLocIndex === HOME_HERO_INDEX}
+                                      onFocus={this._onHomeHeroPaneFocus}
                       />
             </Animated.View>
-            <Animated.View  
-                      // ref={node => this.elts.push(node)} 
+            <Animated.View
                       style={ { ...this.props.homeShelvesStyleObj, 
                                 top: animLocation2,
                                 opacity: animOpacity2  } } >
                       <HomeShelvesPane  
                                       ref={node => this.selectablePanes[HOME_SHELVES_INDEX] = node}
-                                      onPress={this._onShelvesPanePressed}
+                                      isFocused={this.currFocusLocIndex === HOME_SHELVES_INDEX}
+                                      onFocus={this._onShelvesPaneFocus}
+                                      onBlur={this._onShelvesPaneBlur}
                                       onFirstShelfSelected={this._onFirstShelfSelected}
-                                      // onFocus={()=> {console.log("INFO POCCOntainer :: CHS, onFocus")}}
-                                      // onBlur={()=> {console.log("INFO POCCOntainer :: CHS, onBlur")}}
-                                      // onLeft={()=> {console.log("INFO POCCOntainer :: CHS, onLeft")}}
-                                      // onRight={()=> {console.log("INFO POCCOntainer :: CHS, onRight")}}
-                                      // onUp={()=> {console.log("INFO POCCOntainer :: CHS, onUp")}}
-                                      // onDown={()=> {console.log("INFO POCCOntainer :: CHS, onDown")}}
-                                      // onPress={()=> {console.log("INFO POCCOntainer :: CHS, onPress")}}
-                                      //onTouchableHandleActivePressIn={console.log("touchableHandleActivePressIn for HomeShelvesPane")}
-                                      //onTouchableHandleActivePressOut={console.log("touchableHandleActivePressOut for HomeShelvesPane")}
-                                      //onTouchableHandlePress={console.log("touchableHandlePress for HomeShelvesPane")}
                       />
             </Animated.View>
         </View>

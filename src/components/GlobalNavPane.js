@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {
   Text,
-  // TouchableWithoutFeedback,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
+  //TouchableNativeFeedback,
   View
 } from 'react-native';
 import styles from '../styles/styles';
@@ -41,10 +41,21 @@ export default class GlobalNavPane extends Component {
   //   console.log("INFO GlobalNavPane :: onBlur")
   // }
 
+  onFocus = () => {
+    if (this.props.isFocused) {
+      console.log("INFO GlobalNavPane :: onFocus")
+      const { onFocus } = this.props;
+      if (onFocus) {
+        console.log('INFO GlobalNavPane :: onFocus calling back from GlobalNavPane');
+        onFocus();
+      }
+    }
+  }
+
   render() {
     return (
-      <TouchableNativeFeedback
-        // onPress={console.log("INFO GlobalNavPane :: onPress")}
+      <TouchableWithoutFeedback
+        onPress={this.onFocus()}
         // onTouchableHandleActivePressIn={console.log("INFO GlobalNavPane :: onTouchableHandleActivePressIn")}
         // onTouchableHandleActivePressOut={console.log("INFO GlobalNavPane :: onTouchableHandleActivePressOut")}
         // onTouchableHandlePress={console.log("INFO GlobalNavPane :: onTouchableHandleActivePress")}
@@ -54,7 +65,7 @@ export default class GlobalNavPane extends Component {
               {this.constructor.name}
             </Text>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableWithoutFeedback>
     );
   }
 }

@@ -5,7 +5,8 @@ import {
   Easing,
   Image,
   Text,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
+  // TouchableNativeFeedback,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -163,13 +164,18 @@ export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
     this.state = {
+      //isFocused: false,
       onFocusShelf: null,
       selectedShelfIndex: -1,
-      isFirstShelfSelected: false,
+      //isFirstShelfSelected: false,
       //shelvesTopY: initContainerY + 'px',
     }
 
     this.containerShiftOffsetY = 0
+
+    this.isFocused = false
+    this.isFirstShelfSelected = false
+    this.selectedShelfIndex = -1
 
     this.shelves = []
     this.animsArr = []
@@ -178,6 +184,7 @@ export default class HomeShelvesPane extends Component {
     this.nextShelf = null
     this.isPrevMoved = false
     this.isNextMoved = false
+    this.totalShelves = 0
     this.totalMenu = 3  //?????
 
     // console.log("INFO HomeShelvesPane :: INIT_SHELF_Y ?? " + INIT_SHELF_Y)
@@ -207,38 +214,127 @@ export default class HomeShelvesPane extends Component {
     //         console.log('INFO HomeShelvesPane :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
     //     }//switch
     // });//onKeyDownListener
+
+    this.totalShelves = this.shelves.length;
+    //console.log("INFO HomeShelvesPane :: componentDidMount, this.totalShelves is ???? " + this.totalShelves)
   }//componentDidMount
 
   componentWillUnmount() {
-    KeyEvent.removeKeyDownListener();
+    //
+    // KeyEvent.removeKeyDownListener();
+    this._removeKeyListener()
   }//componentWillUnmount
 
-  _onFocus = () => {
-    console.log("INFO HomeShelvesPane :: onFocus, ")
-    this.setState({selectedShelfIndex : 0})
-    this._selectTheFirstShelf()
-    this.props.onFocus()
+  // _onFocus = () => {
+  //   console.log("INFO HomeShelvesPane :: onFocus, ")
+  //   this.setState({selectedShelfIndex : 0})
+  //   this._selectTheFirstShelf()
+  //   this.props.onFocus()
+  // }
+
+  _setKeyListener = () => {
+    console.log('INFO HomeShelvesPane :: _setKeyListener')
+
+    KeyEvent.onKeyDownListener((keyEvent) => {
+      //console.log("INFO HomeShelvesPane :: _setKeyListener, keyEvent.keyCode ? " + keyEvent.keyCode)
+      switch (keyEvent.keyCode) {
+          case keyCodes.up:
+            this._doUp();
+            break;
+          case keyCodes.down:
+            this._doDown();
+            break;
+          case keyCodes.left:
+            this._doLeft();
+            break;
+          case keyCodes.right:
+            this._doRight();
+            break;
+          case keyCodes.center:
+            this._doSelect();
+            break;
+          default:
+            console.log('INFO HomeShelvesPane :: _setKeyListener, keyCode ? : ' + keyEvent.keyCode);
+        }//switch
+    });//onKeyDownListener
   }
+
+  _removeKeyListener = () => {
+    console.log('INFO HomeShelvesPane :: _removeKeyListener')
+
+    KeyEvent.removeKeyDownListener();
+  }
+
+  onFocus = () => {
+    if (this.props.isFocused) {
+      console.log('INFO HomeShelvesPane :: onFocus');
+
+      if (!this.isFocused) {
+        this.isFocused = true
+        this.isFirstShelfSelected = true  //-- check if this.shelves.lengh == 0, well .... at least a shelf exists
+        //this.setState({selectedShelfIndex : 0})
+        this.selectedShelfIndex = 0
+        this._setKeyListener()
+      }
+
+      const { onFocus } = this.props;
+      if (onFocus) {
+        console.log('INFO HomeShelvesPane :: onFocus calling back from HomeShelvesPane');
+        onFocus();
+      }
+    }
+  }//onFocus
 
   onBlur = () => {
-    console.log("INFO HomeShelvesPane :: onBlur, ")
+    console.log("INFO HomeShelvesPane :: onBlur")
+
+    if (!this.isFocused) return
+
+    this.isFocused = false
+    this.isFirstShelfSelected = false
+    this.selectedShelfIndex = -1
+    //this.setState({selectedShelfIndex : -1})
+    this._removeKeyListener()
+
+    const { onBlur } = this.props;
+    if (onBlur) {
+        console.log('INFO HomeShelvesPane :: onBlur calling back from HomeShelvesPane');
+        onBlur();
+    }
   }
 
-  onUp = () => {
-    console.log("---")
-    console.log("INFO HomeShelvesPane :: onUp, from ")
+  _doUp = () => {
+    //console.log("---")
+    console.log("\nINFO HomeShelvesPane :: onUp, from HomeShelvesPane")
 
-    let {selectedShelfIndex} = this.state
-    selectedShelfIndex--
+    this.selectedShelfIndex--
+    if (this.selectedShelfIndex === -1) {
+      //this.isFirstShelfSelected = false
+      this.onBlur()
+    } else if (this.selectedShelfIndex === 0) {
+      this.isFirstShelfSelected = true
+      this.props.onFirstShelfSelected()
+    }
+    //-- do something here
 
-
-    //console.log("INFO HomeShelvesPane :: doUp, to ")
-    //console.log(" ")
   }//_doUp
 
-  onDown = () => {
-    console.log("---")
-    console.log("INFO HomeShelvesPane :: onDown, from ")
+  _doDown = () => {
+    //console.log("---")
+    console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane")
+
+    this.isFirstShelfSelected = false
+    this.selectedShelfIndex++
+    if (this.selectedShelfIndex >= this.totalShelves) {
+      this.selectedShelfIndex = this.totalShelves - 1
+      return
+    }
+
+    //-- do something here
+
+
+    //this.setState({selectedShelfIndex : this.state.selectedShelfIndex + 1})
+    //console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane, this.state.selectedShelfIndex ?? " + this.state.selectedShelfIndex )
 
     // switch (this._currFocusLocIndex) {
     //   case GLOBAL_NAV_INDEX:
@@ -262,16 +358,16 @@ export default class HomeShelvesPane extends Component {
     //console.log(" ")
   }//_doDown
 
-  onLeft = () => {
-    console.log('INFO HomeShelvesPane :: onLeft');
+  _doLeft = () => {
+    console.log('INFO HomeShelvesPane :: _onLeft, from HomeShelvesPane');
   }//_doLeft
 
-  onRight = () => {
-    console.log('INFO HomeShelvesPane :: onRight');
+  _doRight = () => {
+    console.log('INFO HomeShelvesPane :: _onRight, from HomeShelvesPane');
   }//_doRight
 
-  onSelect = () => {
-    console.log('INFO HomeShelvesPane :: onSelect');
+  _doSelect = () => {
+    console.log('INFO HomeShelvesPane :: _doSelect, from HomeShelvesPane');
   }//_doSelect
 
   _onLargeBloomStart = () => {
@@ -332,49 +428,34 @@ export default class HomeShelvesPane extends Component {
     )
   }//_renderEachHomeShelf
 
-  _onPress = () => {
-    console.log("INFO HomeShelvesPane :: _onPress")
-    this.props.onPress()
-  }
+  // _onPress = () => {
+  //   console.log("INFO HomeShelvesPane :: _onPress")
+  //   this.props.onPress()
+  // }
 
-  _onPressIn = () => {
-    console.log("INFO HomeShelvesPane :: _onPressIn")
-    //this.props.onPressCallBack()
-  }
+  // _onPressIn = () => {
+  //   console.log("INFO HomeShelvesPane :: _onPressIn")
+  //   //this.props.onPressCallBack()
+  // }
 
-  _onPressOut = () => {
-    console.log("INFO HomeShelvesPane :: _onPressOut")
-    //this.props.onPressCallBack()
-  }
+  // _onPressOut = () => {
+  //   console.log("INFO HomeShelvesPane :: _onPressOut")
+  //   //this.props.onPressCallBack()
+  // }
 
   //---- both onTouchableHanldePress and touchableHandlePress are working ----//
-  _onTouchableHandlePress = () => {
-    console.log("INFO HomeShelvesPane :: _onTouchableHandlePress")
-    //this.props.onPressCallBack()
-  }
-
-  _onTouchableHandleActivePressIn = () => {
-    console.log("INFO HomeShelvesPane :: _onTouchableHandleActivePressIn")
-    //this.props.onPressCallBack()
-  }
-
-  _onTouchableHandleActivePressOut = () => {
-    console.log("INFO HomeShelvesPane :: _onTouchableHandleActivePressOut")
-    //this.props.onPressCallBack()
-  }
-
-  // _touchableHandlePress = () => {
-  //   console.log("INFO HomeShelvesPane :: _touchableHandlePress")
+  // _onTouchableHandlePress = () => {
+  //   console.log("INFO HomeShelvesPane :: _onTouchableHandlePress")
   //   //this.props.onPressCallBack()
   // }
 
-  // _touchableHandleActivePressIn = () => {
-  //   console.log("INFO HomeShelvesPane :: _touchableHandleActivePressIn")
+  // _onTouchableHandleActivePressIn = () => {
+  //   console.log("INFO HomeShelvesPane :: _onTouchableHandleActivePressIn")
   //   //this.props.onPressCallBack()
   // }
 
-  // _touchableHandleActivePressOut = () => {
-  //   console.log("INFO HomeShelvesPane :: _touchableHandleActivePressOut")
+  // _onTouchableHandleActivePressOut = () => {
+  //   console.log("INFO HomeShelvesPane :: _onTouchableHandleActivePressOut")
   //   //this.props.onPressCallBack()
   // }
   //--------------------------------------------------------------------------//
@@ -384,25 +465,20 @@ export default class HomeShelvesPane extends Component {
             //onTouchableHandleActivePressIn={this.props.onPressCallBack()} 
             //onTouchableHandleActivePressOut={console.log('INFO HomeShelvesPane :: test pressOut')} 
     return (
-      <TouchableNativeFeedback 
+      <TouchableWithoutFeedback 
             //ref={node => this.node = node} 
-            onPress={this._onPress()}
-            //onPressIn={this._onPressIn()}
-            //onPressOut={this._onPressOut()}
-            //onTouchableHandlePress={this._onTouchableHandlePress()}
-            //onTouchableHandleActivePressIn={this._onTouchableHandleActivePressIn()}
-            //onTouchableHandleActivePressOut={this._onTouchableHandleActivePressOut()}
+            onPress={this.onFocus()}
       >
         <View>
             {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
         </View>
-      </TouchableNativeFeedback>
+      </TouchableWithoutFeedback>
     );
   }
 }
 
 HomeShelvesPane.propTypes = {
-  onPressCallBack : PropTypes.func,
+  onPress : PropTypes.func,
   onFirstShelfSelected : PropTypes.func,
 }
 

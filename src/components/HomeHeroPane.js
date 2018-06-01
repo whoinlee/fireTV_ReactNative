@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {
   Text,
-  // TouchableWithoutFeedback,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
+  // TouchableNativeFeedback,
   View
 } from 'react-native';
 import styles from '../styles/styles';
@@ -39,16 +39,29 @@ export default class HomeHeroPane extends Component {
     console.log("INFO HomeHeroPane :: onUp")
   }
 
+  onFocus = () => {
+    if (this.props.isFocused) {
+      console.log("INFO HomeHeroPane :: onFocus")
+      const { onFocus } = this.props;
+      if (onFocus) {
+        console.log('INFO HomeHeroPane :: onFocus calling back from HomeHeroPane');
+        onFocus();
+      }
+    }
+  }
+
   render() {
     return (
-      <TouchableNativeFeedback onPress={console.log("INFO HomeHeroPane :: onPress")}>
+      <TouchableWithoutFeedback 
+        onPress={this.onFocus()}
+      >
         <View>
             <Text style={styles.comment}>
               {this.constructor.name}
               {"\n\n" + this.today}
             </Text>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableWithoutFeedback>
     );
   }
 }
