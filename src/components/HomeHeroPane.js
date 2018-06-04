@@ -15,14 +15,6 @@ export default class HomeHeroPane extends Component {
     this.preStr = (this.today.getMonth() < 9)? "0" : "";
   }
 
-  onFocus = () => {
-    console.log("INFO HomeHeroPane :: onFocus")
-  }
-
-  onBlur = () => {
-    console.log("INFO HomeHeroPane :: onBlur")
-  }
-
   onLeft = () => {
     console.log("INFO HomeHeroPane :: onLeft")
   }
@@ -41,13 +33,17 @@ export default class HomeHeroPane extends Component {
 
   onFocus = () => {
     if (this.props.isFocused) {
-      console.log("INFO HomeHeroPane :: onFocus")
+      console.log("\nINFO HomeHeroPane :: onFocus =====>")
       const { onFocus } = this.props;
       if (onFocus) {
         console.log('INFO HomeHeroPane :: onFocus calling back from HomeHeroPane');
         onFocus();
       }
     }
+  }
+
+  onBlur = () => {
+    console.log("\nINFO HomeHeroPane :: onBlur =====>")
   }
 
   render() {

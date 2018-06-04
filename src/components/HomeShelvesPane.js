@@ -185,56 +185,21 @@ export default class HomeShelvesPane extends Component {
     this.isPrevMoved = false
     this.isNextMoved = false
     this.totalShelves = 0
-    this.totalMenu = 3  //?????
+    this.totalMenu = 3
 
     // console.log("INFO HomeShelvesPane :: INIT_SHELF_Y ?? " + INIT_SHELF_Y)
   }
 
   componentDidMount() {
-    // console.log("INFO HomeShelvesPane :: componentDidMount ")
-    // KeyEvent.onKeyDownListener((keyEvent) => {
-    //   console.log("INFO HomeShelvesPane :: componentDidMount, keyEvent.keyCode ? " + keyEvent.keyCode)
-    //   switch (keyEvent.keyCode) {
-    //       case keyCodes.up:
-    //         this.doUp();
-    //         break;
-    //       case keyCodes.down:
-    //         this.doDown();
-    //         break;
-    //       case keyCodes.left:
-    //         this.doLeft();
-    //         break;
-    //       case keyCodes.right:
-    //         this.doRight();
-    //         break;
-    //       case keyCodes.center:
-    //         this.doSelect();
-    //         break;
-    //       default:
-    //         console.log('INFO HomeShelvesPane :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
-    //     }//switch
-    // });//onKeyDownListener
-
-    this.totalShelves = this.shelves.length;
-    //console.log("INFO HomeShelvesPane :: componentDidMount, this.totalShelves is ???? " + this.totalShelves)
+    this.totalShelves = this.shelves.length
   }//componentDidMount
 
   componentWillUnmount() {
-    //
-    // KeyEvent.removeKeyDownListener();
     this._removeKeyListener()
   }//componentWillUnmount
 
-  // _onFocus = () => {
-  //   console.log("INFO HomeShelvesPane :: onFocus, ")
-  //   this.setState({selectedShelfIndex : 0})
-  //   this._selectTheFirstShelf()
-  //   this.props.onFocus()
-  // }
-
   _setKeyListener = () => {
     console.log('INFO HomeShelvesPane :: _setKeyListener')
-
     KeyEvent.onKeyDownListener((keyEvent) => {
       //console.log("INFO HomeShelvesPane :: _setKeyListener, keyEvent.keyCode ? " + keyEvent.keyCode)
       switch (keyEvent.keyCode) {
@@ -261,13 +226,12 @@ export default class HomeShelvesPane extends Component {
 
   _removeKeyListener = () => {
     console.log('INFO HomeShelvesPane :: _removeKeyListener')
-
     KeyEvent.removeKeyDownListener();
   }
 
   onFocus = () => {
     if (this.props.isFocused) {
-      console.log('INFO HomeShelvesPane :: onFocus');
+      console.log('\nINFO HomeShelvesPane :: onFocus =====>');
 
       if (!this.isFocused) {
         this.isFocused = true
@@ -286,7 +250,7 @@ export default class HomeShelvesPane extends Component {
   }//onFocus
 
   onBlur = () => {
-    console.log("INFO HomeShelvesPane :: onBlur")
+    console.log("\nINFO HomeShelvesPane :: onBlur =====>")
 
     if (!this.isFocused) return
 
@@ -325,7 +289,7 @@ export default class HomeShelvesPane extends Component {
 
   _doDown = () => {
     //console.log("---")
-    console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane")
+    console.log("\nINFO HomeShelvesPane :: _doDown, from HomeShelvesPane")
 
     this.isFirstShelfSelected = false
     this.selectedShelfIndex++
@@ -335,7 +299,7 @@ export default class HomeShelvesPane extends Component {
     }
 
     //-- do something here
-    console.log("INFO HomeShelvesPane :: onDown, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
+    console.log("INFO HomeShelvesPane :: _doDown, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
 
     //this.setState({selectedShelfIndex : this.state.selectedShelfIndex + 1})
     //console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane, this.state.selectedShelfIndex ?? " + this.state.selectedShelfIndex )

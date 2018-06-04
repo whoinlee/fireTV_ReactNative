@@ -11,14 +11,6 @@ import styles from '../styles/styles';
 export default class GlobalNavPane extends Component {
   constructor(props){
     super(props);
-  } 
-
-  onFocus = () => {
-    console.log("INFO GlobalNavPane :: onFocus")
-  }
-
-  onBlur = () => {
-    console.log("INFO GlobalNavPane :: onBlur")
   }
 
   onLeft = () => {
@@ -43,13 +35,17 @@ export default class GlobalNavPane extends Component {
 
   onFocus = () => {
     if (this.props.isFocused) {
-      console.log("INFO GlobalNavPane :: onFocus")
+      console.log("\nINFO GlobalNavPane :: onFocus =====>")
       const { onFocus } = this.props;
       if (onFocus) {
         console.log('INFO GlobalNavPane :: onFocus calling back from GlobalNavPane');
         onFocus();
       }
     }
+  }
+
+  onBlur = () => {
+    console.log("\nINFO GlobalNavPane :: onBlur =====>")
   }
 
   render() {

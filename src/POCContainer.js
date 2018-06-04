@@ -116,48 +116,11 @@ export default class POCContainer extends Component {
 
   componentDidMount() {
     this._setKeyListener()
-
-    //-- temporarily disabled
-    //this._enableTVEventHandler();
   }//componentDidMount
 
   componentWillUnmount() {
-    //KeyEvent.removeKeyDownListener()
     this._removeKeyListener()
-    //this._disableTVEventHandler()
   }//componentWillUnmount
-
-  _setKeyListener = () => {
-    console.log('INFO POCContainer :: _setKeyListener')
-
-    KeyEvent.onKeyDownListener((keyEvent) => {
-      //console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
-      switch (keyEvent.keyCode) {
-        case keyCodes.up:
-          this._doUp();
-          break;
-        case keyCodes.down:
-          this._doDown();
-          break;
-        case keyCodes.left:
-          this._doLeft();
-          break;
-        case keyCodes.right:
-          this._doRight();
-          break;
-        case keyCodes.center:
-          this._doSelect();
-          break;
-        default:
-          console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
-      }//switch
-    });//onKeyDownListener
-  }
-
-  _removeKeyListener = () => {
-    console.log('INFO POCContainer :: _removeKeyListener')
-    KeyEvent.removeKeyDownListener();
-  }
 
   _enableTVEventHandler() {
     console.log('INFO :: _enableTVEventHandler, this.tvEventHandler ? ' + this.tvEventHandler);
@@ -213,6 +176,39 @@ export default class POCContainer extends Component {
       delete this.tvEventHandler
     }
   }//_disableTVEventHandler
+
+  _setKeyListener = () => {
+    console.log('INFO POCContainer :: _setKeyListener')
+    KeyEvent.onKeyDownListener((keyEvent) => {
+      //console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
+      switch (keyEvent.keyCode) {
+        case keyCodes.up:
+          this._doUp();
+          break;
+        case keyCodes.down:
+          this._doDown();
+          break;
+        case keyCodes.left:
+          this._doLeft();
+          break;
+        case keyCodes.right:
+          this._doRight();
+          break;
+        case keyCodes.center:
+          this._doSelect();
+          break;
+        default:
+          console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
+      }//switch
+    });//onKeyDownListener
+    //this._enableTVEventHandler();
+  }
+
+  _removeKeyListener = () => {
+    console.log('INFO POCContainer :: _removeKeyListener')
+    KeyEvent.removeKeyDownListener()
+    //this._disableTVEventHandler()
+  }
 
   _doUp = () => {
     console.log("\nINFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
@@ -307,25 +303,21 @@ export default class POCContainer extends Component {
     if (this.currFocusLocIndex == HOME_SHELVES_INDEX) {
       console.log('INFO POCContainer :: do _doLeft in the HomeShelvesPane');
     }
-  }
+  }//_doLeft
 
   _doRight = () => {
     console.log('INFO POCContainer :: _doRight');
     if (this.currFocusLocIndex == HOME_SHELVES_INDEX) {
       console.log('INFO POCContainer :: do _doRight in the HomeShelvesPane');
     }
-  }
+  }//_doRight
 
   _doSelect = () => {
     console.log('INFO POCContainer :: _doSelect');
     if (this.currFocusLocIndex == HOME_SHELVES_INDEX) {
       console.log('INFO POCContainer :: do _doSelect in the HomeShelvesPane');
     }
-  }
-
-  _toggleGuides = () => {
-
-  }
+  }//_doSelect
 
   _changeOpacity = (targetIndex, targetValue, pDuration=STD_DURATION) => {
     //console.log("INFO POCContainer :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
@@ -336,7 +328,7 @@ export default class POCContainer extends Component {
         duration: pDuration,
       }
     ).start();
-  }
+  }//_changeOpacity
 
   _changeLocation = (targetIndex, targetValue, pDuration=STD_DURATION) => {
     //console.log("INFO POCContainer :: _changeLocation, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " change yLocation to " + targetValue)
@@ -348,17 +340,7 @@ export default class POCContainer extends Component {
         easing: Easing.out(Easing.quad),
       }
     ).start();
-  }
-
-  // _selectTheFirstShelf = () => {
-  //   // this.shelves[0].select()
-  //   // //-- dimm out the rest
-  //   // for (var i = 1; i < totalShelves; i++) {
-  //   //   let target = this.shelves[i]
-  //   //   target.opacityChange(.6)
-  //   // }
-  // }//_selectTheFirstShelf
-
+  }//_changeLocation
 
   _onGlobalNavPaneFocus = () => {
     if (this.currFocusLocIndex !== GLOBAL_NAV_INDEX) return
@@ -367,7 +349,7 @@ export default class POCContainer extends Component {
     this._changeOpacity(GLOBAL_NAV_INDEX, 1)
     this._changeOpacity(HOME_HERO_INDEX, 1)
     this._changeOpacity(HOME_SHELVES_INDEX, 1)
-  }
+  }//_onGlobalNavPaneFocus
 
   _onHomeHeroPaneFocus = () => {
     if (this.currFocusLocIndex !== HOME_HERO_INDEX) return
@@ -376,7 +358,7 @@ export default class POCContainer extends Component {
     this._changeOpacity(GLOBAL_NAV_INDEX, .6)
     this._changeOpacity(HOME_HERO_INDEX, 1)
     this._changeOpacity(HOME_SHELVES_INDEX, .6)
-  }
+  }//_onHomeHeroPaneFocus
 
   _onShelvesPaneFocus = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
@@ -385,7 +367,7 @@ export default class POCContainer extends Component {
     this._changeOpacity(GLOBAL_NAV_INDEX, .6)
     this._changeOpacity(HOME_HERO_INDEX, .6)
     this._changeOpacity(HOME_SHELVES_INDEX, 1)
-  }
+  }//_onShelvesPaneFocus
 
   _onShelvesPaneBlur = () => {
     console.log("INFO POCContainer :: _onShelvesPaneBlur, onBlurCallBack")
@@ -401,12 +383,21 @@ export default class POCContainer extends Component {
     this.isFirstShelfSelected = false
 
     this._setKeyListener()
-  }
+  }//_onShelvesPaneBlur
 
   _onFirstShelfSelected = () => {
     console.log("INFO POCContainer :: _onFirstShelfSelected, onFirstShelfSelected")
     this.isFirstShelfSelected = true
-  }
+  }//_onFirstShelfSelected
+
+  // _selectTheFirstShelf = () => {
+  //   // this.shelves[0].select()
+  //   // //-- dimm out the rest
+  //   // for (var i = 1; i < totalShelves; i++) {
+  //   //   let target = this.shelves[i]
+  //   //   target.opacityChange(.6)
+  //   // }
+  // }//_selectTheFirstShelf
 
   render() {
     //console.log("INFO POCContainer :: render")
