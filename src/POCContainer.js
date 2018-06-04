@@ -49,6 +49,12 @@ const BASE_TILE_H         = 180/RATIO;
 const FOCUSED_TILE_H      = 332/RATIO; 
 /* ------------------------------------------ */
 
+const BASE_SHELF_OFFSET   = 106/RATIO;
+const BASE_SHELF_OFFSET_Y = BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET;
+const FOCUSED_SHELF_SHIFT_Y   = Math.floor(76/RATIO);
+const BLOOMED_SHELF_SHIFT_Y   = Math.floor(131/RATIO);
+const FOCUSED_SHELF_OFFSET_Y  = BASE_SHELF_OFFSET_Y + FOCUSED_SHELF_SHIFT_Y;
+
 // const ControllableGlobalNav = toControllable(GlobalNavPane)
 // const ControllableHomeHero = toControllable(HomeHeroPane)
 // const ControllableHomeShelves = toControllable(HomeShelvesPane)
@@ -77,17 +83,18 @@ export default class POCContainer extends Component {
     this.initGlobalNavY = INIT_GLOBAL_NAV_Y
     this.initHomeHeroY = INIT_HOME_HERO_Y   
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
-    //
-    this.upMidHomeHeroY = INIT_HOME_HERO_Y      
-    this.upOffHomeHeroY = INIT_HOME_HERO_Y
-    this.upOffHomeShelvesY = INIT_HOME_SHELVES_Y 
 
     //-- set panes' up locations
     const TOP_Y = V_CENTER_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H/2)         //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     this.paneShiftOffsetY = this.initHomeShelvesY - TOP_Y + (FOCUSED_TILE_H - BASE_TILE_H)/2               //bc, the fist shelf tile will be focused : (332-180)/2
     this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY
-    this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY
-    this.upHomeShelvesY = TOP_Y;
+    this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
+    this.upHomeShelvesY = TOP_Y
+
+    this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y          //-- homeHeroPane shifts on the fist shelf being largeBloomed
+    //
+    this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y         //-- homeHeroPane shifts/hides on the 2nd shelf being focused
+    this.upOffHomeShelvesY = this.upHomeShelvesY -  FOCUSED_SHELF_OFFSET_Y  //-- need?????
     
     this.tvEventHandler = new TVEventHandler()
   }
@@ -202,13 +209,13 @@ export default class POCContainer extends Component {
       }//switch
     });//onKeyDownListener
     //this._enableTVEventHandler();
-  }
+  }//_setKeyListener
 
   _removeKeyListener = () => {
     console.log('INFO POCContainer :: _removeKeyListener')
     KeyEvent.removeKeyDownListener()
     //this._disableTVEventHandler()
-  }
+  }//_removeKeyListener
 
   _doUp = () => {
     console.log("\nINFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
@@ -386,8 +393,28 @@ export default class POCContainer extends Component {
   }//_onShelvesPaneBlur
 
   _onFirstShelfSelected = () => {
-    console.log("INFO POCContainer :: _onFirstShelfSelected, onFirstShelfSelected")
+    console.log("INFO POCContainer :: _onFirstShelfSelected")
     this.isFirstShelfSelected = true
+
+    //-- move down homeHero
+    this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
+    this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
+  }//_onFirstShelfSelected
+
+  _onFirstShelfLargeBloomed = () => {
+    console.log("INFO POCContainer :: _onFirstShelfLargeBloomed")
+    this.isFirstShelfSelected = true
+
+    //-- move homeHero further up
+    this._changeLocation(HOME_HERO_INDEX, this.upMidHomeHeroY)
+  }//_onFirstShelfSelected
+
+  _onSecondShelfSelected = () => {
+    console.log("INFO POCContainer :: _onSecondShelfSelected")
+
+    //-- move up homeHero off the stage
+    this._changeLocation(HOME_HERO_INDEX, this.upOffHomeHeroY)
+    //this._changeLocation(HOME_SHELVES_INDEX, this.upOffHomeShelvesY)  //need?, adjust the value anyway!!!!!
   }//_onFirstShelfSelected
 
   // _selectTheFirstShelf = () => {
@@ -435,6 +462,7 @@ export default class POCContainer extends Component {
                                       onFocus={this._onShelvesPaneFocus}
                                       onBlur={this._onShelvesPaneBlur}
                                       onFirstShelfSelected={this._onFirstShelfSelected}
+                                      onSecondShelfSelected={this._onSecondShelfSelected}
                       />
             </Animated.View>
         </View>

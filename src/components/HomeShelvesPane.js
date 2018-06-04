@@ -158,6 +158,7 @@ const BASE_SHELF_H          = (BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H 
 const FOCUSED_SHELF_SHIFT   = (FOCUSED_TILE_H - BASE_TITLE_H)/2;    //-- (332-180)/2 = 76: how much unselected shelves shift on selected shelf's being focused
 const FOCUSED_SHELF_H       = BASE_SHELF_H + FOCUSED_SHELF_SHIFT;
 const BLOOMED_SHELF_SHIFT   = Math.floor(131/RATIO);
+const FOCUSED_SHELF_OFFSET  = BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT;
 
 
 export default class HomeShelvesPane extends Component {
@@ -165,8 +166,8 @@ export default class HomeShelvesPane extends Component {
     super(props);
     this.state = {
       //isFocused: false,
-      onFocusShelf: null,
-      selectedShelfIndex: -1,
+      onFocusShelf: null,     //TODO: need to be here?
+      selectedShelfIndex: -1, //TODO: need to be here?
       //isFirstShelfSelected: false,
       //shelvesTopY: initContainerY + 'px',
     }
@@ -184,8 +185,9 @@ export default class HomeShelvesPane extends Component {
     this.nextShelf = null
     this.isPrevMoved = false
     this.isNextMoved = false
-    this.totalShelves = 0
+    
     this.totalMenu = 3
+    this.totalShelves = 0
 
     // console.log("INFO HomeShelvesPane :: INIT_SHELF_Y ?? " + INIT_SHELF_Y)
   }
@@ -253,7 +255,6 @@ export default class HomeShelvesPane extends Component {
     console.log("\nINFO HomeShelvesPane :: onBlur =====>")
 
     if (!this.isFocused) return
-
     this.isFocused = false
     this.isFirstShelfSelected = false
     this.selectedShelfIndex = -1
@@ -300,6 +301,9 @@ export default class HomeShelvesPane extends Component {
 
     //-- do something here
     console.log("INFO HomeShelvesPane :: _doDown, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
+    if (this.selectedShelfIndex === 1) {
+      this.props.onSecondShelfSelected()
+    }
 
     //this.setState({selectedShelfIndex : this.state.selectedShelfIndex + 1})
     //console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane, this.state.selectedShelfIndex ?? " + this.state.selectedShelfIndex )
@@ -446,11 +450,19 @@ export default class HomeShelvesPane extends Component {
 }
 
 HomeShelvesPane.propTypes = {
-  onPress : PropTypes.func,
+  isFocused : PropTypes.bool,
+  onFocus : PropTypes.func,
+  onBlur : PropTypes.func,
   onFirstShelfSelected : PropTypes.func,
+  onSecondShelfSelected : PropTypes.func,
+  onFirstShelfLargeBloomed : PropTypes.func,
 }
 
 HomeShelvesPane.defaultProps = {
-  onPress: () => {console.log("INFO HomeShelvesPane :: please pass a function for onPress")},
+  isFocused : false,
+  onFocus: () => {console.log("INFO HomeShelvesPane :: please pass a function for onFocus")},
+  onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
   onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
+  onSecondShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onSecondShelfSelected")},
+  onFirstShelfLargeBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfLargeBloomed")},
 }
