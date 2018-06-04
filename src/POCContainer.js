@@ -131,26 +131,26 @@ export default class POCContainer extends Component {
     console.log('INFO POCContainer :: _setKeyListener')
 
     KeyEvent.onKeyDownListener((keyEvent) => {
-      console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
+      //console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
       switch (keyEvent.keyCode) {
-          case keyCodes.up:
-            this._doUp();
-            break;
-          case keyCodes.down:
-            this._doDown();
-            break;
-          case keyCodes.left:
-            this._doLeft();
-            break;
-          case keyCodes.right:
-            this._doRight();
-            break;
-          case keyCodes.center:
-            this._doSelect();
-            break;
-          default:
-            //console.log('INFO POCContainer :: componentDidMount, default - keyCode ? : ' + keyEvent.keyCode);
-        }//switch
+        case keyCodes.up:
+          this._doUp();
+          break;
+        case keyCodes.down:
+          this._doDown();
+          break;
+        case keyCodes.left:
+          this._doLeft();
+          break;
+        case keyCodes.right:
+          this._doRight();
+          break;
+        case keyCodes.center:
+          this._doSelect();
+          break;
+        default:
+          console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
+      }//switch
     });//onKeyDownListener
   }
 
@@ -215,16 +215,17 @@ export default class POCContainer extends Component {
   }//_disableTVEventHandler
 
   _doUp = () => {
-    console.log("---")
-    console.log("INFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
+    console.log("\nINFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
     switch (this.currFocusLocIndex) {
       case HOME_SHELVES_INDEX:
         if (this.isFirstShelfSelected) {
           //-- focus moves to the homeHero
           this.currFocusLocIndex -= 1
-          //
+
+          //-- _onShelvesPaneBlur
           // this._changeOpacity(HOME_HERO_INDEX, 1)
           // this._changeOpacity(HOME_SHELVES_INDEX, .6)
+
           this._changeLocation(GLOBAL_NAV_INDEX, this.initGlobalNavY)
           this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
           this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
@@ -361,9 +362,8 @@ export default class POCContainer extends Component {
 
   _onGlobalNavPaneFocus = () => {
     if (this.currFocusLocIndex !== GLOBAL_NAV_INDEX) return
-
     console.log("INFO POCContainer :: _onGlobalNavPaneFocus, onPressCallBack")
-    //do something
+
     this._changeOpacity(GLOBAL_NAV_INDEX, 1)
     this._changeOpacity(HOME_HERO_INDEX, 1)
     this._changeOpacity(HOME_SHELVES_INDEX, 1)
@@ -371,9 +371,8 @@ export default class POCContainer extends Component {
 
   _onHomeHeroPaneFocus = () => {
     if (this.currFocusLocIndex !== HOME_HERO_INDEX) return
-
     console.log("INFO POCContainer :: _onHomeHeroPaneFocus, onPressCallBack")
-    //do something
+
     this._changeOpacity(GLOBAL_NAV_INDEX, .6)
     this._changeOpacity(HOME_HERO_INDEX, 1)
     this._changeOpacity(HOME_SHELVES_INDEX, .6)
@@ -381,26 +380,20 @@ export default class POCContainer extends Component {
 
   _onShelvesPaneFocus = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
-
     console.log("INFO POCContainer :: _onShelvesPaneFocus, onFocusCallBack")
-    //do something
+
     this._changeOpacity(GLOBAL_NAV_INDEX, .6)
     this._changeOpacity(HOME_HERO_INDEX, .6)
     this._changeOpacity(HOME_SHELVES_INDEX, 1)
   }
 
   _onShelvesPaneBlur = () => {
-    // if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
-
     console.log("INFO POCContainer :: _onShelvesPaneBlur, onBlurCallBack")
 
-    this.currFocusLocIndex === HOME_HERO_INDEX
-    // //do something
-    // this._changeOpacity(GLOBAL_NAV_INDEX, .6)
-    // this._changeOpacity(HOME_HERO_INDEX, .6)
-    // this._changeOpacity(HOME_SHELVES_INDEX, 1)
+    this.currFocusLocIndex = HOME_HERO_INDEX
 
     //-- focus moves to homeHero
+    this._onHomeHeroPaneFocus()
     this._changeLocation(GLOBAL_NAV_INDEX, this.initGlobalNavY)
     this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
     this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)

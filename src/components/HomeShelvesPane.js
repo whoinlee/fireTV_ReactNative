@@ -305,17 +305,21 @@ export default class HomeShelvesPane extends Component {
 
   _doUp = () => {
     //console.log("---")
-    console.log("\nINFO HomeShelvesPane :: onUp, from HomeShelvesPane")
+    console.log("\nINFO HomeShelvesPane :: _doUp, from HomeShelvesPane")
+
+    if (this.selectedShelfIndex < 0) return
 
     this.selectedShelfIndex--
     if (this.selectedShelfIndex === -1) {
       //this.isFirstShelfSelected = false
       this.onBlur()
+      return
     } else if (this.selectedShelfIndex === 0) {
       this.isFirstShelfSelected = true
       this.props.onFirstShelfSelected()
     }
     //-- do something here
+    console.log("INFO HomeShelvesPane :: _doUp, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
 
   }//_doUp
 
@@ -331,7 +335,7 @@ export default class HomeShelvesPane extends Component {
     }
 
     //-- do something here
-
+    console.log("INFO HomeShelvesPane :: onDown, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
 
     //this.setState({selectedShelfIndex : this.state.selectedShelfIndex + 1})
     //console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane, this.state.selectedShelfIndex ?? " + this.state.selectedShelfIndex )
