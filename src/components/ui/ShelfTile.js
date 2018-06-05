@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
 	Image,
   	Text,
-  	TouchableNativeFeedback,
+  	TouchableWithoutFeedback,
   	View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -58,6 +58,7 @@ class ShelfTile extends Component {
 
 		this.menus= []
 		this.bloomToLargeTimerID = null
+		this.isFocused = false
 
 		// this.renderContent = this.renderContent.bind(this)
 		// this.updateState = this.updateState.bind(this)
@@ -208,6 +209,24 @@ class ShelfTile extends Component {
 
 	}//_doSelect
 
+	onFocus = () => {
+	    if (this.props.isFocused) {
+	      console.log('\nINFO ShelfTile :: onFocus ====================>');
+
+	      // if (!this.isFocused) {
+	      //   this.isFocused = true
+	      //   //this.selectedTileIndex = 0
+	      //   //this._setKeyListener()
+	      // }
+
+	      const { onFocus } = this.props;
+	      if (onFocus) {
+	        //console.log('INFO HomeShelf :: onFocus calling back from HomeShelvesPane');
+	        onFocus();
+	      }
+	    }
+	}//onFocus
+
 	_onInfoButtonClicked = (e) => {
 		console.log("INFO ShelfTile :: _onInfoButtonClicked")
 	}//_onInfoButtonClicked
@@ -278,6 +297,8 @@ class ShelfTile extends Component {
 		// }//switch
 	}//renderContent
 
+
+
 	render() {
 		// console.log("INFO ShelfTile :: render, this.props.imageURL ? " + this.props.imageURL)
 		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
@@ -287,24 +308,27 @@ class ShelfTile extends Component {
 		let pColor = colorArr[colorIndex]
 		// <Text style={styles.comment}>{this.props.index}</Text>	
 		return (
-			<View style={{	
-							position: pPosition,
-							left: this.props.leftX,
-							// backgroundColor: pColor, 
-							// width: 320/RATIO, 
-							// height: (180)/RATIO, 
-							// borderColor: 'black', borderWidth: .5		/* for testing */
-						}}	>
-				<Image 	source={this.props.imageURL} 
-						style={{	
-							width: 320/RATIO, 
-							height: 180/RATIO
-						}} />
-			</View>
+			<TouchableWithoutFeedback 
+	            onPress={this.onFocus()}
+	      	>
+				<View style={{	
+								position: pPosition,
+								left: this.props.leftX,
+								// backgroundColor: pColor, 
+								// width: 320/RATIO, 
+								// height: (180)/RATIO, 
+								// borderColor: 'black', borderWidth: .5		/* for testing */
+							}}	>
+					<Image 	source={this.props.imageURL} 
+							style={{	
+								width: 320/RATIO, 
+								height: 180/RATIO
+							}} />
+				</View>
+			</TouchableWithoutFeedback >
 		)
 	}//render
 }
-
 
 ShelfTile.propTypes = {
 	index:  PropTypes.number,
@@ -316,12 +340,19 @@ ShelfTile.propTypes = {
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!	*/
 	callBackOnLargeBloomStart: PropTypes.func,
-	callBackOnNoMenuLeft: PropTypes.func
+	callBackOnNoMenuLeft: PropTypes.func,
+	//
+	isFocused : PropTypes.bool,
+  	onFocus : PropTypes.func,
+  	onBlur : PropTypes.func,
 };
 
 ShelfTile.defaultProps = {
 	callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
-	callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")}
+	callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
+	isFocused : false,
+	onFocus: () => {console.log("INFO ShelfTile :: please pass a function for onFocus")},
+  	onBlur: () => {console.log("INFO ShelfTile :: please pass a function for onBlur")},
 };
 
 export default ShelfTile

@@ -57,12 +57,20 @@ const styles = StyleSheet.create({
 	    backgroundColor: '#676767',
 	    position: 'absolute',
 	    width: '100%',
-	    height: '300%',
+	    height: '300%',	//-- hack!!!
 	    //-- for testing --//
 	    // borderWidth: 1,
     	// borderColor: '#000000',
     	//-----------------//
 	},
+
+	activeShelf: {
+		opacity: 1,
+	},
+
+	inactiveShelf: {
+		opacity: .6,
+	}
 });
 
 

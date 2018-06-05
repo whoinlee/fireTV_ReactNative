@@ -4,7 +4,7 @@ import {
   Animated,
   StyleSheet,
   Text,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -43,10 +43,13 @@ export default class HomeShelf extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			isFocused: false,
 			shelfKind: SHELF_KIND_OBJ.BASE      //-- CHECK: need???
 		}
 
 		this.tiles = []							//original tiles
+		this.selectedTileIndex = -1
+		this.isFocused = false
 
 		//-- prevTileIndex: tileIndexQueue[0], currentTileIndex: tileIndexQueue[1], nextTileIndex: tileIndexQueue[2], and so on
 		// this.tileIndexQueue = [-1]			//tile index array based on current location, from prev, current, to next etc (staring from entering no index for the prev tile)
@@ -75,6 +78,24 @@ export default class HomeShelf extends Component {
 	}
 
 	componentWillMount() {}//componentWillMount
+
+	onFocus = () => {
+	    if (this.props.isFocused) {
+	      console.log('\nINFO HomeShelf :: onFocus ====================>');
+
+	      if (!this.isFocused) {
+	        this.isFocused = true
+	        this.selectedTileIndex = 0
+	        //this._setKeyListener()
+	      }
+
+	      const { onFocus } = this.props;
+	      if (onFocus) {
+	        //console.log('INFO HomeShelf :: onFocus calling back from HomeShelvesPane');
+	        onFocus();
+	      }
+	    }
+	}//onFocus
 
 	_buildTileIndexQueue = () => {
 		console.log("INFO HomeShelf :: _buildTileIndexQueue, this.props.shows.length ? ", this.props.shows.length)
@@ -456,7 +477,9 @@ export default class HomeShelf extends Component {
 				  		episodeDesc={" " + tileObj.episodeDesc}
 				  		imageURL={tileObj.imageURL}
 				  		callBackOnLargeBloomStart={this._onLargeBloomStart}
-				  		callBackOnNoMenuLeft={this._backToFocused}>
+				  		callBackOnNoMenuLeft={this._backToFocused}
+				  		isFocused={false}
+				  		>
 		    	</ShelfTile>
 		    // </View>
 		)
@@ -478,34 +501,40 @@ export default class HomeShelf extends Component {
 
 		//-- for testing
 		const colorArr = ['darkcyan', 'darkred', 'darkorchid']
-		let colorIndex = Math.floor(Math.random() * 3);
+		let colorIndex = Math.floor(Math.random() * 3)
 		let pColor = colorArr[colorIndex]
+		let pOpacity = this.props.isFocused ? 1:.6
 		//--------------
 		return (
-			<View 
-				style={{ 
-					position: pPosition,
-					top: this.props.topY,
-					width: '100%',
-					height: '100%',
-					// borderWidth: 1,
-    				// borderColor: 'red',
-    				// backgroundColor: pColor,
-    				// backgroundColor: 'darkgreen'
-    		}} >
+			<TouchableWithoutFeedback 
+	            onPress={this.onFocus()}
+	      	>
 				<View 
-					style={ homeShelfStyles.homeShelfTitleContainer } 
-					// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
-				>
-					<Text style={ homeShelfStyles.shelfTitle }>
-						{this.props.title}
-					</Text>
-				</View>
+					style={{ 
+						position: pPosition,
+						top: this.props.topY,
+						width: '100%',
+						height: '100%',
+						opacity: pOpacity,
+						// borderWidth: 1,
+	    				// borderColor: 'red',
+	    				// backgroundColor: pColor,
+	    				// backgroundColor: 'darkgreen'
+	    		}} >
+					<View 
+						style={ homeShelfStyles.homeShelfTitleContainer } 
+						// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
+					>
+						<Text style={ homeShelfStyles.shelfTitle }>
+							{this.props.title}
+						</Text>
+					</View>
 
-				<View style={ homeShelfStyles.homeShelfTilesContainer }>
-					{this.props.shows.map(this._renderEachShelfTile)}
+					<View style={ homeShelfStyles.homeShelfTilesContainer }>
+						{this.props.shows.map(this._renderEachShelfTile)}
+					</View>
 				</View>
-			</View>
+			</TouchableWithoutFeedback>
 		)
 	}//render
 }
@@ -546,10 +575,17 @@ HomeShelf.propTypes = {
 	shows: PropTypes.array,
 	callBackOnLargeBloomStart: PropTypes.func,
 	callBackOnBackToFocused: PropTypes.func,
-	styleObj: PropTypes.object
+	styleObj: PropTypes.object,
+	//
+	isFocused : PropTypes.bool,
+  	onFocus : PropTypes.func,
+  	onBlur : PropTypes.func,
 };
 
 HomeShelf.defaultProps = {
 	callBackOnLargeBloomStart: () => {console.log("INFO HomeShelf :: please pass a function for callBackOnLargeBloomStart")},
 	callBackOnBackToFocused: () => {console.log("INFO HomeShelf :: please pass a function for callBackOnBackToFocused")},
+	isFocused : false,
+	onFocus: () => {console.log("INFO HomeShelf :: please pass a function for onFocus")},
+  	onBlur: () => {console.log("INFO HomeShelf :: please pass a function for onBlur")},
 };

@@ -230,9 +230,7 @@ export default class POCContainer extends Component {
     //this._disableTVEventHandler()
   }//_removeKeyListener
 
-  _toggleGuide = () => {
-    this.setState({isGuideVisible: !this.state.isGuideVisible})
-  }
+  _toggleGuide = () => { this.setState({isGuideVisible: !this.state.isGuideVisible}) }
 
   _doUp = () => {
     console.log("\nINFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
@@ -295,7 +293,7 @@ export default class POCContainer extends Component {
         this.currHomeShelvesY = this.upHomeShelvesY
         this.isFirstShelfSelected = true
         // TODO:: ***************************************************** //
-        console.log("this.selectablePanes[this.currFocusLocIndex]?? : " + this.selectablePanes[this.currFocusLocIndex])
+        //console.log("this.selectablePanes[this.currFocusLocIndex]?? : " + this.selectablePanes[this.currFocusLocIndex])
         //this.selectablePanes[this.currFocusLocIndex]._onFocus()
 
         // this.selectedShelfIndex = 0  //-- the 1st shelf, CHECK!!!
@@ -367,7 +365,7 @@ export default class POCContainer extends Component {
 
     if (targetIndex === HOME_SHELVES_INDEX) {
       this.currHomeShelvesY = targetValue
-      console.log("INFO POCContainer :: _changeLocation, this.currHomeShelvesY is " + this.currHomeShelvesY)
+      //console.log("INFO POCContainer :: _changeLocation, this.currHomeShelvesY is " + this.currHomeShelvesY)
     }
 
   }//_changeLocation
@@ -441,7 +439,8 @@ export default class POCContainer extends Component {
   }//_onFirstShelfSelected
 
   _onShelvesDown = () => {
-    console.log("INFO POCContainer :: _onShelvesDown, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
+    console.log("INFO POCContainer :: _onShelvesDown")
+    // console.log("INFO POCContainer :: _onShelvesDown, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
 
     //-- move up homeShelves pane by 'FOCUSED_SHELF_H'
     let targetY = this.currHomeShelvesY - FOCUSED_SHELF_H
