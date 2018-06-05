@@ -462,6 +462,16 @@ export default class HomeShelf extends Component {
 		)
 	}//_renderEachShelfTile
 
+	_find_dimesions = (layout) => {
+	    const {height} = layout;
+	    // console.warn(x);
+	    // console.warn(y);
+	    // console.warn(width);
+	    // console.warn(height);
+	    console.log('INFO HomeShelf :: _find_dimensions, height is ' + height);
+	    console.log('INFO HomeShelf :: _find_dimensions, (28/RATIO) is ' + 28/RATIO);
+	 }
+
 	render() {
 		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		// console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
@@ -483,7 +493,10 @@ export default class HomeShelf extends Component {
     				// backgroundColor: pColor,
     				// backgroundColor: 'darkgreen'
     		}} >
-				<View style={ homeShelfStyles.homeShelfTitleContainer }>
+				<View 
+					style={ homeShelfStyles.homeShelfTitleContainer } 
+					// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
+				>
 					<Text style={ homeShelfStyles.shelfTitle }>
 						{this.props.title}
 					</Text>

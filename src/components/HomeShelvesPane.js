@@ -147,18 +147,22 @@ const TOTAL_SHELVES         = SHELVES_DATA_ARR.length;
 const MAX_INDEX             = TOTAL_SHELVES - 1;
 const INIT_SHELF_Y          = 62/RATIO;         //-- from container top to the 1st shelf title
 //
-const BASE_TILE_H           = 180/RATIO;        
-const FOCUSED_TILE_H        = 332/RATIO;        
+const BASE_TILE_H           = 180/RATIO;        //90
+const FOCUSED_TILE_H        = 332/RATIO;        //166
 //
-const BASE_TITLE_H          = 28/RATIO;         //-- title height for Helvetica Light 28px
+//const BASE_TITLE_H          = 28/RATIO;         //-- title height for Helvetica Light 28px
+const BASE_TITLE_H          = 40/RATIO;         //-- title height for Helvetica Light 28px
 const TITLE_N_TILE_OFFSET   = 10/RATIO;         //-- offset between title & tiles
 const BASE_SHELF_OFFSET     = 106/RATIO;        //-- offset between shelves: from the bottom of previous shelf image to the top of next shelf title
 const BASE_SHELF_H          = (BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET);     //-- distance between unselected shelves
 //
-const FOCUSED_SHELF_SHIFT   = (FOCUSED_TILE_H - BASE_TITLE_H)/2;    //-- (332-180)/2 = 76: how much unselected shelves shift on selected shelf's being focused
+const FOCUSED_SHELF_SHIFT   = (FOCUSED_TILE_H - BASE_TILE_H)/2;    //-- (332-180)/2 = 76: how much unselected shelves shift on selected shelf's being focused
 const FOCUSED_SHELF_H       = BASE_SHELF_H + FOCUSED_SHELF_SHIFT;
 const BLOOMED_SHELF_SHIFT   = Math.floor(131/RATIO);
 const FOCUSED_SHELF_OFFSET  = BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT;
+
+// console.log("\nINFO FOCUSED_SHELF_SHIFT 2 ?? " + FOCUSED_SHELF_SHIFT)
+// console.log("INFO FOCUSED_SHELF_H 2 ?? " + FOCUSED_SHELF_H)
 
 
 export default class HomeShelvesPane extends Component {
@@ -305,6 +309,10 @@ export default class HomeShelvesPane extends Component {
       this.props.onSecondShelfSelected()
     }
 
+    if (this.selectedShelfIndex >= 1) {
+      this.props.onShelvesDown()
+    }
+
     //this.setState({selectedShelfIndex : this.state.selectedShelfIndex + 1})
     //console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane, this.state.selectedShelfIndex ?? " + this.state.selectedShelfIndex )
 
@@ -385,6 +393,7 @@ export default class HomeShelvesPane extends Component {
   _renderEachHomeShelf = (shelfObj, i) => {
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, topY ? " + (INIT_SHELF_Y + i*FOCUSED_SHELF_H))
+    console.log("INFO HomeShelvesPane :: _eachHomeShelf, FOCUSED_SHELF_H ? " + FOCUSED_SHELF_H)
     return (
         <HomeShelf  
               key={(i + 1).toString()}
@@ -454,8 +463,9 @@ HomeShelvesPane.propTypes = {
   onFocus : PropTypes.func,
   onBlur : PropTypes.func,
   onFirstShelfSelected : PropTypes.func,
+  onFirstShelfBloomed : PropTypes.func,
   onSecondShelfSelected : PropTypes.func,
-  onFirstShelfLargeBloomed : PropTypes.func,
+  onShelvesDown : PropTypes.func,
 }
 
 HomeShelvesPane.defaultProps = {
@@ -463,6 +473,7 @@ HomeShelvesPane.defaultProps = {
   onFocus: () => {console.log("INFO HomeShelvesPane :: please pass a function for onFocus")},
   onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
   onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
+  onFirstShelfBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfBloomed")},
   onSecondShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onSecondShelfSelected")},
-  onFirstShelfLargeBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfLargeBloomed")},
+  onShelesDown : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesDown")},
 }

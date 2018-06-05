@@ -17,6 +17,7 @@ const homeShelvesStyle = StyleSheet.create({
 	    color: '#fff',
 	    borderWidth: 1,
     	borderColor: 'green',
+    	// width: '100%',
 	},
 
 		shelfTitle: {

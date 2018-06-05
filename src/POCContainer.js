@@ -33,7 +33,7 @@ const INIT_GLOBAL_NAV_Y   = config.initGlobalNavY/RATIO;
 const INIT_HOME_HERO_Y    = config.initHomeHeroY/RATIO;     //-- 165 = (100(globalNav)+65(offset)
 const INIT_HOME_SHELVES_Y = config.initHomeShelvesY/RATIO;  //-- 836 = (100(globalNav)+65(offset)+606(homeHero)+65) = 836 
 //
-const V_CENTER_Y          = Math.floor(config.stageH/(2*RATIO));
+const V_MIDDLE_Y          = Math.floor(config.stageH/(2*RATIO));  //-- vertical middle location of the stage
 //
 const FOCUS_LOC_ARR       = ['globalNavPane', 'homeHeroPane', 'homeShelvesPane'];
 const GLOBAL_NAV_INDEX    = 0;
@@ -43,17 +43,26 @@ const HOME_SHELVES_INDEX  = 2;
 /* ----- from HomeShelvesPane design -------- */
 const INIT_SHELF_Y        = 62/RATIO;         //-- from container top to the 1st shelf title
 //
-const BASE_TITLE_H        = 28/RATIO;
+//const BASE_TITLE_H        = 28/RATIO;         //-- wrong!!! ====> turned out to be '20'
+const BASE_TITLE_H        = 40/RATIO;         
 const TITLE_N_TILE_OFFSET = 10/RATIO; 
 const BASE_TILE_H         = 180/RATIO;
 const FOCUSED_TILE_H      = 332/RATIO; 
 /* ------------------------------------------ */
 
 const BASE_SHELF_OFFSET   = 106/RATIO;
-const BASE_SHELF_OFFSET_Y = BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET;
+const BASE_SHELF_H = BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET;
+// const BASE_SHELF_H = BASE_SHELF_OFFSET_Y;
 const FOCUSED_SHELF_SHIFT_Y   = Math.floor(76/RATIO);
 const BLOOMED_SHELF_SHIFT_Y   = Math.floor(131/RATIO);
-const FOCUSED_SHELF_OFFSET_Y  = BASE_SHELF_OFFSET_Y + FOCUSED_SHELF_SHIFT_Y;
+// const FOCUSED_SHELF_OFFSET_Y  = BASE_SHELF_H + FOCUSED_SHELF_SHIFT_Y;
+const FOCUSED_SHELF_OFFSET_Y  = BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT_Y;
+const FOCUSED_SHELF_H         = BASE_SHELF_H + FOCUSED_SHELF_SHIFT_Y;
+
+// console.log("INFO FOCUSED_SHELF_SHIFT 1 ?? " + FOCUSED_SHELF_SHIFT_Y)
+// console.log("INFO FOCUSED_SHELF_H 1 ?? " + FOCUSED_SHELF_H)
+
+
 
 // const ControllableGlobalNav = toControllable(GlobalNavPane)
 // const ControllableHomeHero = toControllable(HomeHeroPane)
@@ -72,6 +81,7 @@ export default class POCContainer extends Component {
       animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- animation instance for 'globalNav' with initial location value of INIT_GLOBAL_NAV_Y
       animLocation1: new Animated.Value(INIT_HOME_HERO_Y),    //-- for 'homeHero'
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
+      isGuideVisible: true,
     }
 
     this.selectablePanes = []
@@ -85,7 +95,7 @@ export default class POCContainer extends Component {
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
 
     //-- set panes' up locations
-    const TOP_Y = V_CENTER_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H/2)         //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
+    const TOP_Y = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H/2)         //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     this.paneShiftOffsetY = this.initHomeShelvesY - TOP_Y + (FOCUSED_TILE_H - BASE_TILE_H)/2               //bc, the fist shelf tile will be focused : (332-180)/2
     this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY
     this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
@@ -190,20 +200,23 @@ export default class POCContainer extends Component {
       //console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
       switch (keyEvent.keyCode) {
         case keyCodes.up:
-          this._doUp();
-          break;
+          this._doUp()
+          break
         case keyCodes.down:
-          this._doDown();
-          break;
+          this._doDown()
+          break
         case keyCodes.left:
-          this._doLeft();
-          break;
+          this._doLeft()
+          break
         case keyCodes.right:
-          this._doRight();
-          break;
+          this._doRight()
+          break
         case keyCodes.center:
-          this._doSelect();
-          break;
+          this._doSelect()
+          break
+        case 35:
+          this._toggleGuide()
+          break
         default:
           console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
       }//switch
@@ -216,6 +229,10 @@ export default class POCContainer extends Component {
     KeyEvent.removeKeyDownListener()
     //this._disableTVEventHandler()
   }//_removeKeyListener
+
+  _toggleGuide = () => {
+    this.setState({isGuideVisible: !this.state.isGuideVisible})
+  }
 
   _doUp = () => {
     console.log("\nINFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
@@ -347,6 +364,12 @@ export default class POCContainer extends Component {
         easing: Easing.out(Easing.quad),
       }
     ).start();
+
+    if (targetIndex === HOME_SHELVES_INDEX) {
+      this.currHomeShelvesY = targetValue
+      console.log("INFO POCContainer :: _changeLocation, this.currHomeShelvesY is " + this.currHomeShelvesY)
+    }
+
   }//_changeLocation
 
   _onGlobalNavPaneFocus = () => {
@@ -401,8 +424,8 @@ export default class POCContainer extends Component {
     this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
   }//_onFirstShelfSelected
 
-  _onFirstShelfLargeBloomed = () => {
-    console.log("INFO POCContainer :: _onFirstShelfLargeBloomed")
+  _onFirstShelfBloomed = () => {
+    console.log("INFO POCContainer :: _onFirstShelfBloomed")
     this.isFirstShelfSelected = true
 
     //-- move homeHero further up
@@ -417,6 +440,14 @@ export default class POCContainer extends Component {
     //this._changeLocation(HOME_SHELVES_INDEX, this.upOffHomeShelvesY)  //need?, adjust the value anyway!!!!!
   }//_onFirstShelfSelected
 
+  _onShelvesDown = () => {
+    console.log("INFO POCContainer :: _onShelvesDown, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
+
+    //-- move up homeShelves pane by '--'
+    let targetY = this.currHomeShelvesY - FOCUSED_SHELF_H
+    this._changeLocation(HOME_SHELVES_INDEX, targetY)
+  }//_onFirstShelfSelected
+
   // _selectTheFirstShelf = () => {
   //   // this.shelves[0].select()
   //   // //-- dimm out the rest
@@ -425,6 +456,16 @@ export default class POCContainer extends Component {
   //   //   target.opacityChange(.6)
   //   // }
   // }//_selectTheFirstShelf
+
+  _renderGuide = () => {
+    if (this.state.isGuideVisible) {
+      return (
+        <View style={styles.guideContainer}></View>
+      )
+    } else {
+      return null;
+    }
+  }
 
   render() {
     //console.log("INFO POCContainer :: render")
@@ -462,10 +503,14 @@ export default class POCContainer extends Component {
                                       onFocus={this._onShelvesPaneFocus}
                                       onBlur={this._onShelvesPaneBlur}
                                       onFirstShelfSelected={this._onFirstShelfSelected}
+                                      onFirstShelfBloomed={this._onFirstShelfBloomed}
                                       onSecondShelfSelected={this._onSecondShelfSelected}
+                                      onShelvesDown={this._onShelvesDown}
                       />
             </Animated.View>
+            {this._renderGuide()}
         </View>
+
     );
   }
 }//POCContainer

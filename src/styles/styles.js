@@ -14,12 +14,21 @@ const styles = StyleSheet.create({
 	    color: Platform.isTV ? '#fff': '#333',
 	},
 
+	guideContainer: {
+		position: 'absolute',
+		top: config.stageH/(RATIO*2),
+		width: '100%',
+		height: 1,
+		backgroundColor: '#f00',
+		zIndex: 1000,
+	},
 
 	//-- POCContainer
 	pocContainer: {
 	    backgroundColor: Platform.isTV ? '#676767': '#F5FCFF',
 	    width: '100%',
 	    height: '100%',
+	    overflow: 'visible',
 	},
 
 	//-- GlobalNavPane
@@ -50,6 +59,7 @@ const styles = StyleSheet.create({
 	    position: 'absolute',
 	    width: '100%',
 	    height: '100%',
+	    overflow: 'visible',
 	    //-- for testing --//
 	    // borderWidth: 1,
     	// borderColor: '#000000',
