@@ -286,6 +286,12 @@ export default class HomeShelvesPane extends Component {
     } else if (this.selectedShelfIndex === 0) {
       this.isFirstShelfSelected = true
       this.props.onFirstShelfSelected()
+    } else if (this.selectedShelfIndex === 1) {
+      this.props.onSecondShelfSelected()
+    }
+
+    if (this.selectedShelfIndex >= 1) {
+      this.props.onShelvesUp()
     }
     //-- do something here
     console.log("INFO HomeShelvesPane :: _doUp, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
@@ -393,7 +399,7 @@ export default class HomeShelvesPane extends Component {
   _renderEachHomeShelf = (shelfObj, i) => {
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, topY ? " + (INIT_SHELF_Y + i*FOCUSED_SHELF_H))
-    console.log("INFO HomeShelvesPane :: _eachHomeShelf, FOCUSED_SHELF_H ? " + FOCUSED_SHELF_H)
+    //console.log("INFO HomeShelvesPane :: _eachHomeShelf, FOCUSED_SHELF_H ? " + FOCUSED_SHELF_H)
     return (
         <HomeShelf  
               key={(i + 1).toString()}
@@ -441,6 +447,15 @@ export default class HomeShelvesPane extends Component {
   // }
   //--------------------------------------------------------------------------//
 
+  _find_dimesions = (layout) => {
+      const {height} = layout;
+      // console.warn(x);
+      // console.warn(y);
+      // console.warn(width);
+      // console.warn(height);
+      console.log('INFO HomeShelvesPane :: _find_dimensions, height is ' + height);
+  }
+
   render() {
     //let pPosition = (this.props.index == 0)? 'relative' : 'absolute'
             //onTouchableHandleActivePressIn={this.props.onPressCallBack()} 
@@ -450,7 +465,9 @@ export default class HomeShelvesPane extends Component {
             //ref={node => this.node = node} 
             onPress={this.onFocus()}
       >
-        <View>
+        <View
+            onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
+        >
             {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
         </View>
       </TouchableWithoutFeedback>
@@ -466,6 +483,7 @@ HomeShelvesPane.propTypes = {
   onFirstShelfBloomed : PropTypes.func,
   onSecondShelfSelected : PropTypes.func,
   onShelvesDown : PropTypes.func,
+  onShelvesUp : PropTypes.func,
 }
 
 HomeShelvesPane.defaultProps = {
@@ -476,4 +494,5 @@ HomeShelvesPane.defaultProps = {
   onFirstShelfBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfBloomed")},
   onSecondShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onSecondShelfSelected")},
   onShelesDown : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesDown")},
+  onShelesUP : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesUp")},
 }

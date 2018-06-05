@@ -469,7 +469,7 @@ export default class HomeShelf extends Component {
 	    // console.warn(width);
 	    // console.warn(height);
 	    console.log('INFO HomeShelf :: _find_dimensions, height is ' + height);
-	    console.log('INFO HomeShelf :: _find_dimensions, (28/RATIO) is ' + 28/RATIO);
+	    // console.log('INFO HomeShelf :: _find_dimensions, (28/RATIO) is ' + 28/RATIO);
 	 }
 
 	render() {

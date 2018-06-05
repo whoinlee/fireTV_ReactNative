@@ -443,10 +443,18 @@ export default class POCContainer extends Component {
   _onShelvesDown = () => {
     console.log("INFO POCContainer :: _onShelvesDown, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
 
-    //-- move up homeShelves pane by '--'
+    //-- move up homeShelves pane by 'FOCUSED_SHELF_H'
     let targetY = this.currHomeShelvesY - FOCUSED_SHELF_H
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
-  }//_onFirstShelfSelected
+  }//_onShelvesDown
+
+  _onShelvesUp = () => {
+    console.log("INFO POCContainer :: _onShelvesUp, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
+
+    //-- move down homeShelves pane by 'FOCUSED_SHELF_H'
+    let targetY = this.currHomeShelvesY + FOCUSED_SHELF_H
+    this._changeLocation(HOME_SHELVES_INDEX, targetY)
+  }//_onShelvesDown
 
   // _selectTheFirstShelf = () => {
   //   // this.shelves[0].select()
@@ -506,6 +514,7 @@ export default class POCContainer extends Component {
                                       onFirstShelfBloomed={this._onFirstShelfBloomed}
                                       onSecondShelfSelected={this._onSecondShelfSelected}
                                       onShelvesDown={this._onShelvesDown}
+                                      onShelvesUp={this._onShelvesUp}
                       />
             </Animated.View>
             {this._renderGuide()}

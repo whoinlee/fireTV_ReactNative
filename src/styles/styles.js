@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
 	    backgroundColor: Platform.isTV ? '#676767': '#F5FCFF',
 	    width: '100%',
 	    height: '100%',
-	    overflow: 'visible',
 	},
 
 	//-- GlobalNavPane
@@ -58,8 +57,7 @@ const styles = StyleSheet.create({
 	    backgroundColor: '#676767',
 	    position: 'absolute',
 	    width: '100%',
-	    height: '100%',
-	    overflow: 'visible',
+	    height: '300%',
 	    //-- for testing --//
 	    // borderWidth: 1,
     	// borderColor: '#000000',
