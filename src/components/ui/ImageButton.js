@@ -9,7 +9,7 @@ import {
 import config from '../../config';
 import keyCodes from '../../keyCodes';
 import styles from '../../styles/styles';
-import homeShelvesStyle from '../../styles/homeShelvesStyle';
+// import homeShelvesStyle from '../../styles/homeShelvesStyle';
 
 
 const RATIO                 = config.density;

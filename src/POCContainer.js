@@ -25,16 +25,18 @@ import HomeHeroPane from './components/HomeHeroPane';
 import HomeShelvesPane from './components/HomeShelvesPane';
 
 
+//---------- from config -----------------------------------------//
 const RATIO               = config.density;
 const STD_DURATION        = config.stdDuration;
 const SHORT_DURATION      = config.shortDuration;
 //
 const INIT_GLOBAL_NAV_Y   = config.initGlobalNavY/RATIO;
-const INIT_HOME_HERO_Y    = config.initHomeHeroY/RATIO;     //-- 165 = (100(globalNav)+65(offset)
-const INIT_HOME_SHELVES_Y = config.initHomeShelvesY/RATIO;  //-- 836 = (100(globalNav)+65(offset)+606(homeHero)+65) = 836 
+const INIT_HOME_HERO_Y    = config.initHomeHeroY/RATIO;           //-- 165 = (100(globalNav)+65(offset)
+const INIT_HOME_SHELVES_Y = config.initHomeShelvesY/RATIO;        //-- 836 = (100(globalNav)+65(offset)+606(homeHero)+65) = 836 
 //
 const V_MIDDLE_Y          = Math.floor(config.stageH/(2*RATIO));  //-- vertical middle location of the stage
-//
+//----------------------------------------------------------------//
+
 const FOCUS_LOC_ARR       = ['globalNavPane', 'homeHeroPane', 'homeShelvesPane'];
 const GLOBAL_NAV_INDEX    = 0;
 const HOME_HERO_INDEX     = 1;
@@ -43,7 +45,7 @@ const HOME_SHELVES_INDEX  = 2;
 /* ----- from HomeShelvesPane design -------- */
 const INIT_SHELF_Y        = 62/RATIO;         //-- from container top to the 1st shelf title
 //
-//const BASE_TITLE_H        = 28/RATIO;         //-- wrong!!! ====> turned out to be '20'
+//const BASE_TITLE_H        = 28/RATIO;       //-- wrong!!! ====> turned out to be '20'
 const BASE_TITLE_H        = 40/RATIO;         
 const TITLE_N_TILE_OFFSET = 10/RATIO; 
 const BASE_TILE_H         = 180/RATIO;
@@ -62,8 +64,6 @@ const FOCUSED_SHELF_H         = BASE_SHELF_H + FOCUSED_SHELF_SHIFT_Y;
 // console.log("INFO FOCUSED_SHELF_SHIFT 1 ?? " + FOCUSED_SHELF_SHIFT_Y)
 // console.log("INFO FOCUSED_SHELF_H 1 ?? " + FOCUSED_SHELF_H)
 
-
-
 // const ControllableGlobalNav = toControllable(GlobalNavPane)
 // const ControllableHomeHero = toControllable(HomeHeroPane)
 // const ControllableHomeShelves = toControllable(HomeShelvesPane)
@@ -75,9 +75,9 @@ export default class POCContainer extends Component {
     this.state = {
       //activeControllable: null,
       //controllables: [],
-      animOpacity0: new Animated.Value(1), //-- animation instance for 'globalNav' with initial opacity value of '1'
-      animOpacity1: new Animated.Value(1), //-- for 'homeHero'
-      animOpacity2: new Animated.Value(1), //-- for 'homeShelves'
+      animOpacity0: new Animated.Value(1),    //-- animation instance for 'globalNav' with initial opacity value of '1'
+      animOpacity1: new Animated.Value(1),    //-- for 'homeHero'
+      animOpacity2: new Animated.Value(1),    //-- for 'homeShelves'
       animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- animation instance for 'globalNav' with initial location value of INIT_GLOBAL_NAV_Y
       animLocation1: new Animated.Value(INIT_HOME_HERO_Y),    //-- for 'homeHero'
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
@@ -150,11 +150,9 @@ export default class POCContainer extends Component {
         switch (evt.eventType) {
           case 'blur':
             console.log('INFO POCContainer :: blur');
-          //   //cmp._doBlur();
             break;
           case 'focus':
             console.log('INFO POCContainer :: focus');
-            //cmp._doFocus();
             break;
           case 'playPause':
             console.log('INFO POCContainer :: playPause');
@@ -171,14 +169,8 @@ export default class POCContainer extends Component {
           // case 'left':
           //   cmp._doLeft();
           //   break;
-          // case 'right':
-          //   cmp._doRight();
-          //   break;
           // case 'up':
           //   cmp._doUp();
-          //   break;
-          // case 'down':
-          //   cmp._doDown();
           //   break;
           default:
             console.log('INFO POCContainer :: _enableTVEventHandler, default evt.eventType? : ' + evt.eventType);
@@ -212,28 +204,35 @@ export default class POCContainer extends Component {
           this._doRight()
           break
         case keyCodes.center:
+        case keyCodes.return:
           this._doSelect()
           break
-        case 35:
+        case keyCodes.toggleGuide:
           this._toggleGuide()
+          break
+        case keyCodes.reload:
+          //-- for reloading the app
           break
         default:
           console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
       }//switch
     });//onKeyDownListener
+
     //this._enableTVEventHandler();
   }//_setKeyListener
 
   _removeKeyListener = () => {
     console.log('INFO POCContainer :: _removeKeyListener')
     KeyEvent.removeKeyDownListener()
+    
     //this._disableTVEventHandler()
   }//_removeKeyListener
 
   _toggleGuide = () => { this.setState({isGuideVisible: !this.state.isGuideVisible}) }
 
   _doUp = () => {
-    console.log("\nINFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
+    console.log("\n---")
+    console.log("INFO POCContainer :: _doUp, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
     switch (this.currFocusLocIndex) {
       case HOME_SHELVES_INDEX:
         if (this.isFirstShelfSelected) {
@@ -271,7 +270,7 @@ export default class POCContainer extends Component {
   }//_doUp
 
   _doDown = () => {
-    console.log("---")
+    console.log("\n---")
     console.log("INFO POCContainer :: _doDown, from " + FOCUS_LOC_ARR[this.currFocusLocIndex])
     // let prevShelfIndex
     // let nextShelfIndex
