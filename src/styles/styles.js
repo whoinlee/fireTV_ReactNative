@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 	    fontSize: 20,
 	    textAlign: 'center',
 	    margin: 10,
-	    color: Platform.isTV ? '#fff': '#333',
+	    color: Platform.isTV ? '#000': '#333',
 	},
 
 	guideContainer: {

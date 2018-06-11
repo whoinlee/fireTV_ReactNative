@@ -4,7 +4,7 @@ import {
   Animated,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
+  TouchableNativeFeedback,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -391,7 +391,6 @@ export default class HomeShelf extends Component {
 		// }
 	}//_doRight
 
-	//_moveTo = (targetY = this.props.topY, pDuration = STD_DURATION) => {
 	_moveTo = (targetY = 0, pDuration = STD_DURATION) => {
 		console.log("INFO HomeShelf :: _moveTo")
 		// TL.to(this.homeShelfContainer, pDuration, {top: targetY+'px', ease:Power3.easeOut})
@@ -487,15 +486,12 @@ export default class HomeShelf extends Component {
 
 	_find_dimesions = (layout) => {
 	    const {height} = layout;
-	    // console.warn(x);
-	    // console.warn(y);
-	    // console.warn(width);
 	    // console.warn(height);
 	    console.log('INFO HomeShelf :: _find_dimensions, height is ' + height);
-	    // console.log('INFO HomeShelf :: _find_dimensions, (28/RATIO) is ' + 28/RATIO);
-	 }
+	 }//_find_dimesions
 
 	render() {
+		console.log("TESTTTTTT==========================================>>>>> anything new???  more udpate ???")
 		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		// console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
 
@@ -503,10 +499,11 @@ export default class HomeShelf extends Component {
 		const colorArr = ['darkcyan', 'darkred', 'darkorchid']
 		let colorIndex = Math.floor(Math.random() * 3)
 		let pColor = colorArr[colorIndex]
-		let pOpacity = this.props.isFocused ? 1:.6
+		//let pOpacity = this.props.isFocused ? 1:.6
+		let pOpacity = this.props.isFocused ? 1:1	//--temporarily
 		//--------------
 		return (
-			<TouchableWithoutFeedback 
+			<TouchableNativeFeedback 
 	            onPress={this.onFocus()}
 	      	>
 				<View 
@@ -534,7 +531,7 @@ export default class HomeShelf extends Component {
 						{this.props.shows.map(this._renderEachShelfTile)}
 					</View>
 				</View>
-			</TouchableWithoutFeedback>
+			</TouchableNativeFeedback>
 		)
 	}//render
 }

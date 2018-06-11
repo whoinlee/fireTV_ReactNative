@@ -12,7 +12,6 @@ import ImageButton from './ImageButton';
 import config from '../../config';
 import keyCodes from '../../keyCodes';
 import styles from '../../styles/styles';
-// import homeShelvesStyle from '../../styles/homeShelvesStyle';
 
 
 const RATIO                 = config.density;
@@ -171,7 +170,7 @@ class ShelfTile extends Component {
 		//if (this.bloomToLargeTimerID !== null) clearTimeout(this.bloomToLargeTimerID) 
 	}
 
-	changeXLocTo = (targetX) => { TL.to(this.containerDiv, 0, {left: targetX+'px'}) }
+	_changeXLocTo = (targetX) => { TL.to(this.containerDiv, 0, {left: targetX+'px'}) }
 
 	fadeInAt = (targetX, pDelay=0, pDuration=stdDuration) => {
 		TL.to(this.containerDiv, 0, {opacity: 0, left: targetX+'px', delay:pDelay})	//CHECK
@@ -295,9 +294,7 @@ class ShelfTile extends Component {
 		//     default:
 		// 		return null
 		// }//switch
-	}//renderContent
-
-
+	}//_renderContent
 
 	render() {
 		// console.log("INFO ShelfTile :: render, this.props.imageURL ? " + this.props.imageURL)

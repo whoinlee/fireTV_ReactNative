@@ -1,5 +1,6 @@
 rootProject.name = 'RN055FireTV'
-include ':react-native-keyevent'
-project(':react-native-keyevent').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-keyevent/android')
+//-- commented out by WhoIN, for testing, on 06/11/18
+//include ':react-native-keyevent'
+//project(':react-native-keyevent').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-keyevent/android')
 
 include ':app'

@@ -14,7 +14,7 @@ import {
   TVEventHandler,
   View
 } from 'react-native';
-import KeyEvent from 'react-native-keyevent';
+// import KeyEvent from 'react-native-keyevent';
 
 import config from './config';
 import keyCodes from './keyCodes';
@@ -134,13 +134,13 @@ export default class POCContainer extends Component {
   // }
 
   componentDidMount() {
-    //this._enableTVEventHandler()
-    this._setKeyListener()
+    this._enableTVEventHandler()
+    //this._setKeyListener()
   }//componentDidMount
 
   componentWillUnmount() {
-    //_disableTVEventHandler()
-    this._removeKeyListener()
+    this._disableTVEventHandler()
+    //this._removeKeyListener()
   }//componentWillUnmount
 
   _enableTVEventHandler() {
@@ -150,7 +150,7 @@ export default class POCContainer extends Component {
     this.tvEventHandler.enable(this, function(cmp, evt) {
       console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
       //-- sometimes works, sometimes doesn't ?????
-      //if (evt) {
+      if (evt) {
         console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
         switch (evt.eventType) {
           case 'blur':
@@ -180,7 +180,7 @@ export default class POCContainer extends Component {
           default:
             console.log('INFO POCContainer :: _enableTVEventHandler, default evt.eventType? : ' + evt.eventType);
         }//switch
-      // }//if
+      }//if
     });//enable
   }//_enableTVEventHandler
 
@@ -193,42 +193,42 @@ export default class POCContainer extends Component {
 
   _setKeyListener = () => {
     console.log('INFO POCContainer :: _setKeyListener')
-    this._enableTVEventHandler();
-    KeyEvent.onKeyDownListener((keyEvent) => {
-      console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
-      switch (keyEvent.keyCode) {
-        case keyCodes.up:
-          this._doUp()
-          break
-        case keyCodes.down:
-          this._doDown()
-          break
-        case keyCodes.left:
-          this._doLeft()
-          break
-        case keyCodes.right:
-          this._doRight()
-          break
-        case keyCodes.center:
-        case keyCodes.return:
-          this._doSelect()
-          break
-        case keyCodes.toggleGuide:
-          this._toggleGuide()
-          break
-        case keyCodes.reload:
-          //-- for reloading the app: r, r
-          //-- do nothing
-          break
-        default:
-          console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
-      }//switch
-    });//onKeyDownListener
+    //this._enableTVEventHandler();
+    // KeyEvent.onKeyDownListener((keyEvent) => {
+    //   console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
+    //   // switch (keyEvent.keyCode) {
+    //   //   case keyCodes.up:
+    //   //     //this._doUp()
+    //   //     break
+    //   //   case keyCodes.down:
+    //   //     //this._doDown()
+    //   //     break
+    //   //   case keyCodes.left:
+    //   //     //this._doLeft()
+    //   //     break
+    //   //   case keyCodes.right:
+    //   //     //this._doRight()
+    //   //     break
+    //   //   case keyCodes.center:
+    //   //   case keyCodes.return:
+    //   //     //this._doSelect()
+    //   //     break
+    //   //   case keyCodes.toggleGuide:
+    //   //     //this._toggleGuide()
+    //   //     break
+    //   //   case keyCodes.reload:
+    //   //     //-- for reloading the app
+    //   //     break
+    //   //   default:
+    //   //     console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
+    //   // }//switch
+    // });//onKeyDownListener
   }//_setKeyListener
 
   _removeKeyListener = () => {
     console.log('INFO POCContainer :: _removeKeyListener')
     KeyEvent.removeKeyDownListener()
+
     //this._disableTVEventHandler()
   }//_removeKeyListener
 
@@ -488,8 +488,6 @@ export default class POCContainer extends Component {
                                 opacity: animOpacity0  } } >
                       <GlobalNavPane  
                                       ref={node => this.selectablePanes[GLOBAL_NAV_INDEX] = node}
-                                      isFocused={this.currFocusLocIndex === GLOBAL_NAV_INDEX}
-                                      onFocus={this._onGlobalNavPaneFocus}
                       />
             </Animated.View>
             <Animated.View
@@ -498,27 +496,8 @@ export default class POCContainer extends Component {
                                 opacity: animOpacity1  } } >
                       <HomeHeroPane   
                                       ref={node => this.selectablePanes[HOME_HERO_INDEX] = node}
-                                      isFocused={this.currFocusLocIndex === HOME_HERO_INDEX}
-                                      onFocus={this._onHomeHeroPaneFocus}
                       />
             </Animated.View>
-            <Animated.View
-                      style={ { ...this.props.homeShelvesStyleObj, 
-                                top: animLocation2,
-                                opacity: animOpacity2  } } >
-                      <HomeShelvesPane  
-                                      ref={node => this.selectablePanes[HOME_SHELVES_INDEX] = node}
-                                      isFocused={this.currFocusLocIndex === HOME_SHELVES_INDEX}
-                                      onFocus={this._onShelvesPaneFocus}
-                                      onBlur={this._onShelvesPaneBlur}
-                                      onFirstShelfSelected={this._onFirstShelfSelected}
-                                      onFirstShelfBloomed={this._onFirstShelfBloomed}
-                                      onSecondShelfSelected={this._onSecondShelfSelected}
-                                      onShelvesDown={this._onShelvesDown}
-                                      onShelvesUp={this._onShelvesUp}
-                      />
-            </Animated.View>
-            {this._renderGuide()}
         </View>
 
     );

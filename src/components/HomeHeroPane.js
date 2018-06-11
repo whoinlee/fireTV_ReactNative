@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   Text,
   TouchableWithoutFeedback,
-  // TouchableNativeFeedback,
   View
 } from 'react-native';
 import styles from '../styles/styles';
@@ -50,6 +49,9 @@ export default class HomeHeroPane extends Component {
     return (
       <TouchableWithoutFeedback 
         onPress={this.onFocus()}
+        // onPress={console.log("INFO HomeHeroPane :: TouchableWithoutFeedback onPress")}
+        // onPressIn={console.log("INFO HomeHeroPane :: TouchableWithoutFeedback onPressIn")}
+        // onPressOut={console.log("INFO HomeHeroPane :: TouchableWithoutFeedback onPressOut")}
       >
         <View>
             <Text style={styles.comment}>

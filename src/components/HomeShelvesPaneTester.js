@@ -4,8 +4,9 @@ import {
   Animated,
   Easing,
   Image,
+  StyleSheet,
   Text,
-  TouchableWithoutFeedback,
+  TouchableNativeFeedback,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -19,6 +20,7 @@ import styles from '../styles/styles';
 const RATIO                 = config.density;
 const STD_DURATION          = config.stdDuration;
 const SHORT_DURATION        = config.shortDuration;
+const TOP                   = config.initHomeShelvesY/RATIO;
 //
 const SHELVES_DATA_ARR      = [
   {
@@ -232,43 +234,6 @@ export default class HomeShelvesPane extends Component {
     KeyEvent.removeKeyDownListener();
   }//_removeKeyListener
 
-  onFocus = () => {
-    if (this.props.isFocused) {
-      console.log('\nINFO HomeShelvesPane :: onFocus ====================>');
-
-      if (!this.isFocused) {
-        this.isFocused = true
-        this.isFirstShelfSelected = true
-        this.selectedShelfIndex = 0
-        //this.setState({selectedShelfIndex:0})
-        this._setKeyListener()
-      }
-
-      const { onFocus } = this.props;
-      if (onFocus) {
-        //console.log('INFO HomeShelvesPane :: onFocus calling back from HomeShelvesPane');
-        onFocus();
-      }
-    }
-  }//onFocus
-
-  onBlur = () => {
-    console.log("\nINFO HomeShelvesPane :: onBlur ====================>")
-
-    if (!this.isFocused) return
-    this.isFocused = false
-    this.isFirstShelfSelected = false
-    this.selectedShelfIndex = -1
-    //this.setState({selectedShelfIndex : -1})
-    this._removeKeyListener()
-
-    const { onBlur } = this.props;
-    if (onBlur) {
-        //console.log('INFO HomeShelvesPane :: onBlur calling back from HomeShelvesPane');
-        onBlur();
-    }
-  }//onBlur
-
   _doUp = () => {
     //console.log("---")
     console.log("\nINFO HomeShelvesPane :: _doUp, from HomeShelvesPane updated for test")
@@ -406,7 +371,7 @@ export default class HomeShelvesPane extends Component {
   }//_onShelfBlur
 
   _renderEachHomeShelf = (shelfObj, i) => {
-    console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
+    //console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, this.selectedShelfIndex ? " + this.selectedShelfIndex)
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, (this.selectedShelfIndex === i) ? " + (this.selectedShelfIndex === i))
     return (
@@ -421,8 +386,8 @@ export default class HomeShelvesPane extends Component {
               callBackOnLargeBloomStart={this._onLargeBloomStart}
               callBackOnBackToFocused={this._moveBackAdjacentShelves} 
               isFocused={this.selectedShelfIndex === i}
-              onFocus={this._onShelfFocus}
-              onBlur={this._onShelfBlur}
+              //onFocus={this._onShelfFocus}
+              //onBlur={this._onShelfBlur}
         >
         </HomeShelf>
     )
@@ -437,28 +402,71 @@ export default class HomeShelvesPane extends Component {
       console.log('INFO HomeShelvesPane :: _find_dimensions, height is ' + height);
   }//_find_dimensions
 
+
+  onFocus = () => {
+   // if (this.props.isFocused) {
+      console.log('INFO HomeShelvesPane :: onFocus ====================>');
+
+      // if (!this.isFocused) {
+      //   this.isFocused = true
+      //   this.isFirstShelfSelected = true
+      //   this.selectedShelfIndex = 0
+      //   //this.setState({selectedShelfIndex:0})
+      //   this._setKeyListener()
+      // }
+
+      const { onFocus } = this.props;
+      if (onFocus) {
+        //console.log('INFO HomeShelvesPane :: onFocus calling back from HomeShelvesPane');
+        onFocus();
+      }
+    //}
+  }//onFocus
+
+  onBlur = () => {
+    console.log("INFO HomeShelvesPane :: onBlur ====================>")
+
+    // if (!this.isFocused) return
+    // this.isFocused = false
+    // this.isFirstShelfSelected = false
+    // this.selectedShelfIndex = -1
+    // //this.setState({selectedShelfIndex : -1})
+    // this._removeKeyListener()
+
+    const { onBlur } = this.props;
+    if (onBlur) {
+        //console.log('INFO HomeShelvesPane :: onBlur calling back from HomeShelvesPane');
+        onBlur();
+    }
+  }//onBlur
+
+  onSelect = () => {
+    console.log("INFO HomeShelvesPane :: onSelect =====>")
+  }
+
   render() {
     return (
-      <TouchableWithoutFeedback 
-        onPress={this.onFocus()}
-        // onPress={console.log("INFO HomeShelvesPane :: TouchableWithoutFeedback onPress")}
-        // onPressIn={console.log("INFO HomeShelvesPane :: TouchableWithoutFeedback onPressIn")}
-        // onPressOut={console.log("INFO HomeShelvesPane :: TouchableWithoutFeedback onPressOut")}
+      <TouchableNativeFeedback 
+        onPress={this.onSelect}
+          onPressIn={this.onFocus}
+          onPressOut={this.onBlur}
       >
-        <View
+        <View style={ {...this.props.styleObj, top:TOP} }
             //onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
         >
             {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableNativeFeedback>
     );
   }
 }
 
 HomeShelvesPane.propTypes = {
+  styleObj: PropTypes.object,
   isFocused : PropTypes.bool,
   onFocus : PropTypes.func,
   onBlur : PropTypes.func,
+  onSelect : PropTypes.func,
   onFirstShelfSelected : PropTypes.func,
   onFirstShelfBloomed : PropTypes.func,
   onSecondShelfSelected : PropTypes.func,
@@ -467,9 +475,11 @@ HomeShelvesPane.propTypes = {
 }
 
 HomeShelvesPane.defaultProps = {
+  styleObj: StyleSheet.flatten(styles.homeShelvesContainer),
   isFocused : false,
   onFocus: () => {console.log("INFO HomeShelvesPane :: please pass a function for onFocus")},
   onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
+  onSelect: () => {console.log("INFO HomeShelvesPane :: please pass a function for onSelect")},
   onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
   onFirstShelfBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfBloomed")},
   onSecondShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onSecondShelfSelected")},

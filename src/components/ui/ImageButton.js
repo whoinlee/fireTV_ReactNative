@@ -8,8 +8,7 @@ import {
 
 import config from '../../config';
 import keyCodes from '../../keyCodes';
-import styles from '../../styles/styles';
-// import homeShelvesStyle from '../../styles/homeShelvesStyle';
+// import styles from '../../styles/styles';
 
 
 const RATIO                 = config.density;
