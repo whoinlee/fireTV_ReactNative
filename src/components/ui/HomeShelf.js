@@ -5,13 +5,14 @@ import {
   StyleSheet,
   Text,
   TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
-import KeyEvent from 'react-native-keyevent';
+// import KeyEvent from 'react-native-keyevent';
 import ShelfTile from './ShelfTile';
 
 import config from '../../config';
-import keyCodes from '../../keyCodes';
+// import keyCodes from '../../keyCodes';
 // import homeShelvesStyle from '../../styles/homeShelvesStyle';
 
 
@@ -454,6 +455,34 @@ export default class HomeShelf extends Component {
 		this.props.callBackOnBackToFocused()
 	}//_backToFocused
 
+	onFocus = () => {
+	    console.log("INFO HomeShelf :: onFocus ====================================> HomeShelf, this.props.index ?? " + this.props.index)
+	    //this._selectTheFirstShelf()	//selectTheFirstTile
+
+	    const { onFocus } = this.props
+	    if (onFocus) {
+	        //console.log('INFO HomeShelvesPane :: onFocus calling back from HomeHeroPane');
+	        onFocus()
+	    }
+	}
+
+  	onBlur = () => {
+	    console.log("INFO HomeShelf :: onBlur ====================================> HomeShelf")
+
+	    const { onBlur } = this.props;
+	    if (onBlur) {
+	        onBlur()
+	    }
+  	}
+
+	onSelect = () => {
+	    console.log("INFO HomeShelf :: onSelect ====================================> HomeShelf")
+	    const { onSelect } = this.props;
+	      if (onSelect) {
+	        onSelect();
+	      }
+	}
+
 	_renderEachShelfTile = (tileObj, i) => {
 		// console.log("INFO HomeShelf :: _renderEachShelfTile")
 		const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
@@ -491,7 +520,7 @@ export default class HomeShelf extends Component {
 	 }//_find_dimesions
 
 	render() {
-		console.log("TESTTTTTT==========================================>>>>> anything new???  more udpate ???")
+		console.log("INFO HomeShelf :: render --------------------------------------------------------------->")
 		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		// console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
 
@@ -503,8 +532,11 @@ export default class HomeShelf extends Component {
 		let pOpacity = this.props.isFocused ? 1:1	//--temporarily
 		//--------------
 		return (
-			<TouchableNativeFeedback 
-	            onPress={this.onFocus()}
+			<TouchableWithoutFeedback 
+	            // onPress={this.onFocus()}
+	            onPressIn={this.onFocus}
+          		//onPressOut={this.onBlur}
+          		//onPress={this.onSelect}
 	      	>
 				<View 
 					style={{ 
@@ -531,7 +563,7 @@ export default class HomeShelf extends Component {
 						{this.props.shows.map(this._renderEachShelfTile)}
 					</View>
 				</View>
-			</TouchableNativeFeedback>
+			</TouchableWithoutFeedback>
 		)
 	}//render
 }
@@ -575,14 +607,18 @@ HomeShelf.propTypes = {
 	styleObj: PropTypes.object,
 	//
 	isFocused : PropTypes.bool,
+	//
   	onFocus : PropTypes.func,
   	onBlur : PropTypes.func,
+  	onSelect : PropTypes.func,
 };
 
 HomeShelf.defaultProps = {
 	callBackOnLargeBloomStart: () => {console.log("INFO HomeShelf :: please pass a function for callBackOnLargeBloomStart")},
 	callBackOnBackToFocused: () => {console.log("INFO HomeShelf :: please pass a function for callBackOnBackToFocused")},
 	isFocused : false,
+
 	onFocus: () => {console.log("INFO HomeShelf :: please pass a function for onFocus")},
-  	onBlur: () => {console.log("INFO HomeShelf :: please pass a function for onBlur")},
+  	//onBlur: () => {console.log("INFO HomeShelf :: please pass a function for onBlur")},
+  	//onSelect: () => {console.log("INFO HomeShelf :: please pass a function for onSelect")},
 };
