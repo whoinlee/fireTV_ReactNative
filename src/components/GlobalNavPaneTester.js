@@ -94,11 +94,16 @@ export default class GlobalNavPane extends Component {
   }
 
   onSelect = () => {
-    console.log("INFO GlobalNavPane :: onSelect =====>")
+    console.log("INFO GlobalNavPaneTester :: onSelect =======================>")
+    const { onSelect } = this.props;
+      if (onSelect) {
+        //console.log('INFO GlobalNavPane :: onSelect calling back from GlobalNavPane');
+        onSelect();
+      }
   }
 
   onFocus = () => {
-    console.log("INFO GlobalNavPane :: onFocus =====>")
+    console.log("INFO GlobalNavPaneTester :: onFocus =======================>")
 
     //if (this.props.isFocused) {
       const { onFocus } = this.props;
@@ -110,7 +115,12 @@ export default class GlobalNavPane extends Component {
   }
 
   onBlur = () => {
-    console.log("\nINFO GlobalNavPane :: onBlur =====>")
+    console.log("INFO GlobalNavPaneTester :: onBlur =======================>")
+    const { onBlur } = this.props;
+      if (onBlur) {
+        //console.log('INFO GlobalNavPane :: onBlur calling back from GlobalNavPane');
+        onBlur();
+      }
   }
 
   render() {

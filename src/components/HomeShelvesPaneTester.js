@@ -405,7 +405,7 @@ export default class HomeShelvesPane extends Component {
 
   onFocus = () => {
    // if (this.props.isFocused) {
-      console.log('INFO HomeShelvesPane :: onFocus ====================>');
+      console.log('INFO HomeShelvesPane :: onFocus =======================>');
 
       // if (!this.isFocused) {
       //   this.isFocused = true
@@ -424,7 +424,7 @@ export default class HomeShelvesPane extends Component {
   }//onFocus
 
   onBlur = () => {
-    console.log("INFO HomeShelvesPane :: onBlur ====================>")
+    console.log("INFO HomeShelvesPane :: onBlur =======================>")
 
     // if (!this.isFocused) return
     // this.isFocused = false
@@ -441,7 +441,12 @@ export default class HomeShelvesPane extends Component {
   }//onBlur
 
   onSelect = () => {
-    console.log("INFO HomeShelvesPane :: onSelect =====>")
+    console.log("INFO HomeShelvesPane :: onSelect =======================>")
+    const { onSelect } = this.props;
+    if (onSelect) {
+        //console.log('INFO HomeShelvesPane :: onSelect calling back from HomeShelvesPane');
+        onSelect();
+    }
   }
 
   render() {

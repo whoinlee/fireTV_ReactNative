@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   Text,
   TouchableWithoutFeedback,
   View
 } from 'react-native';
 import styles from '../styles/styles';
+import config from '../config';
 
 
 export default class HomeHeroPane extends Component {
@@ -31,27 +33,41 @@ export default class HomeHeroPane extends Component {
   }
 
   onFocus = () => {
-    if (this.props.isFocused) {
-      console.log("\nINFO HomeHeroPane :: onFocus =====>")
+    //if (this.props.isFocused) {
+      console.log("INFO HomeHeroPane :: onFocus =================================> HomeHeroPane")
       const { onFocus } = this.props;
       if (onFocus) {
         console.log('INFO HomeHeroPane :: onFocus calling back from HomeHeroPane');
         onFocus();
       }
-    }
+   // }
   }
 
   onBlur = () => {
-    console.log("\nINFO HomeHeroPane :: onBlur =====>")
+    console.log("INFO HomeHeroPane :: onBlur =================================> HomeHeroPane")
+    const { onBlur } = this.props;
+      if (onBlur) {
+        console.log('INFO HomeHeroPane :: onBlur calling back from HomeHeroPane');
+        onBlur();
+      }
+  }
+
+  onSelect = () => {
+    console.log("INFO HomeHeroPane :: onSelect =================================> HomeHeroPane")
+    const { onSelect } = this.props;
+      if (onSelect) {
+        //console.log('INFO HomeHeroPane :: onSelect calling back from HomeHeroPane');
+        onSelect();
+      }
   }
 
   render() {
     return (
       <TouchableWithoutFeedback 
-        onPress={this.onFocus()}
-        // onPress={console.log("INFO HomeHeroPane :: TouchableWithoutFeedback onPress")}
-        // onPressIn={console.log("INFO HomeHeroPane :: TouchableWithoutFeedback onPressIn")}
-        // onPressOut={console.log("INFO HomeHeroPane :: TouchableWithoutFeedback onPressOut")}
+        //onPress={this.onFocus()}
+          onPress={this.onSelect}
+          onPressIn={this.onFocus}
+          onPressOut={this.onBlur}
       >
         <View>
             <Text style={styles.comment}>
@@ -62,4 +78,18 @@ export default class HomeHeroPane extends Component {
       </TouchableWithoutFeedback>
     );
   }
+}
+
+HomeHeroPane.propTypes = {
+  // styleObj: PropTypes.object,
+  onFocus : PropTypes.func,
+  onBlur : PropTypes.func,
+  onSelect : PropTypes.func,
+}
+
+HomeHeroPane.defaultProps = {
+  // styleObj: StyleSheet.flatten(styles.homeHeroContainer),
+  onFocus: () => {console.log("INFO HomeHeroPane :: please pass a function for onFocus")},
+  // onBlur: () => {console.log("INFO HomeHeroPane :: please pass a function for onBlur")},
+  // onSelect: () => {console.log("INFO HomeHeroPane :: please pass a function for onSelect")},
 }

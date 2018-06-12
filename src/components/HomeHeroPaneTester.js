@@ -36,12 +36,17 @@ export default class HomeHeroPane extends Component {
   }
 
   onSelect = () => {
-    console.log("INFO HomeHeroPane :: onSelect =====>")
+    console.log("INFO HomeHeroPaneTester :: onSelect =======================>")
+    const { onSelect } = this.props;
+      if (onSelect) {
+        //console.log('INFO HomeHeroPane :: onFocus calling back from HomeHeroPane');
+        onSelect();
+      }
   }
 
   onFocus = () => {
    // if (this.props.isFocused) {
-      console.log("INFO HomeHeroPane :: onFocus =====>")
+      console.log("INFO HomeHeroPaneTester :: onFocus =======================>")
       const { onFocus } = this.props;
       if (onFocus) {
         //console.log('INFO HomeHeroPane :: onFocus calling back from HomeHeroPane');
@@ -51,7 +56,12 @@ export default class HomeHeroPane extends Component {
   }
 
   onBlur = () => {
-    console.log("INFO HomeHeroPane :: onBlur =====>")
+    console.log("INFO HomeHeroPaneTester :: onBlur =======================>")
+    const { onBlur } = this.props;
+      if (onBlur) {
+        //console.log('INFO HomeHeroPane :: onFocus calling back from HomeHeroPane');
+        onBlur();
+      }
   }
 
   render() {
