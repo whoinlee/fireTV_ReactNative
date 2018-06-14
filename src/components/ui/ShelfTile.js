@@ -336,20 +336,21 @@ ShelfTile.propTypes = {
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!	*/
-	callBackOnLargeBloomStart: PropTypes.func,
-	callBackOnNoMenuLeft: PropTypes.func,
-	//
-	isFocused : PropTypes.bool,
-  	onFocus : PropTypes.func,
-  	onBlur : PropTypes.func,
+	
+	// callBackOnLargeBloomStart: PropTypes.func,
+	// callBackOnNoMenuLeft: PropTypes.func,
+	// //
+	// isFocused : PropTypes.bool,
+ //  	onFocus : PropTypes.func,
+ //  	onBlur : PropTypes.func,
 };
 
 ShelfTile.defaultProps = {
-	callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
-	callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
-	isFocused : false,
-	onFocus: () => {console.log("INFO ShelfTile :: please pass a function for onFocus")},
-  	onBlur: () => {console.log("INFO ShelfTile :: please pass a function for onBlur")},
+	// callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
+	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
+	// isFocused : false,
+	// onFocus: () => {console.log("INFO ShelfTile :: please pass a function for onFocus")},
+ //  	onBlur: () => {console.log("INFO ShelfTile :: please pass a function for onBlur")},
 };
 
 export default ShelfTile

@@ -141,7 +141,7 @@ android {
 
 dependencies {
     //-- commented out by WhoIN, for testing, on 06/11/18
-//    compile project(':react-native-keyevent')
+    compile project(':react-native-keyevent')
     //...-v7:23.0.1
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:26.0.2"    //23.0.1 (not working), 26.0.2

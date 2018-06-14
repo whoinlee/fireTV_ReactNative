@@ -10,17 +10,24 @@ import {
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
-import HomeShelf from './ui/HomeShelf';
+import HomeShelf from './ui/HomeShelfK';
 
 import config from '../config';
 import keyCodes from '../keyCodes';
 import styles from '../styles/styles';
 
 
+
 const RATIO                 = config.density;
 const STD_DURATION          = config.stdDuration;
 const SHORT_DURATION        = config.shortDuration;
 //
+const UNSELECTED_OPACITY    = config.unselectedOpacity;
+const SELECTED_OPACITY      = config.selectedOpacity;
+
+//----------------//
+//-- test data -- //
+//----------------//
 const SHELVES_DATA_ARR      = [
   {
     title:'up next (7)',
@@ -142,27 +149,29 @@ const SHELVES_DATA_ARR      = [
       ]
   }
 ];//SHELVES_DATA_ARR: hardcoded test data
-//
 const TOTAL_SHELVES         = SHELVES_DATA_ARR.length;
 const MAX_INDEX             = TOTAL_SHELVES - 1;
-const INIT_SHELF_Y          = 62/RATIO;         //-- from container top to the 1st shelf title
-//
-const BASE_TILE_H           = 180/RATIO;        //90
-const FOCUSED_TILE_H        = 332/RATIO;        //166
-//
-//const BASE_TITLE_H          = 28/RATIO;       //-- title height for Helvetica Light 28px
-const BASE_TITLE_H          = 40/RATIO;         //-- title height for Helvetica Light 28px
-const TITLE_N_TILE_OFFSET   = 10/RATIO;         //-- offset between title & tiles
-const BASE_SHELF_OFFSET     = 106/RATIO;        //-- offset between shelves: from the bottom of previous shelf image to the top of next shelf title
-const BASE_SHELF_H          = (BASE_TITLE_H + TITLE_N_TILE_OFFSET + BASE_TILE_H + BASE_SHELF_OFFSET);     //-- distance between unselected shelves
-//
-const FOCUSED_SHELF_SHIFT   = (FOCUSED_TILE_H - BASE_TILE_H)/2;    //-- (332-180)/2 = 76: how much unselected shelves shift on selected shelf's being focused
-const FOCUSED_SHELF_H       = BASE_SHELF_H + FOCUSED_SHELF_SHIFT;
-const BLOOMED_SHELF_SHIFT   = Math.floor(131/RATIO);
-const FOCUSED_SHELF_OFFSET  = BASE_SHELF_OFFSET + FOCUSED_SHELF_SHIFT;
 
-// console.log("\nINFO FOCUSED_SHELF_SHIFT 2 ?? " + FOCUSED_SHELF_SHIFT)
-// console.log("INFO FOCUSED_SHELF_H 2 ?? " + FOCUSED_SHELF_H)
+
+const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;
+
+//-- title (headline)
+const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;         
+const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;
+
+//-- tile (slide) height
+const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;
+const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO; 
+
+//-- shelf related
+const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;
+const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;
+
+const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;
+const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;
+
+const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO;
+const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO; 
 
 
 export default class HomeShelvesPane extends Component {
@@ -171,16 +180,16 @@ export default class HomeShelvesPane extends Component {
     this.state = {
       //isFocused: false,
       //onFocusShelf: null,   //TODO: need to be here?
-      selectedShelfIndex: -1, //TODO: need to be here?
+      //selectedShelfIndex: -1, //TODO: need to be here?
       //isFirstShelfSelected: false,
       //shelvesTopY: initContainerY + 'px',
     }
 
     this.containerShiftOffsetY = 0
+    this.selectedShelfIndex = -1
 
     this.isFocused = false
     this.isFirstShelfSelected = false
-    this.selectedShelfIndex = -1
 
     this.shelves = []
     this.animsArr = []
@@ -191,7 +200,7 @@ export default class HomeShelvesPane extends Component {
     this.isNextMoved = false
     
     this.totalMenu = 3
-    this.totalShelves = 0
+    this.totalShelves = TOTAL_SHELVES
   }
 
   componentDidMount() {
@@ -202,93 +211,120 @@ export default class HomeShelvesPane extends Component {
     this._removeKeyListener()
   }//componentWillUnmount
 
-  _doUp = () => {
-    //console.log("---")
-    console.log("\nINFO HomeShelvesPane :: _doUp, from HomeShelvesPane updated for test")
+  // doDown = () => {
+  //   console.log("INFO HomeShelvesPane, doDown :: testing ............................................")
+  // }//doDown
+
+  // doUp = () => {
+  //   console.log("INFO HomeShelvesPane, doUp :: testing ............................................")
+  // }//doUp
+
+  _onBlur = () => {
+    console.log("INFO HomeShelvesPane :: _onBlur")
+
+    const { onBlur } = this.props;
+    if (onBlur) {
+      onBlur()
+    }
+  }
+
+  doUp = () => {
+    console.log("INFO HomeShelvesPane :: doUp")
 
     if (this.selectedShelfIndex < 0) return
 
     this.selectedShelfIndex--
-    if (this.selectedShelfIndex === -1) {
-      //this.isFirstShelfSelected = false
-      //this.setState({selectedShelfIndex:-1})
-      this.onBlur()
-      return
-    } else if (this.selectedShelfIndex === 0) {
-      this.isFirstShelfSelected = true
-      this.props.onFirstShelfSelected()
-    } else if (this.selectedShelfIndex === 1) {
-      this.props.onSecondShelfSelected()
+    if (this.selectedShelfIndex < 0) {
+      this._onBlur()
+    } else {
+      this._onShelfFocus(this.selectedShelfIndex)
     }
+    this.isFirstShelfSelected = (this.selectedShelfIndex === 0) //TODO: CHECK need??
+    
 
-    //this.setState({selectedShelfIndex:this.selectedShelfIndex})
+    // if (this.selectedShelfIndex < 0) return
 
-    if (this.selectedShelfIndex >= 1) {
-      this.props.onShelvesUp()
-    }
-    //-- do something here
-    console.log("INFO HomeShelvesPane :: _doUp, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
-  }//_doUp
+    // this.selectedShelfIndex--
+    // if (this.selectedShelfIndex === -1) {
+    //   //this.isFirstShelfSelected = false
+    //   //this.setState({selectedShelfIndex:-1})
+    //   this.onBlur()
+    //   return
+    // } else if (this.selectedShelfIndex === 0) {
+    //   this.isFirstShelfSelected = true
+    //   this.props.onFirstShelfSelected()
+    // } else if (this.selectedShelfIndex === 1) {
+    //   this.props.onSecondShelfSelected()
+    // }
 
-  _doDown = () => {
-    //console.log("---")
-    console.log("\nINFO HomeShelvesPane :: _doDown, from HomeShelvesPane")
+    // //this.setState({selectedShelfIndex:this.selectedShelfIndex})
 
-    this.isFirstShelfSelected = false
+    // if (this.selectedShelfIndex >= 1) {
+    //   this.props.onShelvesUp()
+    // }
+    // //-- do something here
+    // console.log("INFO HomeShelvesPane :: doUp, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
+  }//doUp
+
+  doDown = () => {
+    console.log("INFO HomeShelvesPane :: doDown")
+
     this.selectedShelfIndex++
     if (this.selectedShelfIndex >= this.totalShelves) {
       this.selectedShelfIndex = this.totalShelves - 1
-      //this.setState({selectedShelfIndex:this.selectedShelfIndex})
       return
     }
 
-    //-- do something here
-    console.log("INFO HomeShelvesPane :: _doDown, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
-    //this.setState({selectedShelfIndex:this.selectedShelfIndex})
-    if (this.selectedShelfIndex === 1) {
-      this.props.onSecondShelfSelected()
-    }
+    this.isFirstShelfSelected = (this.selectedShelfIndex === 0) //TODO: CHECK need??
+    this._onShelfFocus(this.selectedShelfIndex)
 
-    if (this.selectedShelfIndex >= 1) {
-      this.props.onShelvesDown()
-    }
+    // //-- do something here
+    // console.log("INFO HomeShelvesPane :: _doDown, from HomeShelvesPane, selectedShelfIndex is ? " + this.selectedShelfIndex)
+    // //this.setState({selectedShelfIndex:this.selectedShelfIndex})
+    // if (this.selectedShelfIndex === 1) {
+    //   this.props.onSecondShelfSelected()
+    // }
 
-    //this.setState({selectedShelfIndex : this.state.selectedShelfIndex + 1})
-    //console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane, this.state.selectedShelfIndex ?? " + this.state.selectedShelfIndex )
+    // if (this.selectedShelfIndex >= 1) {
+    //   this.props.onShelvesDown()
+    // }
 
-    // switch (this._currFocusLocIndex) {
-    //   case GLOBAL_NAV_INDEX:
-    //     this._currFocusLocIndex += 1
-    //     this._changeOpacity(GLOBAL_NAV_INDEX, .6)
-    //     this._changeOpacity(HOME_HERO_INDEX, 1)
-    //     this._changeOpacity(HOME_SHELVES_INDEX, .6)
-    //     //-- TODO: reset homeShelves y location
-    //     break;
-    //   case HOME_HERO_INDEX:
-    //     this._currFocusLocIndex += 1
-    //     this._changeOpacity(HOME_HERO_INDEX, .6)
-    //     this._changeOpacity(HOME_SHELVES_INDEX, 1)
-    //     break;
-    //   case HOME_SHELVES_INDEX:
-    //     //-- handle inside of homeShelves pane
-    // }//switch
+    // //this.setState({selectedShelfIndex : this.state.selectedShelfIndex + 1})
+    // //console.log("\nINFO HomeShelvesPane :: onDown, from HomeShelvesPane, this.state.selectedShelfIndex ?? " + this.state.selectedShelfIndex )
 
-    //console.log("INFO HomeShelvesPane :: doDown, to ")
-    // console.log("INFO HomeShelvesPane :: _doDown, to " + FOCUS_LOC_ARR[this._currFocusLocIndex])
-    //console.log(" ")
-  }//_doDown
+    // // switch (this._currFocusLocIndex) {
+    // //   case GLOBAL_NAV_INDEX:
+    // //     this._currFocusLocIndex += 1
+    // //     this._changeOpacity(GLOBAL_NAV_INDEX, .6)
+    // //     this._changeOpacity(HOME_HERO_INDEX, 1)
+    // //     this._changeOpacity(HOME_SHELVES_INDEX, .6)
+    // //     //-- TODO: reset homeShelves y location
+    // //     break;
+    // //   case HOME_HERO_INDEX:
+    // //     this._currFocusLocIndex += 1
+    // //     this._changeOpacity(HOME_HERO_INDEX, .6)
+    // //     this._changeOpacity(HOME_SHELVES_INDEX, 1)
+    // //     break;
+    // //   case HOME_SHELVES_INDEX:
+    // //     //-- handle inside of homeShelves pane
+    // // }//switch
 
-  _doLeft = () => {
-    console.log('INFO HomeShelvesPane :: _onLeft, from HomeShelvesPane');
-  }//_doLeft
+    // //console.log("INFO HomeShelvesPane :: doDown, to ")
+    // // console.log("INFO HomeShelvesPane :: _doDown, to " + FOCUS_LOC_ARR[this._currFocusLocIndex])
+    // //console.log(" ")
+  }//doDown
 
-  _doRight = () => {
-    console.log('INFO HomeShelvesPane :: _onRight, from HomeShelvesPane');
-  }//_doRight
+  doLeft = () => {
+    console.log('INFO HomeShelvesPane :: doLeft, from HomeShelvesPane');
+  }//doLeft
 
-  _doSelect = () => {
-    console.log('INFO HomeShelvesPane :: _doSelect, from HomeShelvesPane ====>      ');
-  }//_doSelect
+  doRight = () => {
+    console.log('INFO HomeShelvesPane :: doRight, from HomeShelvesPane');
+  }//doRight
+
+  doSelect = () => {
+    console.log('INFO HomeShelvesPane :: doSelect, from HomeShelvesPane ====>      ');
+  }//doSelect
 
   _onLargeBloomStart = () => {
     //console.log("INFO HomeShelvesPane :: onLargeBloomStart")
@@ -331,12 +367,27 @@ export default class HomeShelvesPane extends Component {
   // }
 
   _onShelfFocus = (pIndex) => {
-    console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> focused shelfIndex is ? " + pIndex)
+    console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
 
+    // if (this.selectedShelfIndex !== pIndex) {
+    //   this.selectedShelfIndex = pIndex
+
+      //-- do something here
+    // }
     // if (pIndex == 0) {
     //   this.onFocus()
     // }
   }//_onShelfFocus
+
+  // selectTheFirstShelf = () => {
+  //   console.log("INFO HomeShelvesPane, selectTheFirstShelf :: testing ............................................")
+
+  //   if (this.selectedShelfIndex !== 0) {
+  //     this.selectedShelfIndex = 0
+  //     this._onShelfFocus(0)
+  //   }
+    
+  // }
 
   // _onShelfBlur = (pIndex) => {
   //   console.log("INFO HomeShelvesPane :: _onShelfBlur")
@@ -349,10 +400,10 @@ export default class HomeShelvesPane extends Component {
   //   this.setState({selectedShelfIndex : pIndex})
   // }//_onShelfBlur
 
-  _selectTheFirstShelf = () => {
-    console.log("INFO HomeShelvesPane :: _selectTheFirstShelf")
-    this._onShelfFocus(0)
-  }
+  // _selectTheFirstShelf = () => {
+  //   console.log("INFO HomeShelvesPane :: _selectTheFirstShelf")
+  //   this._onShelfFocus(0)
+  // }
 
   onFocus = () => {
    // if (this.props.isFocused) {
@@ -398,69 +449,65 @@ export default class HomeShelvesPane extends Component {
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, this.selectedShelfIndex ? " + this.selectedShelfIndex)
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, (this.selectedShelfIndex === i) ? " + (this.selectedShelfIndex === i))
     return (
-        <HomeShelf  
-              key={(i + 1).toString()}
-              index={i}
+      <Animated.View key={(i + 1).toString()}>
+          <HomeShelf  
+        
+                index={i}
+                // id={"HomeShelf" + i} 
+                title={shelfObj.title}
+                shows={shelfObj.shows}
+                topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
+                ref={node => this.shelves.push(node)}
+                //callBackOnLargeBloomStart={this._onLargeBloomStart}
+                //callBackOnBackToFocused={this._moveBackAdjacentShelves} 
+                //isFocused={this.selectedShelfIndex === i}
 
-              // id={"HomeShelf" + i} 
-              title={shelfObj.title}
-              shows={shelfObj.shows}
-              topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
-              ref={node => this.shelves.push(node)}
-              callBackOnLargeBloomStart={this._onLargeBloomStart}
-              callBackOnBackToFocused={this._moveBackAdjacentShelves} 
-              isFocused={this.selectedShelfIndex === i}
-
-              onFocus={this._onShelfFocus.bind(this,i)}
-              //onBlur={this._onShelfBlur}
-        >
-        </HomeShelf>
+                // onFocus={this._onShelfFocus.bind(this,i)}
+                //onBlur={this._onShelfBlur}
+          />
+      </Animated.View>
     )
   }//_renderEachHomeShelf
+
+
 
   render() {
     console.log("INFO HomeShelvesPane :: render ------------------------------------------------------------>")
     return (
-      <TouchableWithoutFeedback 
-          onPressIn={this.onFocus}
-          //onPressOut={this.onBlur}
-          //onPress={this.onSelect}
-      >
         <View
           //onFocus={this.onFocus}
             //onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
         >
             {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
         </View>
-      </TouchableWithoutFeedback>
     )//return
   }//render
 }
 
 HomeShelvesPane.propTypes = {
   
-  onFocus : PropTypes.func,
+  //onFocus : PropTypes.func,
   onBlur : PropTypes.func,
-  onSelect: PropTypes.func,
+  //onSelect: PropTypes.func,
 
-  isFocused : PropTypes.bool,
-  onFirstShelfSelected : PropTypes.func,
-  onFirstShelfBloomed : PropTypes.func,
-  onSecondShelfSelected : PropTypes.func,
-  onShelvesDown : PropTypes.func,
-  onShelvesUp : PropTypes.func,
+  // isFocused : PropTypes.bool,
+  // onFirstShelfSelected : PropTypes.func,
+  // onFirstShelfBloomed : PropTypes.func,
+  // onSecondShelfSelected : PropTypes.func,
+  // onShelvesDown : PropTypes.func,
+  // onShelvesUp : PropTypes.func,
 }
 
 HomeShelvesPane.defaultProps = {
   
-  onFocus: () => {console.log("INFO HomeShelvesPane :: please pass a function for onFocus")},
-  // onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
+  // onFocus: () => {console.log("INFO HomeShelvesPane :: please pass a function for onFocus")},
+  onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
   // onSelect: () => {console.log("INFO HomeShelvesPane :: please pass a function for onSelect")},
 
-  isFocused : false,
-  onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
-  onFirstShelfBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfBloomed")},
-  onSecondShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onSecondShelfSelected")},
-  onShelesDown : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesDown")},
-  onShelesUP : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesUp")},
+  // isFocused : false,
+  // onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
+  // onFirstShelfBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfBloomed")},
+  // onSecondShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onSecondShelfSelected")},
+  // onShelesDown : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesDown")},
+  // onShelesUP : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesUp")},
 }

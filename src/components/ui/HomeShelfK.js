@@ -40,7 +40,7 @@ const TITLE_UNSELECTED_Y	= 0/RATIO;						//-- title location for unselected shel
 //
 const ASSET_URL				= '../../assets/';
 
-export default class HomeShelf extends Component {
+export default class HomeShelfK extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -82,7 +82,7 @@ export default class HomeShelf extends Component {
 
 	onFocus = () => {
 	    if (this.props.isFocused) {
-	      console.log('\nINFO HomeShelf :: onFocus ====================>');
+	      console.log('\nINFO HomeShelfK :: onFocus ====================>');
 
 	      if (!this.isFocused) {
 	        this.isFocused = true
@@ -92,14 +92,14 @@ export default class HomeShelf extends Component {
 
 	      const { onFocus } = this.props;
 	      if (onFocus) {
-	        //console.log('INFO HomeShelf :: onFocus calling back from HomeShelvesPane');
+	        //console.log('INFO HomeShelfK :: onFocus calling back from HomeShelvesPane');
 	        onFocus();
 	      }
 	    }
 	}//onFocus
 
 	_buildTileIndexQueue = () => {
-		console.log("INFO HomeShelf :: _buildTileIndexQueue, this.props.shows.length ? ", this.props.shows.length)
+		console.log("INFO HomeShelfK :: _buildTileIndexQueue, this.props.shows.length ? ", this.props.shows.length)
 		// for (var i=0; i<this.totalTiles; i++) {
 		// 	const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		// 	if (leftX < INIT_X) {
@@ -113,16 +113,16 @@ export default class HomeShelf extends Component {
 		// 		}
 		// 	}
 		// }
-		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.tileIndexQueue ? ", this.tileIndexQueue)
+		// console.log("INFO HomeShelfK :: buildTileIndexQueue, this.tileIndexQueue ? ", this.tileIndexQueue)
 	}//_buildTileIndexQueue
 
 	_reset = () => {
-		// console.log("INFO HomeShelf :: reset", this.props.index)
+		// console.log("INFO HomeShelfK :: reset", this.props.index)
 		// this.clearBloomTimer()
 	}//_reset
 
 	select = () => {
-		console.log("INFO HomeShelf :: _select, shelf", this.props.index)
+		console.log("INFO HomeShelfK :: _select, shelf", this.props.index)
 		// this.clearBloomTimer()
 
 		// // this.setState({shelfKind: SHELF_KIND_OBJ.FOCUSED, isSelected:true})	//TO CHECK:: topContainerTop
@@ -135,7 +135,7 @@ export default class HomeShelf extends Component {
 		// //const totalTiles = this.totalTiles
 	 //    //-- prev tile
 	 //    const prevTileIndex = this.tileIndexQueue[0]
-	 //    //console.log("INFO HomeShelf :: select, prevTileIndex is ", prevTileIndex)
+	 //    //console.log("INFO HomeShelfK :: select, prevTileIndex is ", prevTileIndex)
 
 	 //    if (prevTileIndex !== -1) {
 	 //    	this.prevTile = this.tiles[prevTileIndex]
@@ -147,17 +147,17 @@ export default class HomeShelf extends Component {
 	 //    const currTileIndex = this.tileIndexQueue[1]
 	 //    this.currTile = this.tiles[currTileIndex]
 	 //    this.currTile.toFocused()
-	 //    //console.log("INFO HomeShelf :: select, currTileIndex is ", currTileIndex)
+	 //    //console.log("INFO HomeShelfK :: select, currTileIndex is ", currTileIndex)
 
 	 //    //-- next tile and the rest of tiles
 	 //    let nextTileIndex
 	 //    let nextX 
-	 //    //console.log("INFO HomeShelf :: select, this.tileIndexQueue.length is ", this.tileIndexQueue.length)
-	 //    //console.log("INFO HomeShelf :: select, this.tileIndexQueue is ", this.tileIndexQueue)
+	 //    //console.log("INFO HomeShelfK :: select, this.tileIndexQueue.length is ", this.tileIndexQueue.length)
+	 //    //console.log("INFO HomeShelfK :: select, this.tileIndexQueue is ", this.tileIndexQueue)
 
 	 //    if (this.tileIndexQueue.length > 2) {
 		//     nextTileIndex = this.tileIndexQueue[2]
-		//     //console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
+		//     //console.log("INFO HomeShelfK :: select, nextTileIndex is ??? ", nextTileIndex)
 		//     this.nextTile  = this.tiles[nextTileIndex]
 		//     nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		//     this.nextTile.toExpanded(nextX)
@@ -165,17 +165,17 @@ export default class HomeShelf extends Component {
 		//     const lastTileIndex = (prevTileIndex === -1)? this.totalTiles : this.totalTiles - 1
 		//     for (var j = 3; j <= lastTileIndex; j++) {
 		//     	nextTileIndex = this.tileIndexQueue[j]
-		//     	//console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
+		//     	//console.log("INFO HomeShelfK :: select, nextTileIndex is ??? ", nextTileIndex)
 		//     	let targetTile = this.tiles[nextTileIndex]
 		//     	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		//     	targetTile.toExpanded(nextX)
 		//     }
 		// }
-		//console.log("INFO HomeShelf :: select, nextTileIndex is ", nextTileIndex)
+		//console.log("INFO HomeShelfK :: select, nextTileIndex is ", nextTileIndex)
 	}//_select
 
 	unselect = () => {
-		console.log("INFO HomeShelf :: unselect, shelf", this.props.index)
+		console.log("INFO HomeShelfK :: unselect, shelf", this.props.index)
 		// this.clearBloomTimer()
 
 		// // this.setState({shelfKind: SHELF_KIND_OBJ.BASE, isSelected:false})	//TO CHEC
@@ -219,14 +219,14 @@ export default class HomeShelf extends Component {
 	}//_unselect
 
 	doLeft = () => {
-		console.log("INFO HomeShelf :: doLeft/moveToRight, shelf", this.props.index)
-		//console.log("INFO HomeShelf :: doLeft/moveToRight, this.state.shelfKind ? ", this.state.shelfKind)
+		console.log("INFO HomeShelfK :: doLeft/moveToRight, shelf", this.props.index)
+		//console.log("INFO HomeShelfK :: doLeft/moveToRight, this.state.shelfKind ? ", this.state.shelfKind)
 		// this.clearBloomTimer()
 
 		// if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-		// 	console.log("INFO HomeShelf :: doLeft, menu change!! ") 
-		// 	// console.log("INFO HomeShelf :: doLeft, this.currTile.props.index? " + this.currTile.props.index) 
-		// 	console.log("INFO HomeShelf :: doLeft, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
+		// 	console.log("INFO HomeShelfK :: doLeft, menu change!! ") 
+		// 	// console.log("INFO HomeShelfK :: doLeft, this.currTile.props.index? " + this.currTile.props.index) 
+		// 	console.log("INFO HomeShelfK :: doLeft, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
 		// 	this.currTile.doLeft()
 		// 	//
 		// 	return
@@ -234,8 +234,8 @@ export default class HomeShelf extends Component {
 
 		// if (this.totalTiles > 1) {
 		// 	console.log("\n")
-		// 	//console.log("INFO HomeShelf :: doLeft//moveToRight, this.totalTiles ?? ", this.totalTiles)
-		// 	console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue  before ? ", this.tileIndexQueue)
+		// 	//console.log("INFO HomeShelfK :: doLeft//moveToRight, this.totalTiles ?? ", this.totalTiles)
+		// 	console.log("INFO HomeShelfK :: doLeft/moveToRight, this.tileIndexQueue  before ? ", this.tileIndexQueue)
 
 		// 	//-- move the rightMostTile to the leftEnd
 		// 	const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
@@ -289,9 +289,9 @@ export default class HomeShelf extends Component {
 		// 	//if (lastTileIndex > MAX_TILE_INDEX) lastTileIndex = MAX_TILE_INDEX	//-- don't need to animate the tiles beyond stage width
 		// 	//if (lastTileIndex !== undefined) {
 		// 	    for (var j = 2; j < lastTileIndex; j++) {
-		// 	    	console.log("INFO HomeShelf :: doLeft/moveToRight, j ", j)
+		// 	    	console.log("INFO HomeShelfK :: doLeft/moveToRight, j ", j)
 		// 	    	let nextTileIndex = this.tileIndexQueue[j]
-		// 	    	//console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
+		// 	    	//console.log("INFO HomeShelfK :: select, nextTileIndex is ??? ", nextTileIndex)
 		// 	    	let targetTile = this.tiles[nextTileIndex]
 		// 	    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 	    	targetTile.toExpanded(nextX)
@@ -315,27 +315,27 @@ export default class HomeShelf extends Component {
 		// 		//-- special case with 2 tiles
 		// 		this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
 		// 	}
-		//     console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
+		//     console.log("INFO HomeShelfK :: doLeft/moveToRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
 		// }
 	}//_doLeft
 
 	doRight = () => {
-		console.log("\nINFO HomeShelf :: doRight, shelf", this.props.index)
-		//console.log("INFO HomeShelf :: doRight, this.state.shelfKind ? ", this.state.shelfKind)
+		console.log("\nINFO HomeShelfK :: doRight, shelf", this.props.index)
+		//console.log("INFO HomeShelfK :: doRight, this.state.shelfKind ? ", this.state.shelfKind)
 
 		// this.clearBloomTimer()
 
 		// if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-		// 	console.log("INFO HomeShelf :: doRight, menu change!! ")
-		// 	// console.log("INFO HomeShelf :: doRight, this.currTile.props.index? " + this.currTile.props.index) 
-		// 	console.log("INFO HomeShelf :: doRight, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
+		// 	console.log("INFO HomeShelfK :: doRight, menu change!! ")
+		// 	// console.log("INFO HomeShelfK :: doRight, this.currTile.props.index? " + this.currTile.props.index) 
+		// 	console.log("INFO HomeShelfK :: doRight, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
 		// 	this.currTile.doRight()
 		// 	//
 		// 	return
 		// }
 
 		// if (this.totalTiles > 1) {
-		// 	//console.log("INFO HomeShelf :: doRight, this.tileIndexQueue  before ? ", this.tileIndexQueue)
+		// 	//console.log("INFO HomeShelfK :: doRight, this.tileIndexQueue  before ? ", this.tileIndexQueue)
 		// 	//-- move the rightMostTile to the leftEnd
 		// 	const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 	const prevX = INIT_X - leftOffset
@@ -362,9 +362,9 @@ export default class HomeShelf extends Component {
 		// 		//if (lastTileIndex > MAX_TILE_INDEX) lastTileIndex = MAX_TILE_INDEX	//-- don't need to animate the tiles beyond stage width
 		// 		//if (lastTileIndex) {
 		// 		    for (var j = 3; j <= lastTileIndex; j++) {
-		// 		    	//console.log("INFO HomeShelf :: doRight, j ", j)
+		// 		    	//console.log("INFO HomeShelfK :: doRight, j ", j)
 		// 		    	let nextTileIndex = this.tileIndexQueue[j]
-		// 		    	//console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
+		// 		    	//console.log("INFO HomeShelfK :: select, nextTileIndex is ??? ", nextTileIndex)
 		// 		    	let targetTile = this.tiles[nextTileIndex]
 		// 		    	if (j === 3) this.nextTile = targetTile
 		// 		    	targetTile.toExpanded(nextX)
@@ -388,18 +388,18 @@ export default class HomeShelf extends Component {
 		//     //-- updateQueue
 		//     let prevTileIndex = this.tileIndexQueue.shift()
 		//     if (prevTileIndex !== -1) this.tileIndexQueue.push(prevTileIndex)
-		//     //console.log("INFO HomeShelf :: doRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
+		//     //console.log("INFO HomeShelfK :: doRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
 		// }
 	}//_doRight
 
 	_moveTo = (targetY = 0, pDuration = STD_DURATION) => {
-		console.log("INFO HomeShelf :: _moveTo")
+		console.log("INFO HomeShelfK :: _moveTo")
 		// TL.to(this.homeShelfContainer, pDuration, {top: targetY+'px', ease:Power3.easeOut})
 		// this.setState({topY: targetY, isMoved: true})
 	}//_moveTo
 
 	// backTo = (targetY = this.props.topY, pDuration = stdDuration) => {
-	// 	console.log("INFO HomeShelf :: backTo")
+	// 	console.log("INFO HomeShelfK :: backTo")
 	// 	this.moveTo(targetY, pDuration)
 	// 	//TL.to(this.homeShelfContainer, pDuration, {top: targetY+'px', ease:Power3.easeOut})
 	// }//backTo
@@ -413,7 +413,7 @@ export default class HomeShelf extends Component {
 	}//_opacityChange
 
 	_onLargeBloomStart = () => {
-		console.log("INFO HomeShelf :: onLargeBloomStart")
+		console.log("INFO HomeShelfK :: onLargeBloomStart")
 		// this.setState({shelfKind: SHELF_KIND_OBJ.BLOOMED})
 		// this.props.callBackOnLargeBloomStart()
 
@@ -429,7 +429,7 @@ export default class HomeShelf extends Component {
 		// }
 
 		// //-- the rest of tiles in the current shelf
-		// //console.log("INFO HomeShelf :: onLargeBloomStart, this.tileIndexQueue ?? " + this.tileIndexQueue)
+		// //console.log("INFO HomeShelfK :: onLargeBloomStart, this.tileIndexQueue ?? " + this.tileIndexQueue)
 		// const lastTileIndex = (this.tileIndexQueue[0] === -1)? this.totalTiles : this.totalTiles - 1
 		// for (var j = 3; j <= lastTileIndex; j++) {
 	 //    	let nextTileIndex = this.tileIndexQueue[j]
@@ -440,12 +440,12 @@ export default class HomeShelf extends Component {
 	}//__onLargeBloomStart
 
 	_clearBloomTimer = () => {
-		console.log("INFO HomeShelf :: clearBloomTimer")
+		console.log("INFO HomeShelfK :: clearBloomTimer")
 		// if (this.currTile !== null) this.currTile.killToLargeBloom()
 	}//_clearBloomTimer
 
 	_backToFocused = (pDir = "left") => {
-		console.log("INFO HomeShelf :: _backToFocused, callBackOnNoMenuLeft")
+		console.log("INFO HomeShelfK :: _backToFocused, callBackOnNoMenuLeft")
 		// this.setState({shelfKind: SHELF_KIND_OBJ.FOCUSED})
 		// if (pDir === "left") {
 		// 	this.doLeft()
@@ -456,7 +456,7 @@ export default class HomeShelf extends Component {
 	}//_backToFocused
 
 	onFocus = () => {
-	    console.log("INFO HomeShelf :: onFocus ====================================> HomeShelf, this.props.index ?? " + this.props.index)
+	    console.log("INFO HomeShelfK :: onFocus ====================================> HomeShelf, this.props.index ?? " + this.props.index)
 	    //this._selectTheFirstShelf()	//selectTheFirstTile
 
 	    const { onFocus } = this.props
@@ -467,7 +467,7 @@ export default class HomeShelf extends Component {
 	}
 
   	onBlur = () => {
-	    console.log("INFO HomeShelf :: onBlur ====================================> HomeShelf")
+	    console.log("INFO HomeShelfK :: onBlur ====================================> HomeShelf")
 
 	    const { onBlur } = this.props;
 	    if (onBlur) {
@@ -476,7 +476,7 @@ export default class HomeShelf extends Component {
   	}
 
 	onSelect = () => {
-	    console.log("INFO HomeShelf :: onSelect ====================================> HomeShelf")
+	    console.log("INFO HomeShelfK :: onSelect ====================================> HomeShelf")
 	    const { onSelect } = this.props;
 	      if (onSelect) {
 	        onSelect();
@@ -484,12 +484,12 @@ export default class HomeShelf extends Component {
 	}
 
 	_renderEachShelfTile = (tileObj, i) => {
-		// console.log("INFO HomeShelf :: _renderEachShelfTile")
+		// console.log("INFO HomeShelfK :: _renderEachShelfTile")
 		const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		// const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		// const leftX = (i==0)? INIT_X : 0;
 		//const leftX = INIT_X;
-		// console.log("INFO HomeShelf :: _renderEachShelfTile, i: " + i + ", leftX ? " + leftX)
+		// console.log("INFO HomeShelfK :: _renderEachShelfTile, i: " + i + ", leftX ? " + leftX)
 		return (
 			// <View 	key={(i + 1).toString()}
 			// 		style={ { left: leftX, width: (320/RATIO+2), borderColor: '#000000', borderWidth: 1} } >
@@ -504,9 +504,9 @@ export default class HomeShelf extends Component {
 				  		episodeID={tileObj.episode}
 				  		episodeDesc={" " + tileObj.episodeDesc}
 				  		imageURL={tileObj.imageURL}
-				  		callBackOnLargeBloomStart={this._onLargeBloomStart}
-				  		callBackOnNoMenuLeft={this._backToFocused}
-				  		isFocused={false}
+				  		// callBackOnLargeBloomStart={this._onLargeBloomStart}
+				  		// callBackOnNoMenuLeft={this._backToFocused}
+				  		// isFocused={false}
 				  		>
 		    	</ShelfTile>
 		    // </View>
@@ -516,13 +516,13 @@ export default class HomeShelf extends Component {
 	_find_dimesions = (layout) => {
 	    const {height} = layout;
 	    // console.warn(height);
-	    console.log('INFO HomeShelf :: _find_dimensions, height is ' + height);
+	    console.log('INFO HomeShelfK :: _find_dimensions, height is ' + height);
 	 }//_find_dimesions
 
 	render() {
-		console.log("INFO HomeShelf :: render --------------------------------------------------------------->")
+		console.log("INFO HomeShelfK :: render --------------------------------------------------------------->")
 		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
-		// console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
+		// console.log("INFO HomeShelfK :: render, this.props.topY ? " + this.props.topY)
 
 		//-- for testing
 		const colorArr = ['darkcyan', 'darkred', 'darkorchid']
@@ -596,29 +596,29 @@ const homeShelfStyles = StyleSheet.create({
 	//---------------------------------//
 });
 
-HomeShelf.propTypes = {
-	index: PropTypes.number,
-	// id: PropTypes.string,
-	topY: PropTypes.number,
-	title: PropTypes.string,
-	shows: PropTypes.array,
-	callBackOnLargeBloomStart: PropTypes.func,
-	callBackOnBackToFocused: PropTypes.func,
-	styleObj: PropTypes.object,
-	//
-	isFocused : PropTypes.bool,
-	//
-  	onFocus : PropTypes.func,
-  	onBlur : PropTypes.func,
-  	onSelect : PropTypes.func,
-};
+// HomeShelf.propTypes = {
+// 	index: PropTypes.number,
+// 	// id: PropTypes.string,
+// 	topY: PropTypes.number,
+// 	title: PropTypes.string,
+// 	shows: PropTypes.array,
+// 	callBackOnLargeBloomStart: PropTypes.func,
+// 	callBackOnBackToFocused: PropTypes.func,
+// 	styleObj: PropTypes.object,
+// 	//
+// 	isFocused : PropTypes.bool,
+// 	//
+//   	onFocus : PropTypes.func,
+//   	onBlur : PropTypes.func,
+//   	onSelect : PropTypes.func,
+// };
 
-HomeShelf.defaultProps = {
-	callBackOnLargeBloomStart: () => {console.log("INFO HomeShelf :: please pass a function for callBackOnLargeBloomStart")},
-	callBackOnBackToFocused: () => {console.log("INFO HomeShelf :: please pass a function for callBackOnBackToFocused")},
-	isFocused : false,
+// HomeShelf.defaultProps = {
+// 	callBackOnLargeBloomStart: () => {console.log("INFO HomeShelfK :: please pass a function for callBackOnLargeBloomStart")},
+// 	callBackOnBackToFocused: () => {console.log("INFO HomeShelfK :: please pass a function for callBackOnBackToFocused")},
+// 	isFocused : false,
 
-	onFocus: () => {console.log("INFO HomeShelf :: please pass a function for onFocus")},
-  	//onBlur: () => {console.log("INFO HomeShelf :: please pass a function for onBlur")},
-  	//onSelect: () => {console.log("INFO HomeShelf :: please pass a function for onSelect")},
-};
+// 	onFocus: () => {console.log("INFO HomeShelfK :: please pass a function for onFocus")},
+//   	//onBlur: () => {console.log("INFO HomeShelfK :: please pass a function for onBlur")},
+//   	//onSelect: () => {console.log("INFO HomeShelfK :: please pass a function for onSelect")},
+// };
