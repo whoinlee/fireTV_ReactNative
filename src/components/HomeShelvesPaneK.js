@@ -369,6 +369,11 @@ export default class HomeShelvesPane extends Component {
   _onShelfFocus = (pIndex) => {
     console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
 
+    if (pIndex <= 1) {
+      console.log("INFO HomeShelvesPane :: _onShelfFocus, calling this.props.updateHomeHeroLocation " + pIndex)
+      this.props.updateHomeHeroLocation(pIndex,false)
+    }
+
     // if (this.selectedShelfIndex !== pIndex) {
     //   this.selectedShelfIndex = pIndex
 
@@ -488,6 +493,8 @@ HomeShelvesPane.propTypes = {
   
   //onFocus : PropTypes.func,
   onBlur : PropTypes.func,
+  updateHomeHeroLocation : PropTypes.func,
+  updateHomeShelvesLocation : PropTypes.func,
   //onSelect: PropTypes.func,
 
   // isFocused : PropTypes.bool,
@@ -502,6 +509,8 @@ HomeShelvesPane.defaultProps = {
   
   // onFocus: () => {console.log("INFO HomeShelvesPane :: please pass a function for onFocus")},
   onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
+  updateHomeHeroLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeHeroLocation")}, 
+  updateHomeShelvesLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeShelvesLocation")}, 
   // onSelect: () => {console.log("INFO HomeShelvesPane :: please pass a function for onSelect")},
 
   // isFocused : false,
