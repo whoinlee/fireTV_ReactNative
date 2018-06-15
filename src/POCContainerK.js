@@ -428,6 +428,10 @@ export default class POCContainerK extends Component {
   }//_onHomeShelvesPaneBlur
 
   _updateHomeHeroLocation = (shelfIndex, isBloomed) => {
+
+    //-- covered by _onHomeShelvesPaneBlur
+    if (shelfIndex < 0 || shelfIndex > 1) return
+
     console.log("INFO POCContainerK :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
     console.log("INFO POCContainerK :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
 
@@ -446,20 +450,15 @@ export default class POCContainerK extends Component {
   }
 
   _updateHomeShelvesLocation = (shelfIndex) => {
+
+    //-- covered by _onHomeShelvesPaneBlur
+    if (shelfIndex < 0) return
+
     console.log("INFO POCContainerK :: _updateHomeShelvesLocation, shelfIndex is ?? " + shelfIndex)
     // console.log("INFO POCContainerK :: _updateHomeShelvesLocation, isBloomed is ?? " + isBloomed)
 
-    let targetY
-    // switch (shelfIndex) {
-    //   case 0:
-    //     //targetY = (isBloomed)? this.upMidHomeHeroY : this.upHomeHeroY
-    //     this._changeLocation(HOME_SHELVES_INDEX, targetY)
-    //     break;
-    //   case 1:
-    //     //targetY = this.upOffHomeHeroY
-    //     this._changeLocation(HOME_SHELVES_INDEX, targetY)
-    //   default:
-    // }
+    let targetY = this.upHomeShelvesY - (shelfIndex) * BASE_SHELF_H
+    this._changeLocation(HOME_SHELVES_INDEX, targetY)
   }
 
   // _hideHomeHeroPane = () => {

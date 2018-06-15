@@ -211,14 +211,6 @@ export default class HomeShelvesPane extends Component {
     this._removeKeyListener()
   }//componentWillUnmount
 
-  // doDown = () => {
-  //   console.log("INFO HomeShelvesPane, doDown :: testing ............................................")
-  // }//doDown
-
-  // doUp = () => {
-  //   console.log("INFO HomeShelvesPane, doUp :: testing ............................................")
-  // }//doUp
-
   _onBlur = () => {
     console.log("INFO HomeShelvesPane :: _onBlur")
 
@@ -367,21 +359,15 @@ export default class HomeShelvesPane extends Component {
   // }
 
   _onShelfFocus = (pIndex) => {
+    if (pIndex < 0) return  //ERROR
+
     console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
 
     if (pIndex <= 1) {
-      console.log("INFO HomeShelvesPane :: _onShelfFocus, calling this.props.updateHomeHeroLocation " + pIndex)
       this.props.updateHomeHeroLocation(pIndex,false)
     }
 
-    // if (this.selectedShelfIndex !== pIndex) {
-    //   this.selectedShelfIndex = pIndex
-
-      //-- do something here
-    // }
-    // if (pIndex == 0) {
-    //   this.onFocus()
-    // }
+    this.props.updateHomeShelvesLocation(pIndex)
   }//_onShelfFocus
 
   // selectTheFirstShelf = () => {
