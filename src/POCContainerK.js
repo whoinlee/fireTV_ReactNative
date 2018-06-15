@@ -152,17 +152,10 @@ export default class POCContainerK extends Component {
       animLocation1: new Animated.Value(INIT_HOME_HERO_Y),    //-- for 'homeHero'
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
       isGuideVisible: false,
-      // isFirstShelfSelected: false,
     }
 
     this.selectablePanes = []
     this.currFocusLocIndex = GLOBAL_NAV_INDEX 
-    this.isFirstShelfSelected = false
-
-    //this.selectedShelfIndex = -1                //TODO: CHECK
-
-    this.currHomeShelvesY = INIT_HOME_SHELVES_Y
-    
 
     //-- set panes' initial locations
     this.initGlobalNavY = INIT_GLOBAL_NAV_Y
@@ -174,7 +167,6 @@ export default class POCContainerK extends Component {
     this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
     this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY
     this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
-    //this.upHomeShelvesY = TOP_Y
 
     //-- set panes' mid-up and off the stage locations
     this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y          //-- homeHeroPane shifts on the fist shelf being largeBloomed
@@ -355,11 +347,6 @@ export default class POCContainerK extends Component {
         easing: Easing.out(Easing.quad),
       }
     ).start();
-
-    // if (targetIndex === HOME_SHELVES_INDEX) {
-    //   this.currHomeShelvesY = targetValue
-    //   //console.log("INFO POCContainerK :: _changeLocation, this.currHomeShelvesY is " + this.currHomeShelvesY)
-    // }
   }//_changeLocation
 
   _onGlobalNavPaneFocus = () => {
@@ -375,7 +362,6 @@ export default class POCContainerK extends Component {
     this._hideGuide()
 
     this.currFocusLocIndex = GLOBAL_NAV_INDEX
-    // this.currHomeShelvesY = this.initHomeShelvesY  //TODO: CHECK need?????
 
     console.log("INFO POCContainerK :: _onGlobalNavPaneFocus, ====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onGlobalNavPaneFocus
@@ -393,7 +379,6 @@ export default class POCContainerK extends Component {
     this._hideGuide()
 
     this.currFocusLocIndex = HOME_HERO_INDEX
-    this.currHomeShelvesY = this.initHomeShelvesY    //TODO: CHECK need?????
 
     //console.warn("on homeHeroPane focus");
     console.log("INFO POCContainerK :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
@@ -412,13 +397,8 @@ export default class POCContainerK extends Component {
     this._showGuide()
 
     this.currFocusLocIndex = HOME_SHELVES_INDEX
-    //this.currHomeShelvesY = this.upHomeShelvesY     //TODO: CHECK need?????
     console.log("INFO POCContainerK :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
 
-    //-- handle the 1st shelf selection
-    //TODO: CHECK
-    //this.isFirstShelfSelected = true   //TODO: CHECK, need????
-    // this.setState({isFirstShelfSelected: true})
     this.selectablePanes[HOME_SHELVES_INDEX].doDown()
   }//_onHomeShelvesPaneFocus
 
@@ -428,29 +408,24 @@ export default class POCContainerK extends Component {
   }//_onHomeShelvesPaneBlur
 
   _updateHomeHeroLocation = (shelfIndex, isBloomed) => {
-
     //-- covered by _onHomeShelvesPaneBlur
     if (shelfIndex < 0 || shelfIndex > 1) return
 
     console.log("INFO POCContainerK :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
     console.log("INFO POCContainerK :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
 
-    // let targetY
     switch (shelfIndex) {
       case 0:
         let targetY = (isBloomed)? this.upMidHomeHeroY : this.upHomeHeroY
-        //if (isBloomed)
         this._changeLocation(HOME_HERO_INDEX, targetY)
         break;
       case 1:
-        //targetY = this.upOffHomeHeroY
         this._changeLocation(HOME_HERO_INDEX, this.upOffHomeHeroY)
       default:
     }
   }
 
   _updateHomeShelvesLocation = (shelfIndex) => {
-
     //-- covered by _onHomeShelvesPaneBlur
     if (shelfIndex < 0) return
 
@@ -461,66 +436,9 @@ export default class POCContainerK extends Component {
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
   }
 
-  // _hideHomeHeroPane = () => {
-  //   console.log("INFO POCContainerK :: _hideHomeHeroPane, when the 2nd shelf is selected in the homeShelvesPane")
-  //   this._changeLocation(HOME_HERO_INDEX, this.upOffHomeHeroY)
-  // }
-
-  // _showHomeHeroPane = () => {
-  //   console.log("INFO POCContainerK :: _hideHomeHeroPane, when the 1st shelf is selected in the homeShelvesPane")
-  //   this._changeLocation(HOME_HERO_INDEX, this.upHomeShelvesY)
-  // }
-
-  // _shiftUpHomeHeroPane = () => {
-  //   console.log("INFO POCContainerK :: _shiftUpHomeHeroPane, when the 1st shelf is bloomed in the homeShelvesPane")
-  //   this._changeLocation(HOME_HERO_INDEX, this.upMidHomeHeroY)
-  // }
-
   _onShelvesPaneSelect = () => {
     console.log("INFO POCContainerK :: _onShelvesPaneSelect, onSelectCallBack =====> POCContainer")
   }//_onShelvesPaneSelect
-
-  _onFirstShelfSelected = () => {
-    console.log("INFO POCContainerK :: _onFirstShelfSelected")
-    this.isFirstShelfSelected = true
-
-    //-- move down homeHero
-    this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
-    this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
-  }//_onFirstShelfSelected
-
-  _onFirstShelfBloomed = () => {
-    console.log("INFO POCContainerK :: _onFirstShelfBloomed")
-    this.isFirstShelfSelected = true
-
-    //-- move homeHero further up
-    this._changeLocation(HOME_HERO_INDEX, this.upMidHomeHeroY)
-  }//_onFirstShelfBloomed
-
-  _onSecondShelfSelected = () => {
-    console.log("INFO POCContainerK :: _onSecondShelfSelected")
-
-    //-- move up homeHero off the stage
-    this._changeLocation(HOME_HERO_INDEX, this.upOffHomeHeroY)
-    //this._changeLocation(HOME_SHELVES_INDEX, this.upOffHomeShelvesY)  //need?, adjust the value anyway!!!!!
-  }//_onSecondShelfSelected
-
-  _onShelvesDown = () => {
-    console.log("INFO POCContainerK :: _onShelvesDown")
-    // console.log("INFO POCContainerK :: _onShelvesDown, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
-
-    //-- move up homeShelves pane by 'FOCUSED_SHELF_H'
-    let targetY = this.currHomeShelvesY - FOCUSED_SHELF_H
-    this._changeLocation(HOME_SHELVES_INDEX, targetY)
-  }//_onShelvesDown
-
-  _onShelvesUp = () => {
-    console.log("INFO POCContainerK :: _onShelvesUp, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
-
-    //-- move down homeShelves pane by 'FOCUSED_SHELF_H'
-    let targetY = this.currHomeShelvesY + FOCUSED_SHELF_H
-    this._changeLocation(HOME_SHELVES_INDEX, targetY)
-  }//_onShelvesUp
 
   _renderGuide = () => {
     if (this.state.isGuideVisible) {
