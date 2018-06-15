@@ -177,8 +177,8 @@ class ShelfTile extends Component {
 		TL.to(this.containerDiv, pDuration, {opacity: 1, delay:pDelay+.1})
 	}//fadeInAt
 
-	_doLeft = () => {
-		console.log("INFO ShelfTile :: _doLeft, to the menu in the left, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
+	doLeft = () => {
+		console.log("INFO ShelfTile :: doLeft, to the menu in the left, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
 		// if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
 		// if (this.state.selectedMenuIndex !== 0) {
 		// 	this.setState({selectedMenuIndex: this.state.selectedMenuIndex - 1 })
@@ -187,10 +187,10 @@ class ShelfTile extends Component {
 		// 	console.log("INFO ShelfTile :: doLeft, calling callBackOnNoMenuLeft")
 		// 	this.props.callBackOnNoMenuLeft("left")
 		// }
-	}//_doLeft
+	}//doLeft
 
-	_doRight = () => {
-		console.log("INFO ShelfTile :: _doRight, to the menu in the right")
+	doRight = () => {
+		console.log("INFO ShelfTile :: doRight, to the menu in the right")
 		// const totalMenu = this.menus.length
 		// const totalMenu = 3
 		// console.log("INFO ShelfTile :: _doRight, totalMenu ?? " + totalMenu)
@@ -202,15 +202,16 @@ class ShelfTile extends Component {
 		// 	console.log("INFO ShelfTile :: _doRight, calling callBackOnNoMenuLeft")
 		// 	this.props.callBackOnNoMenuLeft("right")
 		// }
-	}//_doRight
+	}//doRight
 
-	_doSelect = () => {
-
-	}//_doSelect
+	doSelect = () => {
+		console.log("\nINFO ShelfTile :: doSelect, shelf", this.props.index)
+	}//doSelect
 
 	onFocus = () => {
-	    if (this.props.isFocused) {
-	      console.log('\nINFO ShelfTile :: onFocus ====================>');
+	    //if (this.props.isFocused) {
+	      console.log('INFO ShelfTile :: onFocus ====================>');
+	      //this._clearBloomTimer()
 
 	      // if (!this.isFocused) {
 	      //   this.isFocused = true
@@ -223,8 +224,12 @@ class ShelfTile extends Component {
 	        //console.log('INFO HomeShelf :: onFocus calling back from HomeShelvesPane');
 	        onFocus();
 	      }
-	    }
+	    //}
 	}//onFocus
+
+	onBlur = () => {
+		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
+	}//onBlur
 
 	_onInfoButtonClicked = (e) => {
 		console.log("INFO ShelfTile :: _onInfoButtonClicked")
@@ -336,7 +341,7 @@ ShelfTile.propTypes = {
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!	*/
-	
+
 	// callBackOnLargeBloomStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 	// //

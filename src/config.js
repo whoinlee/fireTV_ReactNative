@@ -24,6 +24,9 @@ export default {
   initGlobalNavH: 100,
   initHomeHeroH: 606,
 
+  //-- UI element left alignment location
+  initX: 200,
+
   //-- homeShelvesPane location & dimension related
   homeShelves: {
     initShelfY: 62,             //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
@@ -40,8 +43,10 @@ export default {
     focusedTileH: 332,          //-- focused tile height, on a selected shelf
     bloomedTileW: 1056,         //-- large bloomed tile width, on a selected shelf, 1056x594
     bloomedTileH: 594,          //-- large bloomed tile height, on a selected shelf
-    // ??? focused unselected tile dimension ??? (375x210)
-    // ??? bloomed unselected tile dimension ??? (782x440)
+    focusedBaseTileW: 375,      //-- unfocused tile width, on a selected shelf, 375x210
+    focusedBaseTileH: 210,      //-- unfocused tile height, on a selected shelf
+    bloomedBaseTileW: 782,      //-- unbloomed tile width, on a selected shelf, 782x440
+    bloomedBaseTileH: 440,      //-- unbloomed tile height, on a selected shelf
 
     //-- shelf related
     baseShelfOffsetX: 0,        //-- distance between tiles on an unselected shelf
@@ -55,7 +60,7 @@ export default {
     focusedShelfOffsetY: 182,   //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
     focusedShelfH: 584,         //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
 
-    bloomedShelfOffsetX: 57,    //-- distance between tiles on a focused shelf ?????
+    bloomedShelfOffsetX: 57,    //-- distance between tiles on a bloomed shelf
     bloomedShelfOffsetY: 313,   //-- focusedShelfOffsetY (182) + bloomedShelfShiftY (131) = 313
     bloomedShelfH: 543          //-- focusedTitleH (60) + titleToTileOffset (10) + bloomedTileH (594) + bloomedShelfOffsetY (313) = 977
   }
