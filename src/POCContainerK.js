@@ -11,7 +11,6 @@ import {
   Animated,
   Easing,
   StyleSheet,
-  //TVEventHandler,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -23,112 +22,42 @@ import GlobalNavPane from './components/GlobalNavPaneK';
 import HomeHeroPane from './components/HomeHeroPaneK';
 import HomeShelvesPane from './components/HomeShelvesPaneK';
 
-// const AnimatedGlobalNavPane = Animated.createAnimatedComponent(GlobalNavPane);
-// const AnimatedHomeHeroPane = Animated.createAnimatedComponent(HomeHeroPane);
-// const AnimatedHomeShelvesPane = Animated.createAnimatedComponent(HomeShelvesPane);
 
-
-//---------- from config -------------------------------------------//
-/*
-  //-- base dimension and density
-  density: PixelRatio.get(),    //TV density
-  stageW: 1920,
-  stageH: 1080,
-
-  //-- animation related
-  stdDuration: 500,             //in milliseconds = .5 sec,
-  shortDuration: 350,           //in milliseconds = .35 sec,
-  waitToLargeBloomDuration: 4000,
-
-  //-- pane initial location
-  initGlobalNavY: 0,
-  initHomeHeroY: 165,
-  initHomeShelvesY: 836,
-
-  //-- pane initial dimension
-  initGlobalNavH: 100,
-  initHomeHeroH: 606,
-
-  //-- opacity related
-  unselectedOpacity: 1,
-  selectedOpacity: .6,
-*/
-//---------- from config -------------------------------------------//
-
-
+/* --------- from config -------------------------------------------//
+//-- density, animation duration, opacity, and
+//-- initial pane location related
+//----------------------------------------------------------------- */
 const RATIO                 = config.density;
 const STD_DURATION          = config.stdDuration;
 const SHORT_DURATION        = config.shortDuration;
+const UNSELECTED_OPACITY    = config.unselectedOpacity;
+const SELECTED_OPACITY      = config.selectedOpacity;
 //
 const V_MIDDLE_Y            = Math.floor(config.stageH/(2*RATIO));  //-- vertical middle location of the stage
-//
 const INIT_GLOBAL_NAV_Y     = config.initGlobalNavY/RATIO;
 const INIT_HOME_HERO_Y      = config.initHomeHeroY/RATIO;           //-- 165 = (100(globalNav)+65(offset)
 const INIT_HOME_SHELVES_Y   = config.initHomeShelvesY/RATIO;        //-- 836 = (100(globalNav)+65(offset)+606(homeHero)+65) = 836 
-//
-const UNSELECTED_OPACITY    = config.unselectedOpacity;
-const SELECTED_OPACITY      = config.selectedOpacity;
 
 
 /* ---------- from config ------------------------------------------//
 //-- homeShelvesPane location & dimension related
-//------------------------------------------------------------------//
-homeShelves: {
-  initShelfY: 62,             //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
+//----------------------------------------------------------------- */
+const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
 
-  //-- shelf title related
-  baseTitleH: 40,             //-- unselected shelf title height (!!!not same as the font size, 28)
-  focusedTitleH: 60,          //-- update!!!
-  titleToTileOffset: 10,      //-- distance from the bottom of shelf title to the top of shelf tile
-  
-  //-- tile dimensions
-  baseTileW: 320,             //-- unselected base tile width, 320x180
-  baseTileH: 180,             //-- unselected base tile height
-  focusedTileW: 590,          //-- focused tile width, on a selected shelf, 590x332
-  focusedTileH: 332,          //-- focused tile height, on a selected shelf
-  bloomedTileW: 1056,         //-- large bloomed tile width, on a selected shelf, 1056x594
-  bloomedTileH: 594,          //-- large bloomed tile height, on a selected shelf
-  // ??? focused unselected tile dimension ??? (375x210)
-  // ??? bloomed unselected tile dimension ??? (782x440)
+const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;          //-- unselected shelf title height (!!!not same as the font size, 28)  
+const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;   //-- distance from the bottom of shelf title to the top of shelf tile
 
-  //-- shelf related
-  baseShelfOffsetX: 0,        //-- distance between tiles on an unselected shelf
-  baseShelfOffsetY: 106,      //-- distance between unselected shelves
-  baseShelfH: 336,            //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
+const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //-- base tile height, on an unselected shelf
+const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //-- focused tile height, on a selected shelf
 
-  focusedShelfShiftY: 76,     //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
-  bloomedShelfShiftY: 131,    //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
-  
-  focusedShelfOffsetX: 25,    //-- distance between tiles on a focused shelf
-  focusedShelfOffsetY: 182,   //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
-  focusedShelfH: 584,         //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
+const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
+const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
 
-  bloomedShelfOffsetX: 57,    //-- distance between tiles on a focused shelf ?????
-  bloomedShelfOffsetY: 313,   //-- focusedShelfOffsetY (182) + bloomedShelfShiftY (131) = 313
-  bloomedShelfH: 543          //-- focusedTitleH (60) + titleToTileOffset (10) + bloomedTileH (594) + bloomedShelfOffsetY (313) = 977
-}
-//----------------------------------------------------------------*/
+const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
+const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
 
-
-const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;
-
-const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;         
-const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;
-
-const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;
-const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO; 
-
-const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;
-const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;
-// const BASE_SHELF_H = BASE_SHELF_OFFSET_Y;
-
-const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;
-const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;
-
-// const FOCUSED_SHELF_OFFSET_Y  = BASE_SHELF_H + FOCUSED_SHELF_SHIFT_Y;
-const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO;
-const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;  
-/* ------------------------------------------ */
+const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
+const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
 
 /* ------------------------------------------ */
@@ -145,9 +74,9 @@ export default class POCContainerK extends Component {
     super(props);
 
     this.state = {
-      animOpacity0: new Animated.Value(1),      //-- animation instance for 'globalNav' with initial opacity value of '1'
-      animOpacity1: new Animated.Value(1),      //-- for 'homeHero'
-      animOpacity2: new Animated.Value(1),      //-- for 'homeShelves'
+      animOpacity0: new Animated.Value(1),                    //-- animation instance for 'globalNav' with initial opacity value of '1'
+      animOpacity1: new Animated.Value(1),                    //-- for 'homeHero'
+      animOpacity2: new Animated.Value(1),                    //-- for 'homeShelves'
       animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- animation instance for 'globalNav' with initial location value of INIT_GLOBAL_NAV_Y
       animLocation1: new Animated.Value(INIT_HOME_HERO_Y),    //-- for 'homeHero'
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
@@ -157,22 +86,20 @@ export default class POCContainerK extends Component {
     this.selectablePanes = []
     this.currFocusLocIndex = GLOBAL_NAV_INDEX 
 
-    //-- set panes' initial locations
+    //-- initial pane locations
     this.initGlobalNavY = INIT_GLOBAL_NAV_Y
     this.initHomeHeroY = INIT_HOME_HERO_Y   
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
 
-    //-- set panes' up locations
+    //-- up pane locations
     this.upHomeShelvesY = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET + BASE_TILE_H/2)       //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
     this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY
     this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
 
-    //-- set panes' mid-up and off the stage locations
+    //-- mid-up and off the stage homeHero pane locations
     this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y          //-- homeHeroPane shifts on the fist shelf being largeBloomed
-    //
     this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y         //-- homeHeroPane shifts/hides on the 2nd shelf being focused
-    this.upOffHomeShelvesY = this.upHomeShelvesY -  FOCUSED_SHELF_OFFSET_Y  //-- need?????
   }
 
   componentDidMount() {
@@ -423,7 +350,7 @@ export default class POCContainerK extends Component {
         this._changeLocation(HOME_HERO_INDEX, this.upOffHomeHeroY)
       default:
     }
-  }
+  }//_updateHomeHeroLocation
 
   _updateHomeShelvesLocation = (shelfIndex) => {
     //-- covered by _onHomeShelvesPaneBlur
@@ -434,7 +361,7 @@ export default class POCContainerK extends Component {
 
     let targetY = this.upHomeShelvesY - (shelfIndex) * BASE_SHELF_H
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
-  }
+  }//_updateHomeShelvesLocation
 
   _onShelvesPaneSelect = () => {
     console.log("INFO POCContainerK :: _onShelvesPaneSelect, onSelectCallBack =====> POCContainer")

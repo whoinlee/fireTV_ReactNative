@@ -1,7 +1,7 @@
 import {PixelRatio} from 'react-native';
 
 export default {
-  //-- base dimension and density
+  //-- density and base dimenstion
   density: PixelRatio.get(),    //-- TV density
   stageW: 1920,
   stageH: 1080,
@@ -11,18 +11,18 @@ export default {
   shortDuration: 350,           //-- in milliseconds = .35 sec,
   waitToLargeBloomDuration: 4000,
 
-  //-- pane initial location
+  //-- opacity related
+  unselectedOpacity: .5,        //-- .6 -> .5, for testing
+  selectedOpacity: 1,
+
+  //-- initial pane yLocation
   initGlobalNavY: 0,
   initHomeHeroY: 165,
   initHomeShelvesY: 836,
 
-  //-- pane initial dimension
+  //-- initial pane height
   initGlobalNavH: 100,
   initHomeHeroH: 606,
-
-  //-- opacity related
-  unselectedOpacity: .5,        //-- .6 -> .5, for testing
-  selectedOpacity: 1,
 
   //-- homeShelvesPane location & dimension related
   homeShelves: {
