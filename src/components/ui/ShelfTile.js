@@ -210,7 +210,7 @@ class ShelfTile extends Component {
 
 	onFocus = () => {
 	    //if (this.props.isFocused) {
-	      console.log('INFO ShelfTile :: onFocus ====================>');
+	      //console.log('INFO ShelfTile :: onFocus ====================>');
 	      //this._clearBloomTimer()
 
 	      // if (!this.isFocused) {

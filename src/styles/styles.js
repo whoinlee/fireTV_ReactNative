@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
 	    backgroundColor: '#676767',
 	    position: 'absolute',
 	    width: '100%',
-	    height: '300%',	//-- hack!!!
+	    height: '400%',	//-- hack!!!
 	    //-- for testing --//
 	    // borderWidth: 1,
     	// borderColor: '#000000',

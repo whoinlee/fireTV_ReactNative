@@ -115,10 +115,10 @@ export default class POCContainerK extends Component {
   //   this.tvEventHandler.enable(this, function(cmp, evt) {
   //     //console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
   //     if (evt) {
-  //       console.log('INFO POCContainerK :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
+  //       console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
   //       switch (evt.eventType) {
   //         case 'focus':
-  //           console.log('INFO POCContainerK :: _enableTVEventHandler, evt.tag? : ' + evt.tag);
+  //           console.log('INFO POCContainer :: _enableTVEventHandler, evt.tag? : ' + evt.tag);
   //         case 'blur':
   //         case 'select':
   //           break;
@@ -126,19 +126,19 @@ export default class POCContainerK extends Component {
   //         case 'right':
   //         case 'up':
   //         case 'down':
-  //           console.log('INFO POCContainerK :: _enableTVEventHandler, ever???? : ' + evt.eventType);
+  //           console.log('INFO POCContainer :: _enableTVEventHandler, ever???? : ' + evt.eventType);
   //           break;
   //         case 'playPause':
-  //           console.log('INFO POCContainerK :: playPause ===>');
+  //           console.log('INFO POCContainer :: playPause ===>');
   //           break;
   //         case 'rewind':
-  //           console.log('INFO POCContainerK :: rewind ======>');
+  //           console.log('INFO POCContainer :: rewind ======>');
   //          break;
   //         case 'fastForward':
-  //           console.log('INFO POCContainerK :: fastForward =>');
+  //           console.log('INFO POCContainer :: fastForward =>');
   //           break;
   //         default:
-  //           console.log('INFO POCContainerK :: _enableTVEventHandler, default, evt.eventType? : ' + evt.eventType);
+  //           console.log('INFO POCContainer :: _enableTVEventHandler, default, evt.eventType? : ' + evt.eventType);
   //       }//switch
   //     }//if
   //   });//enable
@@ -152,9 +152,9 @@ export default class POCContainerK extends Component {
   // }//_disableTVEventHandler
 
   _setKeyListener = () => {
-    console.log('INFO POCContainerK :: _setKeyListener')
+    console.log('INFO POCContainer :: _setKeyListener')
     KeyEvent.onKeyDownListener((keyEvent) => {
-      // console.log('INFO POCContainerK :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
+      // console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
       switch (keyEvent.keyCode) {
         case keyCodes.up:
           this.doUp()
@@ -180,19 +180,19 @@ export default class POCContainerK extends Component {
           //-- do nothing
           break
         default:
-          console.log('INFO POCContainerK :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
+          console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
       }//switch
     });//onKeyDownListener
   }//_setKeyListener
 
   _removeKeyListener = () => {
-    console.log('INFO POCContainerK :: _removeKeyListener')
+    console.log('INFO POCContainer :: _removeKeyListener')
     KeyEvent.removeKeyDownListener()
   }//_removeKeyListener
 
   doUp = () => {
     if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return //-- do nothing
-    console.log('INFO POCContainerK :: doUp');
+    console.log('INFO POCContainer :: doUp');
 
     switch (this.currFocusLocIndex) {
       case HOME_HERO_INDEX :
@@ -205,7 +205,7 @@ export default class POCContainerK extends Component {
   }//doUp
 
   doDown = () => {
-    console.log('INFO POCContainerK :: doDown, this.currFocusLocIndex ? ' + this.currFocusLocIndex);
+    console.log('INFO POCContainer :: doDown, this.currFocusLocIndex ? ' + this.currFocusLocIndex);
 
     switch (this.currFocusLocIndex) {
       case GLOBAL_NAV_INDEX :
@@ -222,24 +222,24 @@ export default class POCContainerK extends Component {
 
   doLeft = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
-    // console.log('INFO POCContainerK :: _doLeft');
+    // console.log('INFO POCContainer :: _doLeft');
     this.selectablePanes[HOME_SHELVES_INDEX].doLeft()
   }//doLeft
 
   doRight = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
-    // console.log('INFO POCContainerK :: _doRight');
+    // console.log('INFO POCContainer :: _doRight');
     this.selectablePanes[HOME_SHELVES_INDEX].doRight()
   }//doRight
 
   doSelect = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
-    console.log('INFO POCContainerK :: _doSelect');
+    console.log('INFO POCContainer :: _doSelect');
     this.selectablePanes[HOME_SHELVES_INDEX].doSelect()
   }//doSelect
 
   _changeOpacity = (targetIndex, targetValue, pDuration=STD_DURATION) => {
-    //console.log("INFO POCContainerK :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
+    //console.log("INFO POCContainer :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
     Animated.timing(
       this.state["animOpacity" + targetIndex], 
       {
@@ -250,7 +250,7 @@ export default class POCContainerK extends Component {
   }//_changeOpacity
 
   _changeLocation = (targetIndex, targetValue, pDuration=STD_DURATION) => {
-    //console.log("INFO POCContainerK :: _changeLocation, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " change yLocation to " + targetValue)
+    //console.log("INFO POCContainer :: _changeLocation, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " change yLocation to " + targetValue)
     Animated.timing(
       this.state["animLocation" + targetIndex], 
       {
@@ -262,7 +262,7 @@ export default class POCContainerK extends Component {
   }//_changeLocation
 
   _onGlobalNavPaneFocus = () => {
-    //console.log("INFO POCContainerK :: _onGlobalNavPaneFocus, ====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
+    //console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return
     
     this._changeOpacity(GLOBAL_NAV_INDEX, SELECTED_OPACITY)
@@ -275,11 +275,11 @@ export default class POCContainerK extends Component {
 
     this.currFocusLocIndex = GLOBAL_NAV_INDEX
 
-    console.log("INFO POCContainerK :: _onGlobalNavPaneFocus, ====================> currFocusLocIndex ? " + this.currFocusLocIndex)
+    console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onGlobalNavPaneFocus
 
   _onHomeHeroPaneFocus = () => {
-    //console.log("INFO POCContainerK :: _onHomeHeroPaneFocus, =====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
+    //console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === HOME_HERO_INDEX) return
     
     this._changeOpacity(GLOBAL_NAV_INDEX, UNSELECTED_OPACITY)
@@ -293,11 +293,11 @@ export default class POCContainerK extends Component {
     this.currFocusLocIndex = HOME_HERO_INDEX
 
     //console.warn("on homeHeroPane focus");
-    console.log("INFO POCContainerK :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
+    console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onHomeHeroPaneFocus
 
   _onHomeShelvesPaneFocus = () => {
-    //console.log("INFO POCContainerK :: _onHomeShelvesPaneFocus, ======================> prevFocusLocIndex ? " + this.currFocusLocIndex)
+    //console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === HOME_SHELVES_INDEX) return
     
     this._changeOpacity(GLOBAL_NAV_INDEX, UNSELECTED_OPACITY)
@@ -309,7 +309,7 @@ export default class POCContainerK extends Component {
     this._showGuide()
 
     this.currFocusLocIndex = HOME_SHELVES_INDEX
-    console.log("INFO POCContainerK :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
+    console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
 
     this.selectablePanes[HOME_SHELVES_INDEX].doDown()
   }//_onHomeShelvesPaneFocus
@@ -318,8 +318,8 @@ export default class POCContainerK extends Component {
     //-- covered by _onHomeShelvesPaneBlur
     if (shelfIndex < 0 || shelfIndex > 1) return
 
-    console.log("INFO POCContainerK :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
-    console.log("INFO POCContainerK :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
+    console.log("INFO POCContainer :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
+    console.log("INFO POCContainer :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
 
     switch (shelfIndex) {
       case 0:
@@ -333,11 +333,10 @@ export default class POCContainerK extends Component {
   }//_updateHomeHeroLocation
 
   _updateHomeShelvesLocation = (shelfIndex) => {
-    //-- covered by _onHomeShelvesPaneBlur
-    if (shelfIndex < 0) return
-    console.log("INFO POCContainerK :: _updateHomeShelvesLocation, shelfIndex is ?? " + shelfIndex)
-
+    if (shelfIndex < 0) return  //-- covered by _onHomeShelvesPaneBlur
+    
     let targetY = this.upHomeShelvesY - (shelfIndex) * FOCUSED_SHELF_H
+    //console.log("INFO POCContainer :: _updateHomeShelvesLocation, shelfIndex is ?? " + shelfIndex + ", targetY : " + targetY)
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
   }//_updateHomeShelvesLocation
 
@@ -358,7 +357,7 @@ export default class POCContainerK extends Component {
   }//_renderGuide
 
   render() {
-    console.log("INFO POCContainerK :: render --------------------------------------------------------------->")
+    console.log("INFO POCContainer :: render --------------------------------------------------------------->")
     let { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
     return (
         <View style={styles.pocContainer}>
@@ -382,7 +381,7 @@ export default class POCContainerK extends Component {
                                 opacity: animOpacity2  } } >
                       <HomeShelvesPane
                                 ref={node => {this.selectablePanes[HOME_SHELVES_INDEX] = node}}
-                                onBlur={this._onHomeHeroPaneFocusrr}
+                                onBlur={this._onHomeHeroPaneFocus}
                                 updateHomeHeroLocation={this._updateHomeHeroLocation}
                                 updateHomeShelvesLocation={this._updateHomeShelvesLocation}
                       />

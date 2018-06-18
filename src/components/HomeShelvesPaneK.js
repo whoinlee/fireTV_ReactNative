@@ -177,7 +177,7 @@ const SHELVES_DATA_ARR      = [
   }
 ];//hardcoded test data
 const TOTAL_SHELVES         = SHELVES_DATA_ARR.length;
-const MAX_INDEX             = TOTAL_SHELVES - 1;
+const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 
 
 export default class HomeShelvesPane extends Component {
@@ -192,20 +192,20 @@ export default class HomeShelvesPane extends Component {
     }
     this.shelves = []
     this.selectedShelfIndex = -1
-
-    this.containerShiftOffsetY = 0    //TODO: CHECK need?
-    this.isFocused = false            //TODO: CHECK need?
-    //this.isFirstShelfSelected = false //TODO: CHECK need?
-
-    this.animsArr = []
     this.prevShelf = null
     this.currShelf = null
     this.nextShelf = null
+
+    this.containerShiftOffsetY = 0    //TODO: CHECK need?
+    // this.isFocused = false            //TODO: CHECK need?
+    //this.isFirstShelfSelected = false //TODO: CHECK need?
+
+    this.animsArr = []
+    
     this.isPrevMoved = false
     this.isNextMoved = false
     
     this.totalMenu = 3
-    this.totalShelves = TOTAL_SHELVES
   }
 
   componentDidMount() {
@@ -218,25 +218,27 @@ export default class HomeShelvesPane extends Component {
 
   doUp = () => {
     if (this.selectedShelfIndex < 0) return //ERROR
-    console.log("INFO HomeShelvesPane :: doUp")
 
     this.selectedShelfIndex--
+    console.log("INFO HomeShelvesPane :: doUp, this.selectedShelfIndex? " + this.selectedShelfIndex)
     if (this.selectedShelfIndex < 0) {
       this.onBlur()
     } else {
       this._onShelfFocus(this.selectedShelfIndex)
+      //-- TODO: dim out prev and next shelves
     }
     //this.isFirstShelfSelected = (this.selectedShelfIndex === 0) //TODO: CHECK need??
   }//doUp
 
   doDown = () => {
     this.selectedShelfIndex++
-    if (this.selectedShelfIndex >= this.totalShelves) {
-      this.selectedShelfIndex = this.totalShelves - 1
+    if (this.selectedShelfIndex > MAX_SHELF_INDEX) {
+      this.selectedShelfIndex = MAX_SHELF_INDEX
+      console.log("INFO HomeShelvesPane :: doDown, MAX_SHELF_INDEX? " + MAX_SHELF_INDEX)
+      console.log("INFO HomeShelvesPane :: doDown, 1 this.selectedShelfIndex? " + this.selectedShelfIndex)
       return
     }
-
-    console.log("INFO HomeShelvesPane :: doDown")
+    console.log("INFO HomeShelvesPane :: doDown, 2 this.selectedShelfIndex? " + this.selectedShelfIndex)
     //this.isFirstShelfSelected = (this.selectedShelfIndex === 0) //TODO: CHECK need??
     this._onShelfFocus(this.selectedShelfIndex)
   }//doDown
@@ -273,11 +275,20 @@ export default class HomeShelvesPane extends Component {
   }//onBlur
 
   _onShelfFocus = (pIndex) => {
-    if (pIndex < 0) return  //ERROR
+    // console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> pIndex is ? " + pIndex)
+    // console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> this.selectedShelfIndex is ? " + this.selectedShelfIndex)
+    if (pIndex < 0) return //ERROR, never happens
     console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
+    this.selectedShelfIndex = pIndex    //-- to confirm
 
-    if (pIndex !== this.selectedShelfIndex) this.selectedShelfIndex = pIndex
-    this.shelves[pIndex].onFocus()
+    this.currShelf = this.shelves[pIndex]
+    this.prevShelf = (pIndex > 0)? this.shelves[pIndex - 1] : null
+    this.nextShelf = (pIndex >= MAX_SHELF_INDEX)? null : this.shelves[pIndex + 1]
+
+    //this.shelves[pIndex].onFocus()
+    this.currShelf.onFocus()
+    if (this.prevShelf) this.prevShelf.onBlur()
+    if (this.nextShelf) this.nextShelf.onBlur()
 
     if (pIndex <= 1) this.props.updateHomeHeroLocation(pIndex,false)
     this.props.updateHomeShelvesLocation(pIndex)
