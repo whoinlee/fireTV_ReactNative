@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import {
   Animated,
+  Easing,
   StyleSheet,
   Text,
   TouchableNativeFeedback,
@@ -9,7 +10,7 @@ import {
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
-import ShelfTile from './ShelfTile';
+import ShelfTile from './ShelfTileK';
 
 import config from '../../config';
 import keyCodes from '../../keyCodes';
@@ -66,7 +67,7 @@ const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //--
 /* ------------------------------------------ */
 /* HomeShelf specific contants                */
 /* ------------------------------------------ */
-const SHELF_KIND			= {
+const SHELF_KIND_OBJ			= {
   BASE: 0,
   FOCUSED: 1,
   BLOOMED: 2
@@ -84,24 +85,28 @@ export default class HomeShelf extends Component {
 		super(props)
 		this.state = {
 			isDimmed: false,
-			isFocused: false,					//-- CHECK: need???
+			isFocused: false,
+			titleYPosition: new Animated.Value(0), 		
 			isBloomed: false,					//-- CHECK: need???
-			shelfKind: SHELF_KIND.BASE      	//-- CHECK: need???
+			shelfKind: SHELF_KIND_OBJ.BASE      //-- CHECK: need???
 		}
 
-		this.tiles = []							//original tiles
+		this.tiles = []							//-- original tile array by index
+		this.tileQueue = []						//-- tile array ordered by the location
 		this.selectedTileIndex = -1
+		this.prevTile = null
+		this.currTile = null
+		this.nextTile = null
 
-		this.isFocused = false
+		this.totalTiles = props.shows.length
+
+		// this.isFocused = false
+		this.isBloomed = false
+		this.shelfKind = SHELF_KIND_OBJ.BASE
 
 		//-- prevTileIndex: tileIndexQueue[0], currentTileIndex: tileIndexQueue[1], nextTileIndex: tileIndexQueue[2], and so on
 		// this.tileIndexQueue = [-1]			//tile index array based on current location, from prev, current, to next etc (staring from entering no index for the prev tile)
 		
-		// this.prevTile = null
-		// this.currTile = null
-		// this.nextTile = null
-		this.totalTiles = props.shows.length	//-- TODO: totalTiles=0 case?????
-
 		// this.reset = this.reset.bind(this)
 		// this.select = this.select.bind(this)
 		// this.unselect = this.unselect.bind(this)
@@ -120,14 +125,16 @@ export default class HomeShelf extends Component {
 		// this.buildTileIndexQueue()
 	}
 
-	componentWillMount() {}//componentWillMount
+	componentWillMount() {
+		this._buildTileQueue()
+	}//componentWillMount
 
 	doLeft = () => {
 		console.log("INFO HomeShelf :: doLeft/moveToRight, shelf", this.props.index)
 		//console.log("INFO HomeShelf :: doLeft/moveToRight, this.state.shelfKind ? ", this.state.shelfKind)
 		// this.clearBloomTimer()
 
-		// if (this.state.shelfKind === SHELF_KIND.BLOOMED) {
+		// if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
 		// 	console.log("INFO HomeShelf :: doLeft, menu change!! ") 
 		// 	// console.log("INFO HomeShelf :: doLeft, this.currTile.props.index? " + this.currTile.props.index) 
 		// 	console.log("INFO HomeShelf :: doLeft, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
@@ -142,7 +149,7 @@ export default class HomeShelf extends Component {
 		// 	console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue  before ? ", this.tileIndexQueue)
 
 		// 	//-- move the rightMostTile to the leftEnd
-		// 	const leftOffset = TILE_WIDTH_ARR[SHELF_KIND.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		// 	const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 	const prevX = INIT_X - leftOffset
 		// 	let rightMostTile
 		// 	let prevPrevTile
@@ -185,7 +192,7 @@ export default class HomeShelf extends Component {
 		// 	//-- update nextTile (curr to next)
 		// 	//this.nextTile = this.currTile
 		// 	this.nextTile = this.tiles[this.tileIndexQueue[1]]
-		// 	let nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		// 	let nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 	this.nextTile.toExpanded(nextX)
 
 		// 	//-- then start animating all tiles to the right
@@ -197,7 +204,7 @@ export default class HomeShelf extends Component {
 		// 	    	let nextTileIndex = this.tileIndexQueue[j]
 		// 	    	//console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
 		// 	    	let targetTile = this.tiles[nextTileIndex]
-		// 	    	nextX += TILE_WIDTH_ARR[SHELF_KIND.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		// 	    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 	    	targetTile.toExpanded(nextX)
 		// 	    }
 		//    // }
@@ -229,7 +236,7 @@ export default class HomeShelf extends Component {
 
 		// this.clearBloomTimer()
 
-		// if (this.state.shelfKind === SHELF_KIND.BLOOMED) {
+		// if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
 		// 	console.log("INFO HomeShelf :: doRight, menu change!! ")
 		// 	// console.log("INFO HomeShelf :: doRight, this.currTile.props.index? " + this.currTile.props.index) 
 		// 	console.log("INFO HomeShelf :: doRight, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
@@ -241,7 +248,7 @@ export default class HomeShelf extends Component {
 		// if (this.totalTiles > 1) {
 		// 	//console.log("INFO HomeShelf :: doRight, this.tileIndexQueue  before ? ", this.tileIndexQueue)
 		// 	//-- move the rightMostTile to the leftEnd
-		// 	const leftOffset = TILE_WIDTH_ARR[SHELF_KIND.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		// 	const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 	const prevX = INIT_X - leftOffset
 
 		// 	// -- update prevTile, currTile, and nextTile
@@ -260,7 +267,7 @@ export default class HomeShelf extends Component {
 		// 		console.log("this.tileIndexQueue[2]???? " + this.tileIndexQueue[2])
 		// 		this.currTile = this.tiles[this.tileIndexQueue[2]]
 		// 		this.currTile.toFocused(INIT_X)
-		// 		let nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		// 		let nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 		//-- then start animating all tiles to the right
 		// 		let lastTileIndex = (this.tileIndexQueue[0] === -1)? this.totalTiles : this.totalTiles - 1
 		// 		//if (lastTileIndex > MAX_TILE_INDEX) lastTileIndex = MAX_TILE_INDEX	//-- don't need to animate the tiles beyond stage width
@@ -273,7 +280,7 @@ export default class HomeShelf extends Component {
 		// 		    	if (j === 3) this.nextTile = targetTile
 		// 		    	targetTile.toExpanded(nextX)
 		// 		    	//targetTile.toExpanded(nextX, noScale)
-		// 		    	nextX += TILE_WIDTH_ARR[SHELF_KIND.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		// 		    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		// 		    }
 		// 	   // }
 			   
@@ -284,7 +291,7 @@ export default class HomeShelf extends Component {
 		// 	    }
 		// 	} else {
 		// 		if (prevPrevTile !== undefined) {
-		// 	    	prevPrevTile.changeXLocTo(INIT_X + INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED])
+		// 	    	prevPrevTile.changeXLocTo(INIT_X + INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED])
 		// 	    	prevPrevTile.toFocused(INIT_X)
 		// 	    }
 		// 	}
@@ -303,8 +310,21 @@ export default class HomeShelf extends Component {
 	onFocus = () => {
 		console.log("INFO HomeShelf :: onFocus, =================> focusedShelfIndex is ? " + this.props.index)
 
-		this.setState({isDimmed: false, isFocused:true, shelfKind: SHELF_KIND.FOCUSED})	//TO CHECK:: topContainerTop
+		this.setState({isDimmed: false, isFocused:true, isBloomed:false, shelfKind: SHELF_KIND_OBJ.FOCUSED})	//TO CHECK:: topContainerTop
 		this._clearBloomTimer()
+		//this._changeTitleLocation(-22)	//testing
+
+		// let prevTileIndex
+		// let nextTileIndex
+		if (this.selectedTileIndex < 0) this.selectedTileIndex = 0
+		this.currTile = this.tiles[this.selectedTileIndex]
+
+
+		//
+		//this.currTile.
+		// prevTileIndex = this.selectedTileIndex - 1
+		// nextTileIndex = this.selectedTileIndex + 1
+
 
 		// //-- shelf "title" animation: location & font size change
 		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90
@@ -316,7 +336,7 @@ export default class HomeShelf extends Component {
 
 	 //    if (prevTileIndex !== -1) {
 	 //    	this.prevTile = this.tiles[prevTileIndex]
-	 //    	const prevX = INIT_X - TILE_WIDTH_ARR[SHELF_KIND.FOCUSED] - TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+	 //    	const prevX = INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] - TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 	 //    	this.prevTile.toExpanded(prevX)
 	 //    }
 
@@ -336,7 +356,7 @@ export default class HomeShelf extends Component {
 		//     nextTileIndex = this.tileIndexQueue[2]
 		//     //console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
 		//     this.nextTile  = this.tiles[nextTileIndex]
-		//     nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		//     nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		//     this.nextTile.toExpanded(nextX)
 
 		//     const lastTileIndex = (prevTileIndex === -1)? this.totalTiles : this.totalTiles - 1
@@ -344,7 +364,7 @@ export default class HomeShelf extends Component {
 		//     	nextTileIndex = this.tileIndexQueue[j]
 		//     	//console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
 		//     	let targetTile = this.tiles[nextTileIndex]
-		//     	nextX += TILE_WIDTH_ARR[SHELF_KIND.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND.FOCUSED]
+		//     	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		//     	targetTile.toExpanded(nextX)
 		//     }
 		// }
@@ -354,13 +374,13 @@ export default class HomeShelf extends Component {
 	onBlur = () => {
 		console.log("INFO HomeShelf :: onBlur, shelf index is ? " +  this.props.index + ", isFocused ? " + this.state.isFocused)
 
-		if (this.state.isFocused) this._backTo()
+		//if (this.state.isFocused) this._backToOrg()
 		this.setState({isDimmed: true})
 		//this._opacityChange(UNSELECTED_OPACITY)
 		// this.clearBloomTimer()
 
-		// // this.setState({shelfKind: SHELF_KIND.BASE, isFocused:false})	//TO CHEC
-		// this.setState({shelfKind: SHELF_KIND.BASE})	//TO CHECK:: topContainerTop
+		// // this.setState({shelfKind: SHELF_KIND_OBJ.BASE, isFocused:false})	//TO CHEC
+		// this.setState({shelfKind: SHELF_KIND_OBJ.BASE})	//TO CHECK:: topContainerTop
 		// this.opacityChange(.6)
 
 		// //-- shelf title animation: location & font size change
@@ -370,7 +390,7 @@ export default class HomeShelf extends Component {
 		// const prevTileIndex = this.tileIndexQueue[0]
 	 //    if (prevTileIndex !== -1) {
 	 //    	this.prevTile = this.tiles[prevTileIndex]
-	 //    	const prevX = INIT_X - TILE_WIDTH_ARR[SHELF_KIND.BASE] - TILE_OFFSET_ARR[SHELF_KIND.BASE]
+	 //    	const prevX = INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE] - TILE_OFFSET_ARR[SHELF_KIND_OBJ.BASE]
 	 //    	this.prevTile.backToOrg(prevX)
 	 //    }
 
@@ -385,7 +405,7 @@ export default class HomeShelf extends Component {
 	 //    if (this.tileIndexQueue.length > 2) {
 		//     nextTileIndex = this.tileIndexQueue[2]
 		//     this.nextTile  = this.tiles[nextTileIndex]
-		//     nextX = INIT_X + TILE_WIDTH_ARR[SHELF_KIND.BASE] + TILE_OFFSET_ARR[SHELF_KIND.BASE]
+		//     nextX = INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BASE]
 		//     this.nextTile.backToOrg(nextX)
 
 		//     //-- the rest (CHECK the last one, when inited)
@@ -393,24 +413,62 @@ export default class HomeShelf extends Component {
 		//     for (var j = 3; j <= lastTileIndex; j++) {
 		//     	nextTileIndex = this.tileIndexQueue[j]
 		//     	let targetTile = this.tiles[nextTileIndex]
-		//     	nextX += TILE_WIDTH_ARR[SHELF_KIND.BASE] + TILE_OFFSET_ARR[SHELF_KIND.BASE]
+		//     	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BASE]
 		//     	targetTile.backToOrg(nextX)
 		//     }
 		// }
 	}//onBlur
 
-	_backTo = () => {
-		console.log("INFO HomeShelf :: _backTo, shelf index is ? " +  this.props.index + ", isBloomed ? " + this.state.isBloomed)
-		//this.setState({isFocused: false, isBloomed: false, shelfKind: SHELF_KIND.BASE})
+	_reset = () => {
+		console.log("INFO HomeShelf :: _reset", this.props.index)
+
+		this.setState({isDimmed: false})
+		// this.setState({isDimmed: false, isFocused: false, isBloomed: false, shelfKind: SHELF_KIND_OBJ.BASE})
+
+		this._clearBloomTimer()
+		this._buildTileQueue()
+		this._backToOrg()
+
+	}//_reset
+
+	_clearBloomTimer = () => {
+		console.log("INFO HomeShelf :: _clearBloomTimer")
+		// if (this.currTile !== null) this.currTile.killToLargeBloom()
+	}//_clearBloomTimer
+
+	_buildTileQueue = () => {
+		console.log("INFO HomeShelf :: _buildTileQueue")
+		this.tileQueue = this.tiles.slice(0)	//-- from 0 to end, i.e. the copy of whole array
+	}//_reset
+
+	_backToOrg = () => {
+		console.log("INFO HomeShelf :: _backToOrg, shelf index is ? " + this.props.index + ", isBloomed ? " + this.state.isBloomed)
+		//this.setState({isFocused: false, isBloomed: false, shelfKind: SHELF_KIND_OBJ.BASE})
+
+		if (this.state.isFocused) {
+			//-- do something
+		}
 	}
 
-	_opacityChange = (val) => {
-		// this.topContainerStyle = {
-		// 	top: this.state.topContainerTop + 'px',
-		// 	opacity: val
-		// }
-		// TL.to(this.homeShelfContainer, 0, {opacity: val})
-	}//_opacityChange
+	_changeTitleLocation = (targetValue, pDuration=STD_DURATION) => {
+	    console.log("INFO HomeShelf :: _changeTitleLocation, to " + targetValue)
+	    Animated.timing(
+	      this.state.titleYPosition, 
+	      {
+	        toValue: targetValue,
+	        duration: pDuration,
+	        easing: Easing.out(Easing.quad),
+	      }
+	    ).start();
+	  }//_changeLocation
+
+	// _opacityChange = (val) => {
+	// 	// this.topContainerStyle = {
+	// 	// 	top: this.state.topContainerTop + 'px',
+	// 	// 	opacity: val
+	// 	// }
+	// 	// TL.to(this.homeShelfContainer, 0, {opacity: val})
+	// }//_opacityChange
 
 	_moveTo = (targetY = 0, pDuration = STD_DURATION) => {
 		console.log("INFO HomeShelf :: _moveTo")
@@ -426,19 +484,19 @@ export default class HomeShelf extends Component {
 
 	_onLargeBloomStart = () => {
 		console.log("INFO HomeShelf :: onLargeBloomStart")
-		// this.setState({isDimmed: false, isFocused: false, isBloomed: false, shelfKind: SHELF_KIND.BLOOMED})
-		// this.setState({shelfKind: SHELF_KIND.BLOOMED})
+		// this.setState({isDimmed: false, isFocused: false, isBloomed: false, shelfKind: SHELF_KIND_OBJ.BLOOMED})
+		// this.setState({shelfKind: SHELF_KIND_OBJ.BLOOMED})
 
 		// this.props.callBackOnLargeBloomStart()
 
 		// let prevX
 		// let nextX
 		// if (this.prevTile !== null) {
-		// 	prevX = INIT_X - (TILE_WIDTH_ARR[SHELF_KIND.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND.BLOOMED])
+		// 	prevX = INIT_X - (TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
 		// 	this.prevTile.toMedBloomed(prevX)
 		// }
 		// if (this.nextTile !== null) {
-		// 	nextX = INIT_X + (BLOOMED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND.BLOOMED])
+		// 	nextX = INIT_X + (BLOOMED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
 		// 	this.nextTile.toMedBloomed(nextX)
 		// }
 
@@ -448,19 +506,16 @@ export default class HomeShelf extends Component {
 		// for (var j = 3; j <= lastTileIndex; j++) {
 	 //    	let nextTileIndex = this.tileIndexQueue[j]
 	 //    	let targetTile = this.tiles[nextTileIndex]
-	 //    	nextX += TILE_WIDTH_ARR[SHELF_KIND.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND.BLOOMED]
+	 //    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED]
 	 //    	targetTile.toMedBloomed(nextX, false, 0)
 	 //    }
 	}//__onLargeBloomStart
 
-	_clearBloomTimer = () => {
-		console.log("INFO HomeShelf :: clearBloomTimer")
-		// if (this.currTile !== null) this.currTile.killToLargeBloom()
-	}//_clearBloomTimer
+
 
 	_backToFocused = (pDir = "left") => {
 		console.log("INFO HomeShelf :: _backToFocused, callBackOnNoMenuLeft")
-		// this.setState({shelfKind: SHELF_KIND.FOCUSED})
+		// this.setState({shelfKind: SHELF_KIND_OBJ.FOCUSED})
 		// if (pDir === "left") {
 		// 	this.doLeft()
 		// } else {
@@ -472,7 +527,7 @@ export default class HomeShelf extends Component {
 	_buildTileIndexQueue = () => {
 		console.log("INFO HomeShelf :: _buildTileIndexQueue, this.props.shows.length ? ", this.props.shows.length)
 		// for (var i=0; i<this.totalTiles; i++) {
-		// 	const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND.BASE];
+		// 	const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		// 	if (leftX < INIT_X) {
 		// 		//-- if prev tile exists
 		// 		if (this.tileIndexQueue[0] === -1) {
@@ -487,15 +542,10 @@ export default class HomeShelf extends Component {
 		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.tileIndexQueue ? ", this.tileIndexQueue)
 	}//_buildTileIndexQueue
 
-	_reset = () => {
-		// console.log("INFO HomeShelf :: reset", this.props.index)
-		// this.clearBloomTimer()
-	}//_reset
-
 	_renderEachShelfTile = (tileObj, i) => {
 		// console.log("INFO HomeShelf :: _renderEachShelfTile")
-		const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND.BASE];
-		// const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X : INIT_X - TILE_WIDTH_ARR[SHELF_KIND.BASE];
+		const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
+		// const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		// const leftX = (i==0)? INIT_X : 0;
 		//const leftX = INIT_X;
 		// console.log("INFO HomeShelf :: _renderEachShelfTile, i: " + i + ", leftX ? " + leftX)
@@ -525,42 +575,47 @@ export default class HomeShelf extends Component {
 	_find_dimesions = (layout) => {
 	    const {height} = layout;
 	    // console.warn(height);
-	    console.log('INFO HomeShelf :: _find_dimensions, height is ' + height);
+	    console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
 	 }//_find_dimesions
 
 	render() {
 		console.log("INFO HomeShelf :: render --------------------------------------------------------------->")
-		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		//let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		//let pOpacity = this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY
 		// console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
 
 		//-- for testing
 		const colorArr = ['darkcyan', 'darkred', 'darkorchid']
 		let colorIndex = Math.floor(Math.random() * 3)
 		let pColor = colorArr[colorIndex]
-		//let pOpacity = this.props.isFocused ? 1:.6
-		let pOpacity = this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY
+
+		
 		//--------------
 		return (
 			<View 
 				style={{ 
-					position: pPosition,
+					position: (this.props.index === 0)? 'relative' : 'absolute',
 					top: this.props.topY,
 					width: '100%',
 					height: '100%',
-					opacity: pOpacity,
-					// borderWidth: 1,
-    				// borderColor: 'red',
-    				// backgroundColor: pColor,
-    				// backgroundColor: 'darkgreen'
+					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
+					overflow: 'visible',
+					borderWidth: 1,
+    				borderColor: 'blue',
+    				// backgroundColor: (this.state.isFocused)? pColor : 'transparent',
     		}} >
-				<View 
-					style={ homeShelfStyles.homeShelfTitleContainer } 
-					// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
+				<Animated.View 
+					//style={ homeShelfStyles.homeShelfTitleContainer } 
+					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
+								top: this.state.titleYPosition,
+						 	} } 
+					//onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
 				>
-					<Text style={ homeShelfStyles.shelfTitle }>
+
+					<Text style={ homeShelfStyles.shelfTitleBase }>
 						{this.props.title}
 					</Text>
-				</View>
+				</Animated.View>
 
 				<View style={ homeShelfStyles.homeShelfTilesContainer }>
 					{this.props.shows.map(this._renderEachShelfTile)}
@@ -568,6 +623,8 @@ export default class HomeShelf extends Component {
 			</View>
 		)
 	}//render
+
+	//					// <Text style={ (!this.state.isFocused)? homeShelfStyles.shelfTitleBase : homeShelfStyles.shelfTitleSelected }>
 }
 
 
@@ -576,15 +633,27 @@ const homeShelfStyles = StyleSheet.create({
 	homeShelfTitleContainer: {
 	    borderWidth: .5,
     	borderColor: 'darkgreen',
+    	overflow: 'visible',
+    	backgroundColor: 'green',
 	},
-		shelfTitle: {
-			left: INIT_X,
-			fontSize: 28/RATIO,
-		    fontFamily: 'Helvetica-Light',
-		    fontWeight: '100',	/*HelveticaLight*/
-		    textAlign: 'left',
-		    color: '#fff',
-		},
+
+	shelfTitleBase: {
+		left: INIT_X,
+		fontSize: 28/RATIO,
+	    fontFamily: 'Helvetica-Light',
+	    fontWeight: '100',	/*HelveticaLight*/
+	    textAlign: 'left',
+	    color: '#fff',
+	},
+
+	shelfTitleSelected: {
+		left: INIT_X,
+		fontSize: 40/RATIO,
+	    fontFamily: 'Helvetica-Light',
+	    fontWeight: '100',	/*HelveticaLight*/
+	    textAlign: 'left',
+	    color: '#fff',
+	},
 	//---------------------------------//
 
 

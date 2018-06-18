@@ -75,10 +75,10 @@ export default class POCContainerK extends Component {
     super(props);
 
     this.state = {
-      animOpacity0: new Animated.Value(1),                    //-- animation instance for 'globalNav' with initial opacity value of '1'
+      animOpacity0: new Animated.Value(1),                    //-- for 'globalNav' opacity value with initial value of '1'
       animOpacity1: new Animated.Value(1),                    //-- for 'homeHero'
       animOpacity2: new Animated.Value(1),                    //-- for 'homeShelves'
-      animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- animation instance for 'globalNav' with initial location value of INIT_GLOBAL_NAV_Y
+      animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- for 'globalNav' location value with the initial value of INIT_GLOBAL_NAV_Y
       animLocation1: new Animated.Value(INIT_HOME_HERO_Y),    //-- for 'homeHero'
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
       isGuideVisible: false,
@@ -244,7 +244,7 @@ export default class POCContainerK extends Component {
       this.state["animOpacity" + targetIndex], 
       {
         toValue: targetValue,
-        duration: pDuration,
+        // duration: pDuration,
       }
     ).start();
   }//_changeOpacity

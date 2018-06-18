@@ -196,12 +196,13 @@ export default class HomeShelvesPane extends Component {
     this.currShelf = null
     this.nextShelf = null
 
-    this.containerShiftOffsetY = 0    //TODO: CHECK need?
+    // this.containerShiftOffsetY = 0    //TODO: CHECK need?
     // this.isFocused = false            //TODO: CHECK need?
     //this.isFirstShelfSelected = false //TODO: CHECK need?
 
-    this.animsArr = []
+    // this.animsArr = []
     
+    //-- TODO: check!!!
     this.isPrevMoved = false
     this.isNextMoved = false
     
