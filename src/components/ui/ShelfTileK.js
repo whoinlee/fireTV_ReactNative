@@ -328,27 +328,40 @@ class ShelfTile extends Component {
 		let pColor = colorArr[colorIndex]
 		// <Text style={styles.comment}>{this.props.index}</Text>	
 		return (
-			<TouchableWithoutFeedback 
-	            onPress={this.onFocus()}
-	      	>
-				<View style={{	
-								position: pPosition,
-								left: this.props.leftX,
-								// backgroundColor: pColor, 
-								// width: 320/RATIO, 
-								// height: (180)/RATIO, 
-								// borderColor: 'black', borderWidth: .5		/* for testing */
-							}}	>
-					<Image 	source={this.props.imageURL} 
-							style={{	
-								width: 320/RATIO, 
-								height: 180/RATIO
-							}} />
-				</View>
-			</TouchableWithoutFeedback >
+			<View style={{	
+							position: pPosition,
+							left: this.props.leftX,
+							//top: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1]/2,
+							//backgroundColor: pColor, 
+							//width: 320/RATIO, 
+							//height: (180)/RATIO, 
+							borderColor: 'black', borderWidth: .5		/* for testing */
+						}}	>
+				<Image 	source={this.props.imageURL} 
+						style={{	
+							width: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0], 
+							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
+							//top: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1]/2,
+							//overflow: 'visible',
+						}} />
+			</View>
 		)
 	}//render
 }
+
+/*
+<Animated.Image
+              source={{uri: 'https://stage.tvecms.bravo.nbcuni.com/sites/bravo/files/2018/01/rhoa_s10_as_1965x1108_170382.jpg'}}
+              style={{
+                opacity: imageOpacity,
+                transform: [{ scale : imageScale }],
+                resizeMode: Image.resizeMode.cover,
+                width: Dimensions.get('window').width,
+                height: 400,
+                overflow: 'visible',
+              }}
+            />
+*/
 
 ShelfTile.propTypes = {
 	index:  PropTypes.number,

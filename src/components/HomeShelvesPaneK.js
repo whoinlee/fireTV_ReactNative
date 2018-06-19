@@ -184,11 +184,7 @@ export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
     this.state = {
-      //isFocused: false,
-      //onFocusShelf: null,     //TODO: need to be here?
-      //selectedShelfIndex: -1, //TODO: need to be here?
-      //isFirstShelfSelected: false,
-      //shelvesTopY: initContainerY + 'px',
+      //
     }
     this.shelves = []
     this.selectedShelfIndex = -1
@@ -196,51 +192,37 @@ export default class HomeShelvesPane extends Component {
     this.currShelf = null
     this.nextShelf = null
 
-    // this.containerShiftOffsetY = 0    //TODO: CHECK need?
-    // this.isFocused = false            //TODO: CHECK need?
-    //this.isFirstShelfSelected = false //TODO: CHECK need?
-
-    // this.animsArr = []
-    
     //-- TODO: check!!!
-    this.isPrevMoved = false
-    this.isNextMoved = false
-    
-    this.totalMenu = 3
+    // this.isPrevMoved = false
+    // this.isNextMoved = false
+    // this.totalMenu = 3
   }
 
   componentDidMount() {
-    // this.totalShelves = this.shelves.length  //TODO: CHECK need?
+    // this.totalShelves = this.shelves.length  //TODO: with actual data
   }//componentDidMount
 
   componentWillUnmount() {
-    this._removeKeyListener()
   }//componentWillUnmount
 
   doUp = () => {
     if (this.selectedShelfIndex < 0) return //ERROR
-
     this.selectedShelfIndex--
     console.log("INFO HomeShelvesPane :: doUp, this.selectedShelfIndex? " + this.selectedShelfIndex)
     if (this.selectedShelfIndex < 0) {
       this.onBlur()
     } else {
       this._onShelfFocus(this.selectedShelfIndex)
-      //-- TODO: dim out prev and next shelves
     }
-    //this.isFirstShelfSelected = (this.selectedShelfIndex === 0) //TODO: CHECK need??
   }//doUp
 
   doDown = () => {
     this.selectedShelfIndex++
     if (this.selectedShelfIndex > MAX_SHELF_INDEX) {
       this.selectedShelfIndex = MAX_SHELF_INDEX
-      console.log("INFO HomeShelvesPane :: doDown, MAX_SHELF_INDEX? " + MAX_SHELF_INDEX)
-      console.log("INFO HomeShelvesPane :: doDown, 1 this.selectedShelfIndex? " + this.selectedShelfIndex)
       return
     }
     console.log("INFO HomeShelvesPane :: doDown, 2 this.selectedShelfIndex? " + this.selectedShelfIndex)
-    //this.isFirstShelfSelected = (this.selectedShelfIndex === 0) //TODO: CHECK need??
     this._onShelfFocus(this.selectedShelfIndex)
   }//doDown
 
@@ -259,7 +241,6 @@ export default class HomeShelvesPane extends Component {
 
   onFocus = () => {
     console.log("INFO HomeShelvesPane :: onFocus")
-
     const { onFocus } = this.props;
     if (onFocus) {
       onFocus()
@@ -268,7 +249,6 @@ export default class HomeShelvesPane extends Component {
 
   onBlur = () => {
     console.log("INFO HomeShelvesPane :: onBlur")
-
     const { onBlur } = this.props;
     if (onBlur) {
       onBlur()
@@ -276,36 +256,21 @@ export default class HomeShelvesPane extends Component {
   }//onBlur
 
   _onShelfFocus = (pIndex) => {
-    // console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> pIndex is ? " + pIndex)
-    // console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> this.selectedShelfIndex is ? " + this.selectedShelfIndex)
     if (pIndex < 0) return //ERROR, never happens
-    console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
-    this.selectedShelfIndex = pIndex    //-- to confirm
+    //console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
+    this.selectedShelfIndex = pIndex    //-- to confirm (duplicate calculation, as it's already done in doUp/doDown)
 
     this.currShelf = this.shelves[pIndex]
     this.prevShelf = (pIndex > 0)? this.shelves[pIndex - 1] : null
     this.nextShelf = (pIndex >= MAX_SHELF_INDEX)? null : this.shelves[pIndex + 1]
 
-    //this.shelves[pIndex].onFocus()
     this.currShelf.onFocus()
     if (this.prevShelf) this.prevShelf.onBlur()
     if (this.nextShelf) this.nextShelf.onBlur()
 
-    if (pIndex <= 1) this.props.updateHomeHeroLocation(pIndex,false)
+    if (pIndex <= 1) this.props.updateHomeHeroLocation(pIndex,false)  //-- when the 1st/2nd shelf is selected/bloomed, homeHeroPane changes its location
     this.props.updateHomeShelvesLocation(pIndex)
   }//_onShelfFocus
-
-  // _onShelfBlur = (pIndex) => {
-  //   console.log("INFO HomeShelvesPane :: _onShelfBlur")
-  // }//_onShelfBlur
-
-  // _onShelfSelect = (pIndex) => {
-  //   console.log("INFO HomeShelvesPane :: _onShelfSelect, pIndex is ? " + pIndex)
-
-  //   if (pIndex !== this.state.selectedShelfIndex)
-  //   this.setState({selectedShelfIndex : pIndex})
-  // }//_onShelfSelect
-
 
   _onLargeBloomStart = () => {
     //console.log("INFO HomeShelvesPane :: onLargeBloomStart")
@@ -343,10 +308,10 @@ export default class HomeShelvesPane extends Component {
   }//_moveBackAdjacentShelves
 
   _find_dimesions = (layout) => {
-      const {height} = layout;
-      // console.warn(x);
-      // console.warn(height);
-      console.log('INFO HomeShelvesPane :: _find_dimensions, height is ' + height);
+    //-- used for testing
+    const {height} = layout;
+    // console.warn(height);
+    console.log('INFO HomeShelvesPane :: _find_dimensions, height is ' + height);
   }//_find_dimensions
 
   _renderEachHomeShelf = (shelfObj, i) => {
@@ -354,25 +319,18 @@ export default class HomeShelvesPane extends Component {
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, this.selectedShelfIndex ? " + this.selectedShelfIndex)
     // console.log("INFO HomeShelvesPane :: _eachHomeShelf, (this.selectedShelfIndex === i) ? " + (this.selectedShelfIndex === i))
     return (
-     //<Animated.View key={(i + 1).toString()}>
-          <HomeShelf  
-                key={(i + 1).toString()}
-                ref={node => this.shelves.push(node)}
+      <HomeShelf  
+            key={(i + 1).toString()}
+            ref={node => this.shelves.push(node)}
 
-                // id={"HomeShelf" + i} 
-                index={i}
-                title={shelfObj.title}
-                shows={shelfObj.shows}
-                topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
-                
-                //callBackOnLargeBloomStart={this._onLargeBloomStart}
-                //callBackOnBackToFocused={this._moveBackAdjacentShelves} 
-                //isFocused={this.selectedShelfIndex === i}
-
-                // onFocus={this._onShelfFocus.bind(this,i)}
-                //onBlur={this._onShelfBlur}
-          />
-      //</Animated.View>
+            index={i}
+            title={shelfObj.title}
+            shows={shelfObj.shows}
+            topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
+            
+            //callBackOnLargeBloomStart={this._onLargeBloomStart}
+            //callBackOnBackToFocused={this._moveBackAdjacentShelves} 
+      />
     )
   }//_renderEachHomeShelf
 
@@ -392,24 +350,12 @@ HomeShelvesPane.propTypes = {
   onBlur : PropTypes.func.isRequired,
   updateHomeHeroLocation : PropTypes.func.isRequired,
   updateHomeShelvesLocation : PropTypes.func.isRequired,
-
-  // isFocused : PropTypes.bool,
-  // onFirstShelfSelected : PropTypes.func,
   // onFirstShelfBloomed : PropTypes.func,
-  // onSecondShelfSelected : PropTypes.func,
-  // onShelvesDown : PropTypes.func,
-  // onShelvesUp : PropTypes.func,
 }
 
 HomeShelvesPane.defaultProps = {
   onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
   updateHomeHeroLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeHeroLocation")}, 
   updateHomeShelvesLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeShelvesLocation")}, 
-
-  // isFocused : false,
-  // onFirstShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfSelected")},
   // onFirstShelfBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfBloomed")},
-  // onSecondShelfSelected : () => {console.log("INFO HomeShelvesPane :: please pass a function for onSecondShelfSelected")},
-  // onShelvMisesDown : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesDown")},
-  // onShelesUP : () => {console.log("INFO HomeShelvesPane :: please pass a function for onShelvesUp")},
 }

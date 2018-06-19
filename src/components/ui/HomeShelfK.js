@@ -462,14 +462,6 @@ export default class HomeShelf extends Component {
 	    ).start();
 	  }//_changeLocation
 
-	// _opacityChange = (val) => {
-	// 	// this.topContainerStyle = {
-	// 	// 	top: this.state.topContainerTop + 'px',
-	// 	// 	opacity: val
-	// 	// }
-	// 	// TL.to(this.homeShelfContainer, 0, {opacity: val})
-	// }//_opacityChange
-
 	_moveTo = (targetY = 0, pDuration = STD_DURATION) => {
 		console.log("INFO HomeShelf :: _moveTo")
 		// TL.to(this.homeShelfContainer, pDuration, {top: targetY+'px', ease:Power3.easeOut})
@@ -555,6 +547,7 @@ export default class HomeShelf extends Component {
 				<ShelfTile 	
 						key={(i + 1).toString()}
 						ref={node => this.tiles.push(node)}
+
 				  		index={i}
 				  		homeShelfIndex={this.props.index}
 				  		leftX={leftX}
@@ -566,8 +559,7 @@ export default class HomeShelf extends Component {
 				  		// callBackOnLargeBloomStart={this._onLargeBloomStart}
 				  		// callBackOnNoMenuLeft={this._backToFocused}
 				  		// isFocused={false}
-				  		>
-		    	</ShelfTile>
+				/>
 		    // </View>
 		)
 	}//_renderEachShelfTile
