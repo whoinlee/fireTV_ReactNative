@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import {
+	Animated,
+	Easing,
 	Image,
   	Text,
   	TouchableWithoutFeedback,
@@ -34,11 +36,12 @@ const TILE_SIZE_ARR 		= [
   [config.homeShelves.bloomedBaseTileW/RATIO, config.homeShelves.bloomedBaseTileH/RATIO],	//-- medBloomed tile size: 0.741 of the largeBloomed
   [config.homeShelves.bloomedTileW/RATIO, config.homeShelves.bloomedTileH/RATIO]			//-- largeBloomed tile size
 ];
-//
-const toExpandedScale = Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;		//1.17
-const toFocusedScale = Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;		//1.84
-const toMedBloomedScale = Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.MED_BLOOMED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;	//2.44
-const toLgBloomedScale = Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;	//3.30
+const ORIGINAL_SCALE		= 1
+const EXPANDED_SCALE 		= Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;		//1.17
+const FOCUSED_SCALE 		= Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;			//1.84
+const MED_BLOOMED_SCALE 	= Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.MED_BLOOMED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;		//2.44
+const LG_BLOOMED_SCALE 		= Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;		//3.30
+const SCALE_ARR				= [ORIGINAL_SCALE, EXPANDED_SCALE, FOCUSED_SCALE, MED_BLOOMED_SCALE, LG_BLOOMED_SCALE];
 //
 const infoIconPath = '../../assets/images/icons/infoIcon.png';
 const playIconPath = '../../assets/images/icons/playIcon.png';
@@ -51,8 +54,9 @@ class ShelfTile extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			imageScale: new Animated.Value(1),  
 			tileKind: TILE_KIND_OBJ.ORIGINAL,	//TODO: check, need to be here?
-			selectedMenuIndex: 1				//no selection (??? or playIcon?)
+			selectedMenuIndex: 1				//TODO: check, need to be here?
 		}
 
 		this.menus= []							
@@ -64,9 +68,8 @@ class ShelfTile extends Component {
 		this.bloomToLargeTimerID = null
 		this.isFocused = false
 		this.isBloomed = false
-		this.tileKind = TILE_KIND_OBJ.ORIGINAL
-
-
+		this.tileKind = TILE_KIND_OBJ.ORIGINAL 	//TODO: check, need?
+		
 		// this.renderContent = this.renderContent.bind(this)
 		// this.updateState = this.updateState.bind(this)
 		// this.backToOrg = this.backToOrg.bind(this)
@@ -120,50 +123,74 @@ class ShelfTile extends Component {
 	}//doRight
 
 	doSelect = () => {
-		console.log("\nINFO ShelfTile :: doSelect, shelf", this.props.index)
+		console.log("INFO ShelfTile :: doSelect, tile " + this.props.index)
 	}//doSelect
 
 	onFocus = () => {
-	    //if (this.props.isFocused) {
-	      //console.log('INFO ShelfTile :: onFocus ====================>');
-	      this._clearBloomTimer()
-	      this._toFocused()
+		console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
+      	this._clearBloomTimer()
+      	this._toFocused()
 
-	      // if (!this.isFocused) {
-	      //   this.isFocused = true
-	      //   //this.selectedTileIndex = 0
-	      //   //this._setKeyListener()
-	      // }
-
-	      const { onFocus } = this.props;
-	      if (onFocus) {
-	        //console.log('INFO HomeShelf :: onFocus calling back from HomeShelvesPane');
-	        onFocus();
-	      }
-	    //}
+      	const { onFocus } = this.props;
+      	if (onFocus) {
+        	console.log('INFO ShelfTile :: onFocus calling back from ShelfTile');
+        	onFocus();
+      	}
 	}//onFocus
 
 	onBlur = () => {
 		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
 	}//onBlur
 
-	_updateState = (tileKind) => {
-		console.log("INFO ShelfTile :: _updateState, index: " + this.props.index)
-		// let newSelectedMenuIndex
-		// if (tileKind === TILE_KIND_OBJ.LG_BLOOMED) {
-		// 	newSelectedMenuIndex = 1	//playMenu
-		// } else {
-		// 	newSelectedMenuIndex = -1	//noMenu
-		// }
-		// this.setState({tileKind: tileKind, selectedMenuIndex: newSelectedMenuIndex})
+	
+
+	_updateKind = (pKind) => {
+		console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
+		let newSelectedMenuIndex
+		if (tileKind === TILE_KIND_OBJ.LG_BLOOMED) {
+			newSelectedMenuIndex = 1	//playMenu
+		} else {
+			newSelectedMenuIndex = -1	//noMenu
+		}
+
+		//-- TODO: update state variables? or class variables?, need?
+		// this.setState({tileKind: pKind, selectedMenuIndex: newSelectedMenuIndex})
 	}//_updateState
 
-	_backToOrg = (targetX) => {
-		console.log("INFO ShelfTile :: _backToOrg, index: " + this.props.index)
-		// this.updateState(TILE_KIND_OBJ.ORIGINAL)
+	_changeScale = (targetValue, pDuration=STD_DURATION) => {
+	    console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
+	    Animated.timing(
+	      this.state.imageScale, 
+	      {
+	        toValue: targetValue,
+	        duration: pDuration,
+	        easing: Easing.out(Easing.quad),
+	      }
+	    ).start();
+	}//_changeScale
+
+	backToOrg = () => {
+		console.log("INFO ShelfTile :: backToOrg, index: " + this.props.index)
+
+		this._updateKind(TILE_KIND_OBJ.ORIGINAL)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL])
+
 		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
 		// TL.to(this.imageContainer, stdDuration, {css: { '-webkit-filter': 'brightness(1)', scale: 1 }})
 	}//_backToOrg
+
+	_toFocused = (targetX = undefined) => {
+		console.log("INFO ShelfTile :: _toFocused, index: " + this.props.index)
+
+		this._updateKind(TILE_KIND_OBJ.FOCUSED)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED])
+
+		// if (targetX !== undefined) {
+		// 	TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
+		// }
+		// //.7 to .5
+		// TL.to(this.imageContainer, stdDuration, {css: {'-webkit-filter': 'brightness(.5)', scale: toFocusedScale}, onComplete: this.showFocusedContent()})
+	}//_toFocused
 
 	_toExpanded = (targetX, noScale=false, pDuration=stdDuration) => {
 		console.log("INFO ShelfTile :: _toExpanded, index: " + this.props.index)
@@ -176,17 +203,6 @@ class ShelfTile extends Component {
 		// 	TL.to(this.imageContainer, pDuration, {css: { '-webkit-filter': 'brightness(1)', scale: toExpandedScale}})
 		// }
 	}//_toExpanded
-
-	_toFocused = (targetX = undefined) => {
-		console.log("INFO ShelfTile :: _toFocused, index: " + this.props.index)
-		// this.killToLargeBloom()
-		// this.updateState(TILE_KIND_OBJ.FOCUSED)
-		// if (targetX !== undefined) {
-		// 	TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
-		// }
-		// //.7 to .5
-		// TL.to(this.imageContainer, stdDuration, {css: {'-webkit-filter': 'brightness(.5)', scale: toFocusedScale}, onComplete: this.showFocusedContent()})
-	}//_toFocused
 
 	_toMedBloomed = (targetX, noScale=false, pDuration=stdDuration) => {
 		console.log("INFO ShelfTile :: _toMedBloomed")
@@ -207,6 +223,21 @@ class ShelfTile extends Component {
 		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
 	}//_toLargeBloomed
 
+	// **
+	_clearBloomTimer = () => {
+		console.log("INFO ShelfTile :: _clearBloomTimer")
+		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
+	}
+
+	_waitToLargeBloom = () => {
+		console.log("INFO ShelfTile :: _waitToLargeBloom")
+		this._clearBloomTimer()
+		//this._killToLargeBloom()
+		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION*1000)
+	}//_waitToLargeBloom
+	// **
+
+
 	_showFocusedContent = () => { 
 		console.log("INFO ShelfTile :: _showFocusedContent")
 		// TL.to(this.focusedContent, stdDuration, {delay:.2, opacity:1, onComplete: this.waitToLargeBloom()}) 
@@ -221,18 +252,6 @@ class ShelfTile extends Component {
 		console.log("INFO ShelfTile :: _showBloomedContent")
 		// TL.to(this.bloomedContent, stdDuration, {delay:stdDuration, css: {visibility: 'visible', opacity: 1}})
 	}//_showBloomedContent
-
-	_waitToLargeBloom = () => {
-		console.log("INFO ShelfTile :: _waitToLargeBloom")
-		this._clearBloomTimer()
-		//this._killToLargeBloom()
-		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION*1000)
-	}//_waitToLargeBloom
-
-	_clearBloomTimer = () => {
-		console.log("INFO ShelfTile :: _clearBloomTimer")
-		//if (this.bloomToLargeTimerID !== null) clearTimeout(this.bloomToLargeTimerID) 
-	}
 
 	_changeXLocTo = (targetX) => { TL.to(this.containerDiv, 0, {left: targetX+'px'}) }
 
@@ -322,7 +341,9 @@ class ShelfTile extends Component {
 	render() {
 		// console.log("INFO ShelfTile :: render, this.props.imageURL ? " + this.props.imageURL)
 		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
-		let pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		const pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		const { imageScale } = this.state
+
 		const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
 		let colorIndex = Math.floor(Math.random() * 4);
 		let pColor = colorArr[colorIndex]
@@ -331,19 +352,26 @@ class ShelfTile extends Component {
 			<View style={{	
 							position: pPosition,
 							left: this.props.leftX,
+							// transform: [{ scale: imageScale }],
 							//top: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1]/2,
+
+							//-- for testing
 							//backgroundColor: pColor, 
 							//width: 320/RATIO, 
 							//height: (180)/RATIO, 
-							borderColor: 'black', borderWidth: .5		/* for testing */
+							// borderColor: 'black', borderWidth: .5		/* for testing */
 						}}	>
-				<Image 	source={this.props.imageURL} 
-						style={{	
+				<Animated.Image 	
+						source={this.props.imageURL} 
+						style={{
+							transform: [{ scale: imageScale }],
 							width: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0], 
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
+							resizeMode: Image.resizeMode.cover,
 							//top: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1]/2,
-							//overflow: 'visible',
-						}} />
+							// overflow: 'visible',
+						}} 
+				/>
 			</View>
 		)
 	}//render

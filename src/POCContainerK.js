@@ -357,8 +357,8 @@ export default class POCContainerK extends Component {
   }//_renderGuide
 
   render() {
-    console.log("INFO POCContainer :: render --------------------------------------------------------------->")
-    let { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
+    //console.log("INFO POCContainer :: render --------------------------------------------------------------->")
+    const { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
     return (
         <View style={styles.pocContainer}>
             <Animated.View

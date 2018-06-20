@@ -175,7 +175,7 @@ const SHELVES_DATA_ARR      = [
        imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
-];//hardcoded test data
+];//-- hardcoded test data
 const TOTAL_SHELVES         = SHELVES_DATA_ARR.length;
 const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 
@@ -249,6 +249,9 @@ export default class HomeShelvesPane extends Component {
 
   onBlur = () => {
     console.log("INFO HomeShelvesPane :: onBlur")
+
+    //if (this.currShelf) this.currShelf.backToOrg()
+
     const { onBlur } = this.props;
     if (onBlur) {
       onBlur()
@@ -256,9 +259,10 @@ export default class HomeShelvesPane extends Component {
   }//onBlur
 
   _onShelfFocus = (pIndex) => {
-    if (pIndex < 0) return //ERROR, never happens
+    if (pIndex < 0) return //ERROR
+
     //console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
-    this.selectedShelfIndex = pIndex    //-- to confirm (duplicate calculation, as it's already done in doUp/doDown)
+    this.selectedShelfIndex = pIndex    //-- to confirm (duplicate, as it's already done in doUp/doDown)
 
     this.currShelf = this.shelves[pIndex]
     this.prevShelf = (pIndex > 0)? this.shelves[pIndex - 1] : null
