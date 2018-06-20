@@ -250,7 +250,7 @@ export default class HomeShelvesPane extends Component {
   onBlur = () => {
     console.log("INFO HomeShelvesPane :: onBlur")
 
-    //if (this.currShelf) this.currShelf.backToOrg()
+    if (this.currShelf) this.currShelf.onBlur()
 
     const { onBlur } = this.props;
     if (onBlur) {

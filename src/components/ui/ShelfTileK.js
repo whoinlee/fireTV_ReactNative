@@ -142,19 +142,17 @@ class ShelfTile extends Component {
 		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
 	}//onBlur
 
-	
-
 	_updateKind = (pKind) => {
 		console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
 		let newSelectedMenuIndex
-		if (tileKind === TILE_KIND_OBJ.LG_BLOOMED) {
+		if (pKind === TILE_KIND_OBJ.LG_BLOOMED) {
 			newSelectedMenuIndex = 1	//playMenu
 		} else {
 			newSelectedMenuIndex = -1	//noMenu
 		}
 
 		//-- TODO: update state variables? or class variables?, need?
-		// this.setState({tileKind: pKind, selectedMenuIndex: newSelectedMenuIndex})
+		this.setState({tileKind: pKind, selectedMenuIndex: newSelectedMenuIndex})
 	}//_updateState
 
 	_changeScale = (targetValue, pDuration=STD_DURATION) => {
@@ -345,8 +343,9 @@ class ShelfTile extends Component {
 		const { imageScale } = this.state
 
 		const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
-		let colorIndex = Math.floor(Math.random() * 4);
-		let pColor = colorArr[colorIndex]
+		const colorIndex = Math.floor(Math.random() * 4);
+		const pColor = colorArr[colorIndex]
+		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 1000
 		// <Text style={styles.comment}>{this.props.index}</Text>	
 		return (
 			<View style={{	
@@ -364,10 +363,15 @@ class ShelfTile extends Component {
 				<Animated.Image 	
 						source={this.props.imageURL} 
 						style={{
-							transform: [{ scale: imageScale }],
+							transform: [
+								{ scale: imageScale },
+								{ translateX: 0 },
+								{ translateY: 0 }
+							],
 							width: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0], 
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
+							zIndex: pZindex
 							//top: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1]/2,
 							// overflow: 'visible',
 						}} 
