@@ -31,7 +31,9 @@ const SELECTED_OPACITY      = config.selectedOpacity;
 //-- homeShelvesPane location & dimension related
 //----------------------------------------------------------------- */
 const INIT_X				= config.initX/RATIO;							//-- UI element left alignment location
+const INIT_Y          		= config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
 const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
+// console.log("INFO INIT_Y is ?????????? " + config.homeShelves.initShelfY)
 
 //-- title (headline)
 const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;          //-- unselected shelf title height (!!!not same as the font size, 28)  
@@ -67,14 +69,14 @@ const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //--
 /* ------------------------------------------ */
 /* HomeShelf specific contants                */
 /* ------------------------------------------ */
-const SHELF_KIND_OBJ			= {
+const SHELF_KIND_OBJ		= {
   BASE: 0,
   FOCUSED: 1,
   BLOOMED: 2
 };
 const TILE_WIDTH_ARR		= [BASE_TILE_W, FOCUSED_BASE_TILE_W, BLOOMED_BASE_TILE_W];						//-- the array of unfocused tile width: 320x180(on a base shelf), 375x210(on a focused shelf), 782x440(on a bloomed shelf)
 const TILE_OFFSET_ARR		= [BASE_SHELF_OFFSET_X, FOCUSED_SHELF_OFFSET_X, BLOOMED_SHELF_OFFSET_X];		//-- the array of offset between tiles adjacent, on a base/focused/bloomed shelf
-const MAX_TILE_INDEX		= Math.floor((config.stageW-config.initX)/config.homeShelves.baseTileW);						//-- stageWidth/baseTileWidth, max number of base tiles in a row(shelf)
+const MAX_TILE_INDEX		= Math.floor(config.stageW/config.homeShelves.baseTileW);						//-- stageWidth/baseTileWidth, max number of base tiles in a row(shelf)
 const TITLE_SELECTED_Y 		= -90/RATIO;																	//-- title location for a selected shelf, TODO: CHECK
 const TITLE_UNSELECTED_Y	= 0/RATIO;																		//-- title location for unselected shelves, TODO: CHECK
 const ASSET_URL				= '../../assets/';
@@ -86,47 +88,33 @@ export default class HomeShelf extends Component {
 		this.state = {
 			isDimmed: false,
 			isFocused: false,
-			titleYPosition: new Animated.Value(0), 		
-			isBloomed: false,					//-- CHECK: need???
-			shelfKind: SHELF_KIND_OBJ.BASE      //-- CHECK: need???
+			isBloomed: false,	//-- CHECK: need???
+			titleYPosition: new Animated.Value(INIT_Y),	
+			shelfKind: SHELF_KIND_OBJ.BASE      
 		}
 
 		this.tiles = []							//-- original tile array by index
-		this.tileQueue = []						//-- tile array ordered by the location
-		this.selectedTileIndex = -1
+
+		//-- prevTileIndex: tileIndexQueue[0], currentTileIndex: tileIndexQueue[1], nextTileIndex: tileIndexQueue[2], and so on
+		this.tileIndexQueue = [-1]				//-- tile index array ordered by the location
+		this.selectedTileIndex = -1				//-- TODO: CHECK, need?
 		this.prevTile = null
 		this.currTile = null
 		this.nextTile = null
 
 		this.totalTiles = props.shows.length
 
-		// this.isFocused = false
-		this.isBloomed = false
-		this.shelfKind = SHELF_KIND_OBJ.BASE
+		// this.isFocused = false				//-- CHECK, in state
+		this.isBloomed = false					//-- CHECK, in state
+		// this.shelfKind = SHELF_KIND_OBJ.BASE
 
-		//-- prevTileIndex: tileIndexQueue[0], currentTileIndex: tileIndexQueue[1], nextTileIndex: tileIndexQueue[2], and so on
+		
 		// this.tileIndexQueue = [-1]			//tile index array based on current location, from prev, current, to next etc (staring from entering no index for the prev tile)
 		
-		// this.reset = this.reset.bind(this)
-		// this.select = this.select.bind(this)
-		// this.unselect = this.unselect.bind(this)
-		// this.doLeft = this.doLeft.bind(this)
-		// this.doRight = this.doRight.bind(this)
-
-		// this.buildTileIndexQueue = this.buildTileIndexQueue.bind(this)
-		// this.moveTo = this.moveTo.bind(this)
-
-		// this.opacityChange = this.opacityChange.bind(this)
-		// this.onLargeBloomStart = this.onLargeBloomStart.bind(this)
-		// this.backToFocused = this.backToFocused.bind(this)
-		// this.eachShelfTile = this.eachShelfTile.bind(this)
-		// this.clearBloomTimer = this.clearBloomTimer.bind(this)
-
-		// this.buildTileIndexQueue()
 	}
 
 	componentWillMount() {
-		this._buildTileQueue()
+		this._buildTileIndexQueue()
 	}//componentWillMount
 
 	doLeft = () => {
@@ -309,27 +297,40 @@ export default class HomeShelf extends Component {
 
 	onFocus = () => {
 		console.log("INFO HomeShelf :: onFocus, =================> focusedShelfIndex is ? " + this.props.index)
+		console.log("INFO HomeShelf :: onFocus, this.tileIndexQueue is ? " + this.tileIndexQueue)
 
 		this.setState({isDimmed: false, isFocused:true, isBloomed:false, shelfKind: SHELF_KIND_OBJ.FOCUSED})	//TO CHECK:: topContainerTop
 		this._clearBloomTimer()
-		//this._changeTitleLocation(-22)	//testing
 
-		// let prevTileIndex
-		// let nextTileIndex
-		if (this.selectedTileIndex < 0) this.selectedTileIndex = 0
-		this.currTile = this.tiles[this.selectedTileIndex]
+		/* //-- shelf "title" animation: location & font size change
+		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90*/
 
-		this.currTile.onFocus()
+		this._changeTitleLocation(0)	//-- temporarily commented out
 
+		//if (this.selectedTileIndex < 0) this.selectedTileIndex = 0
+		const prevTileIndex = this.tileIndexQueue[0]
+		const currTileIndex = this.tileIndexQueue[1]
+		const nextTileIndex = this.tileIndexQueue[2]
 
-		//
-		//this.currTile.
-		// prevTileIndex = this.selectedTileIndex - 1
-		// nextTileIndex = this.selectedTileIndex + 1
+		// console.log("INFO HomeShelf :: onFocus, prevTileIndex is ? " + prevTileIndex)
+		// console.log("INFO HomeShelf :: onFocus, currTileIndex is ? " + currTileIndex)
+		// console.log("INFO HomeShelf :: onFocus, nextTileIndex is ? " + nextTileIndex)
 
+		// if (prevTileIndex !== -1) {
+		// 	const prevX = INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] - TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
+		// 	this.prevTile = this.tiles[prevTileIndex]
+		// 	this.prevTile.toExpanded(prevX)
+		// }
 
-		// //-- shelf "title" animation: location & font size change
-		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90
+		if (currTileIndex !== -1) {
+			this.currTile = this.tiles[currTileIndex]
+			this.currTile.onFocus()
+		}
+
+		// if (nextTileIndex !== -1) {
+		// 	this.nextTile = this.tiles[nextTileIndex]
+		// 	//this.prevTile.onFocus()
+		// }
 
 		// //const totalTiles = this.totalTiles
 	 //    //-- prev tile
@@ -378,13 +379,14 @@ export default class HomeShelf extends Component {
 	// 	//-- TODO: move the rest of tiles
 	// }
 
-	onBlur = () => {
+	onBlur = (pIsDimmed = true) => {
 		console.log("INFO HomeShelf :: onBlur, shelf index is ? " +  this.props.index + ", isFocused ? " + this.state.isFocused)
 
-		//if (this.state.isFocused) this._backToOrg()
-		this.setState({isDimmed: true})
-		//this._opacityChange(UNSELECTED_OPACITY)
-		// this.clearBloomTimer()
+		/* //-- shelf "title" animation: location & font size change
+		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90*/
+
+		this.setState({isDimmed: pIsDimmed, isFocused:false, isBloomed:false, shelfKind: SHELF_KIND_OBJ.BASE})
+		this._changeTitleLocation(INIT_Y)
 
 		if (this.currTile) this.currTile.backToOrg()
 
@@ -428,6 +430,18 @@ export default class HomeShelf extends Component {
 		// }
 	}//onBlur
 
+	_backToOrg = () => {
+		console.log("INFO HomeShelf :: _backToOrg, shelf index is ? " + this.props.index + ", isBloomed ? " + this.state.isBloomed)
+
+		this.setState({isFocused: false, isBloomed: false, shelfKind: SHELF_KIND_OBJ.BASE})
+
+		//if (this.state.isFocused) {
+			//-- do something
+		//}
+
+		if (this.currTile) this.currTile.backToOrg()
+	}
+
 	_reset = () => {
 		console.log("INFO HomeShelf :: _reset", this.props.index)
 
@@ -437,7 +451,6 @@ export default class HomeShelf extends Component {
 		this._clearBloomTimer()
 		this._buildTileQueue()
 		this._backToOrg()
-
 	}//_reset
 
 	_clearBloomTimer = () => {
@@ -445,21 +458,45 @@ export default class HomeShelf extends Component {
 		// if (this.currTile !== null) this.currTile.killToLargeBloom()
 	}//_clearBloomTimer
 
-	_buildTileQueue = () => {
-		console.log("INFO HomeShelf :: _buildTileQueue")
-		this.tileQueue = this.tiles.slice(0)	//-- from 0 to end, i.e. the copy of whole array
-	}//_reset
+	_buildTileIndexQueue = () => {
+		console.log("INFO HomeShelf :: _buildTileIndexQueue, this.totalTiles ?? " + this.totalTiles)
+		//this.tileIndexQueue = this.tiles.slice(0)	//-- from 0 to end, i.e. the copy of whole array
 
-	backToOrg = () => {
-		console.log("INFO HomeShelf :: backToOrg, shelf index is ? " + this.props.index + ", isBloomed ? " + this.state.isBloomed)
-		//this.setState({isFocused: false, isBloomed: false, shelfKind: SHELF_KIND_OBJ.BASE})
+		const lastIndex = this.totalTiles - 1
 
-		//if (this.state.isFocused) {
-			//-- do something
-		//}
+		//-- for the 1st element, -1: no prevTileIndex
+		this.tileIndexQueue[0] = -1	
+		//-- from the 2nd to the (lastIndex - 1) element		
+		for (var i=0; i<lastIndex; i++) {
+			this.tileIndexQueue.push(i)
+		}
+		//-- for the last element
+		if (lastIndex > MAX_TILE_INDEX) {
+			//-- circular, the last index becomes the prevIndex
+			this.tileIndexQueue[0] = lastIndex      
+		} else {
+			//-- last index goes to the last element
+			this.tileIndexQueue.push(lastIndex)
+		}
 
-		if (this.currTile) this.currTile.backToOrg()
-	}
+		/*
+		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.props.shows.length ? ", this.props.shows.length)
+		for (var i=0; i<this.totalTiles; i++) {
+			const leftX = ( (i < maxTileIndex) || (i < (this.totalTiles - 1)) )? initX + tileBaseWidth[shelfKindObj.BASE]*i : initX - tileBaseWidth[shelfKindObj.BASE];
+			if (leftX < initX) {
+				//-- if prev tile exists
+				if (this.tileIndexQueue[0] === -1) {
+					this.tileIndexQueue[0] = i	//-- replace '-1' with 'i'
+				}
+			} else {
+				if (this.tileIndexQueue[i+1] === undefined) {
+					this.tileIndexQueue[i+1] = i
+				}
+			}
+		}
+		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.tileIndexQueue ? ", this.tileIndexQueue)
+		*/
+	}//_buildTileIndexQueue
 
 	_updateKind = (pKind) => {
 		console.log("INFO HomeShelf :: _updateKind, index: " + this.props.index + ", shelfKind: " + pKind)
@@ -527,8 +564,6 @@ export default class HomeShelf extends Component {
 	 //    }
 	}//__onLargeBloomStart
 
-
-
 	_backToFocused = (pDir = "left") => {
 		console.log("INFO HomeShelf :: _backToFocused, callBackOnNoMenuLeft")
 		// this.setState({shelfKind: SHELF_KIND_OBJ.FOCUSED})
@@ -539,24 +574,6 @@ export default class HomeShelf extends Component {
 		// }
 		//this.props.callBackOnBackToFocused()
 	}//_backToFocused
-
-	_buildTileIndexQueue = () => {
-		console.log("INFO HomeShelf :: _buildTileIndexQueue, this.props.shows.length ? ", this.props.shows.length)
-		// for (var i=0; i<this.totalTiles; i++) {
-		// 	const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
-		// 	if (leftX < INIT_X) {
-		// 		//-- if prev tile exists
-		// 		if (this.tileIndexQueue[0] === -1) {
-		// 			this.tileIndexQueue[0] = i	//-- replace '-1' with 'i'
-		// 		}
-		// 	} else {
-		// 		if (this.tileIndexQueue[i+1] === undefined) {
-		// 			this.tileIndexQueue[i+1] = i
-		// 		}
-		// 	}
-		// }
-		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.tileIndexQueue ? ", this.tileIndexQueue)
-	}//_buildTileIndexQueue
 
 	_renderEachShelfTile = (tileObj, i) => {
 		// console.log("INFO HomeShelf :: _renderEachShelfTile")
@@ -602,6 +619,10 @@ export default class HomeShelf extends Component {
 		//let pOpacity = this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY
 		// console.log("INFO HomeShelf :: render, this.props.topY ? " + this.props.topY)
 
+		const { shelfKind } = this.state
+		const titleStyle = (shelfKind === SHELF_KIND_OBJ.BASE) ? homeShelfStyles.shelfTitleBase : homeShelfStyles.shelfTitleFocused
+		// const titleStyle = homeShelfStyles.shelfTitleBase	//-- temporary
+
 		//-- for testing
 		const colorArr = ['darkcyan', 'darkred', 'darkorchid']
 		let colorIndex = Math.floor(Math.random() * 3)
@@ -618,19 +639,17 @@ export default class HomeShelf extends Component {
 					height: '100%',
 					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
 					overflow: 'visible',
-					// borderWidth: 4,
+					// borderWidth: .5,
     	// 			borderColor: 'blue',
     				//backgroundColor: this.state.isDimmed ? 'transparent': '#33ff00',
     		}} >
 				<Animated.View 
-					//style={ homeShelfStyles.homeShelfTitleContainer } 
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
 								top: this.state.titleYPosition,
 						 	} } 
 					//onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
 				>
-
-					<Text style={ homeShelfStyles.shelfTitleBase }>
+					<Text style={ titleStyle }>
 						{this.props.title}
 					</Text>
 				</Animated.View>
@@ -649,15 +668,19 @@ export default class HomeShelf extends Component {
 const homeShelfStyles = StyleSheet.create({
 	//-- "title" ----------------------//
 	homeShelfTitleContainer: {
-	    borderWidth: .5,
-    	borderColor: 'darkgreen',
+		position: 'absolute',
+		left: INIT_X,
+		top: INIT_Y,
+	    // borderWidth: .5,
+    	// borderColor: 'darkgreen',
     	overflow: 'visible',
+    	
     	// position: 'static',
     	// backgroundColor: 'green',
 	},
 
 	shelfTitleBase: {
-		left: INIT_X,
+		//left: INIT_X,
 		fontSize: 28/RATIO,
 	    fontFamily: 'Helvetica-Light',
 	    fontWeight: '100',	/*HelveticaLight*/
@@ -665,8 +688,8 @@ const homeShelfStyles = StyleSheet.create({
 	    color: '#fff',
 	},
 
-	shelfTitleSelected: {
-		left: INIT_X,
+	shelfTitleFocused: {
+		//left: INIT_X,
 		fontSize: 40/RATIO,
 	    fontFamily: 'Helvetica-Light',
 	    fontWeight: '100',	/*HelveticaLight*/
@@ -678,9 +701,9 @@ const homeShelfStyles = StyleSheet.create({
 
 	//-- "tile" ----------------------//
 	homeShelfTilesContainer: {
-		// position: 'absolute',
+		position: 'absolute',
 		//top: TITLE_TO_TILE_OFFSET,
-		top: TITLE_TO_TILE_OFFSET,
+		top: INIT_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET,
     	flex: 1,
     	// borderWidth: .5,
     	// borderColor: 'darkgreen',

@@ -250,7 +250,7 @@ export default class HomeShelvesPane extends Component {
   onBlur = () => {
     console.log("INFO HomeShelvesPane :: onBlur")
 
-    if (this.currShelf) this.currShelf.onBlur()
+    if (this.currShelf) this.currShelf.onBlur(false)
 
     const { onBlur } = this.props;
     if (onBlur) {
@@ -330,7 +330,8 @@ export default class HomeShelvesPane extends Component {
             index={i}
             title={shelfObj.title}
             shows={shelfObj.shows}
-            topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
+            // topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
+            topY={i*FOCUSED_SHELF_H}
             
             //callBackOnLargeBloomStart={this._onLargeBloomStart}
             //callBackOnBackToFocused={this._moveBackAdjacentShelves} 

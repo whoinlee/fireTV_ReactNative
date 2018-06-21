@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 	    height: '400%',	//-- hack!!!
 	    //-- for testing --//
 	    // borderWidth: 1,
-    	// borderColor: '#000000',
+    	// borderColor: '#f00',
     	//-----------------//
 	},
 

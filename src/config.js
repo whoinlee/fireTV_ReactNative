@@ -18,7 +18,7 @@ export default {
   //-- initial pane yLocation
   initGlobalNavY: 0,
   initHomeHeroY: 165,
-  initHomeShelvesY: 836,
+  initHomeShelvesY: 806,        //-- 836 --> 806 by '30'
 
   //-- initial pane height
   initGlobalNavH: 100,
@@ -29,7 +29,7 @@ export default {
 
   //-- homeShelvesPane location & dimension related
   homeShelves: {
-    initShelfY: 62,             //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
+    initShelfY: 92,             //-- distance from the top of homeShelvesPane container to the top of 1st shelf container, 62 ---> 92 (by 30)
 
     //-- shelf title related
     baseTitleH: 40,             //-- unselected shelf title height (!!!not same as the font size, 28)

@@ -128,7 +128,6 @@ class ShelfTile extends Component {
 
 	onFocus = () => {
 		console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
-      	this._clearBloomTimer()
       	this._toFocused()
 
       	const { onFocus } = this.props;
@@ -180,6 +179,7 @@ class ShelfTile extends Component {
 	_toFocused = (targetX = undefined) => {
 		console.log("INFO ShelfTile :: _toFocused, index: " + this.props.index)
 
+		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED])
 
@@ -192,6 +192,7 @@ class ShelfTile extends Component {
 
 	_toExpanded = (targetX, noScale=false, pDuration=stdDuration) => {
 		console.log("INFO ShelfTile :: _toExpanded, index: " + this.props.index)
+		
 		// this.updateState(TILE_KIND_OBJ.EXPANDED)
 		// TL.to(this.containerDiv, pDuration, {left: targetX+'px'})
 		
@@ -257,8 +258,6 @@ class ShelfTile extends Component {
 		TL.to(this.containerDiv, 0, {opacity: 0, left: targetX+'px', delay:pDelay})	//CHECK
 		TL.to(this.containerDiv, pDuration, {opacity: 1, delay:pDelay+.1})
 	}//fadeInAt
-
-	
 
 	// onBloom = () => {
 
@@ -341,10 +340,11 @@ class ShelfTile extends Component {
 		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
 		const pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		const { imageScale } = this.state
+		const pTranslateX = (TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]*imageScale)/2
 
-		const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
-		const colorIndex = Math.floor(Math.random() * 4);
-		const pColor = colorArr[colorIndex]
+		// const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
+		// const colorIndex = Math.floor(Math.random() * 4);
+		// const pColor = colorArr[colorIndex]
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 1000
 		// <Text style={styles.comment}>{this.props.index}</Text>	
 		return (
