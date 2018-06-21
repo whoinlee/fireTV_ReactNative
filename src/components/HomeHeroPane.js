@@ -63,19 +63,12 @@ export default class HomeHeroPane extends Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback 
-        //onPress={this.onFocus()}
-          onPress={this.onSelect}
-          onPressIn={this.onFocus}
-          onPressOut={this.onBlur}
-      >
         <View>
             <Text style={styles.comment}>
               {this.constructor.name}
               {"\n\n" + this.today}
             </Text>
         </View>
-      </TouchableWithoutFeedback>
     );
   }
 }

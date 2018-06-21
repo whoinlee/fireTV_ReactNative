@@ -65,18 +65,11 @@ export default class GlobalNavPane extends Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback
-          // onPress={this.onFocus()}
-          onPress={this.onSelect}
-          onPressIn={this.onFocus}
-          onPressOut={this.onBlur}
-      >
         <View>
             <Text style={styles.comment}>
               {this.constructor.name}
             </Text>
         </View>
-      </TouchableWithoutFeedback>
     );
   }
 }

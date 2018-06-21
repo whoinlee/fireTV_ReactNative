@@ -11,7 +11,6 @@ import {
   Animated,
   Easing,
   StyleSheet,
-  TVEventHandler,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -24,103 +23,46 @@ import HomeHeroPane from './components/HomeHeroPane';
 import HomeShelvesPane from './components/HomeShelvesPane';
 
 
-//---------- from config -----------------------------------------//
-/*
-  //-- base dimension and density
-  density: PixelRatio.get(),    //TV density
-  stageW: 1920,
-  stageH: 1080,
 
-  //-- animation related
-  stdDuration: 500,             //in milliseconds = .5 sec,
-  shortDuration: 350,           //in milliseconds = .35 sec,
-  waitToLargeBloomDuration: 4000,
-
-  //-- pane initial location
-  initGlobalNavY: 0,
-  initHomeHeroY: 165,
-  initHomeShelvesY: 836,
-
-  //-- pane initial dimension
-  initGlobalNavH: 100,
-  initHomeHeroH: 606,
-
-  //-- opacity related
-  unselectedOpacity: 1,
-  selectedOpacity: .6,
-*/
+/* --------- from config -------------------------------------------//
+//-- density, animation duration, opacity, and
+//-- initial pane location related
+//----------------------------------------------------------------- */
 const RATIO                 = config.density;
 const STD_DURATION          = config.stdDuration;
 const SHORT_DURATION        = config.shortDuration;
-//
-const INIT_GLOBAL_NAV_Y     = config.initGlobalNavY/RATIO;
-const INIT_HOME_HERO_Y      = config.initHomeHeroY/RATIO;           //-- 165 = (100(globalNav)+65(offset)
-const INIT_HOME_SHELVES_Y   = config.initHomeShelvesY/RATIO;        //-- 836 = (100(globalNav)+65(offset)+606(homeHero)+65) = 836 
-//
-const V_MIDDLE_Y            = Math.floor(config.stageH/(2*RATIO));  //-- vertical middle location of the stage
 const UNSELECTED_OPACITY    = config.unselectedOpacity;
 const SELECTED_OPACITY      = config.selectedOpacity;
+//
+const V_MIDDLE_Y            = Math.floor(config.stageH/(2*RATIO));          //-- vertical middle location of the stage
+const INIT_GLOBAL_NAV_Y     = config.initGlobalNavY/RATIO;
+const INIT_HOME_HERO_Y      = config.initHomeHeroY/RATIO;                   //-- 165 = (100(globalNav)+65(offset)
+const INIT_HOME_SHELVES_Y   = config.initHomeShelvesY/RATIO;                //-- 836 = (100(globalNav)+65(offset)+606(homeHero)+65) = 836 
 
-/*
+
+/* ---------- from config ------------------------------------------//
 //-- homeShelvesPane location & dimension related
-homeShelves: {
-  initShelfY: 62,             //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
+//----------------------------------------------------------------- */
+const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
 
-  //-- shelf title related
-  baseTitleH: 40,             //-- unselected shelf title height (!!!not same as the font size, 28)
-  focusedTitleH: 60,          //-- update!!!
-  titleToTileOffset: 10,      //-- distance from the bottom of shelf title to the top of shelf tile
-  
-  //-- tile dimensions
-  baseTileW: 320,             //-- unselected base tile width, 320x180
-  baseTileH: 180,             //-- unselected base tile height
-  focusedTileW: 590,          //-- focused tile width, on a selected shelf, 590x332
-  focusedTileH: 332,          //-- focused tile height, on a selected shelf
-  bloomedTileW: 1056,         //-- large bloomed tile width, on a selected shelf, 1056x594
-  bloomedTileH: 594,          //-- large bloomed tile height, on a selected shelf
-  // ??? focused unselected tile dimension ??? (375x210)
-  // ??? bloomed unselected tile dimension ??? (782x440)
+const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;          //-- unselected shelf title height (!!!not same as the font size, 28)  
+const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;   //-- distance from the bottom of shelf title to the top of shelf tile
 
-  //-- shelf related
-  baseShelfOffsetX: 0,        //-- distance between tiles on an unselected shelf
-  baseShelfOffsetY: 106,      //-- distance between unselected shelves
-  baseShelfH: 336,            //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
+const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //-- base tile height, on an unselected shelf
+const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //-- focused tile height, on a selected shelf
 
-  focusedShelfShiftY: 76,     //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
-  bloomedShelfShiftY: 131,    //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
-  
-  focusedShelfOffsetX: 25,    //-- distance between tiles on a focused shelf
-  focusedShelfOffsetY: 182,   //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
-  focusedShelfH: 584,         //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
+const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
+const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
 
-  bloomedShelfOffsetX: 57,    //-- distance between tiles on a focused shelf ?????
-  bloomedShelfOffsetY: 313,   //-- focusedShelfOffsetY (182) + bloomedShelfShiftY (131) = 313
-  bloomedShelfH: 543          //-- focusedTitleH (60) + titleToTileOffset (10) + bloomedTileH (594) + bloomedShelfOffsetY (313) = 977
-}
-*/
-const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;
+const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
+const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
 
-const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;         
-const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;
-
-const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;
-const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO; 
-
-const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;
-const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;
-// const BASE_SHELF_H = BASE_SHELF_OFFSET_Y;
-
-const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;
-const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;
-
-// const FOCUSED_SHELF_OFFSET_Y  = BASE_SHELF_H + FOCUSED_SHELF_SHIFT_Y;
-const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO;
-const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;  
-/* ------------------------------------------ */
+const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
+const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
 
 /* ------------------------------------------ */
-/* POCContainer specific constants            */
+/* POCContainerK specific constants           */
 /* ------------------------------------------ */
 const FOCUS_LOC_ARR         = ['globalNavPane', 'homeHeroPane', 'homeShelvesPane'];
 const GLOBAL_NAV_INDEX      = 0;
@@ -128,131 +70,118 @@ const HOME_HERO_INDEX       = 1;
 const HOME_SHELVES_INDEX    = 2;
 
 
-export default class POCContainer extends Component {
+export default class POCContainerK extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      animOpacity0: new Animated.Value(1),    //-- animation instance for 'globalNav' with initial opacity value of '1'
-      animOpacity1: new Animated.Value(1),    //-- for 'homeHero'
-      animOpacity2: new Animated.Value(1),    //-- for 'homeShelves'
-      animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- animation instance for 'globalNav' with initial location value of INIT_GLOBAL_NAV_Y
+      animOpacity0: new Animated.Value(1),                    //-- for 'globalNav' opacity value with initial value of '1'
+      animOpacity1: new Animated.Value(1),                    //-- for 'homeHero'
+      animOpacity2: new Animated.Value(1),                    //-- for 'homeShelves'
+      animLocation0: new Animated.Value(INIT_GLOBAL_NAV_Y),   //-- for 'globalNav' location value with the initial value of INIT_GLOBAL_NAV_Y
       animLocation1: new Animated.Value(INIT_HOME_HERO_Y),    //-- for 'homeHero'
       animLocation2: new Animated.Value(INIT_HOME_SHELVES_Y), //-- for 'homeShelves'
       isGuideVisible: false,
     }
 
-    this.tvEventHandler = new TVEventHandler()
+    this.selectablePanes = []
+    this.currFocusLocIndex = GLOBAL_NAV_INDEX 
 
-    //this.selectablePanes = []
-    this.currFocusLocIndex = GLOBAL_NAV_INDEX  //TODO: CHECK - needs to move to the state ???
-    this.selectedShelfIndex = -1               //TODO: CHECK
-    this.currHomeShelvesY = INIT_HOME_SHELVES_Y
-    this.isFirstShelfSelected = false
-
-    //-- set panes' initial locations
+    //-- initial pane locations
     this.initGlobalNavY = INIT_GLOBAL_NAV_Y
     this.initHomeHeroY = INIT_HOME_HERO_Y   
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
 
-    //-- set panes' up locations
+    //-- up pane locations
     this.upHomeShelvesY = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET + BASE_TILE_H/2)       //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
     this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY
     this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
-    //this.upHomeShelvesY = TOP_Y
 
-    //-- set panes' mid-up and off the stage locations
+    //-- mid-up and off the stage homeHero pane locations
     this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y          //-- homeHeroPane shifts on the fist shelf being largeBloomed
-    //
     this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y         //-- homeHeroPane shifts/hides on the 2nd shelf being focused
-    this.upOffHomeShelvesY = this.upHomeShelvesY -  FOCUSED_SHELF_OFFSET_Y  //-- need?????
   }
 
   componentDidMount() {
-    //this._enableTVEventHandler()
     this._setKeyListener()
   }//componentDidMount
 
   componentWillUnmount() {
-    //_disableTVEventHandler()
     this._removeKeyListener()
   }//componentWillUnmount
 
-  _enableTVEventHandler() {
-    this.tvEventHandler = new TVEventHandler()
-    console.log('INFO :: _enableTVEventHandler, this.tvEventHandler ? ' + this.tvEventHandler);
-    //
-    this.tvEventHandler.enable(this, function(cmp, evt) {
-      //console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
-      if (evt) {
-        console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
-        switch (evt.eventType) {
-          case 'focus':
-            console.log('INFO POCContainer :: _enableTVEventHandler, evt.tag? : ' + evt.tag);
-          case 'blur':
-          case 'select':
-            break;
-          case 'left':
-          case 'right':
-          case 'up':
-          case 'down':
-            console.log('INFO POCContainer :: _enableTVEventHandler, ever???? : ' + evt.eventType);
-            break;
-          case 'playPause':
-            console.log('INFO POCContainer :: playPause ===>');
-            break;
-          case 'rewind':
-            console.log('INFO POCContainer :: rewind ======>');
-           break;
-          case 'fastForward':
-            console.log('INFO POCContainer :: fastForward =>');
-            break;
-          default:
-            console.log('INFO POCContainer :: _enableTVEventHandler, default, evt.eventType? : ' + evt.eventType);
-        }//switch
-      }//if
-    });//enable
-  }//_enableTVEventHandler
+  // _enableTVEventHandler() {
+  //   this.tvEventHandler.enable(this, function(cmp, evt) {
+  //     //console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
+  //     if (evt) {
+  //       console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
+  //       switch (evt.eventType) {
+  //         case 'focus':
+  //           console.log('INFO POCContainer :: _enableTVEventHandler, evt.tag? : ' + evt.tag);
+  //         case 'blur':
+  //         case 'select':
+  //           break;
+  //         case 'left':
+  //         case 'right':
+  //         case 'up':
+  //         case 'down':
+  //           console.log('INFO POCContainer :: _enableTVEventHandler, ever???? : ' + evt.eventType);
+  //           break;
+  //         case 'playPause':
+  //           console.log('INFO POCContainer :: playPause ===>');
+  //           break;
+  //         case 'rewind':
+  //           console.log('INFO POCContainer :: rewind ======>');
+  //          break;
+  //         case 'fastForward':
+  //           console.log('INFO POCContainer :: fastForward =>');
+  //           break;
+  //         default:
+  //           console.log('INFO POCContainer :: _enableTVEventHandler, default, evt.eventType? : ' + evt.eventType);
+  //       }//switch
+  //     }//if
+  //   });//enable
+  // }//_enableTVEventHandler
 
-  _disableTVEventHandler() {
-    if (this.tvEventHandler) {
-      this.tvEventHandler.disable()
-      delete this.tvEventHandler
-    }
-  }//_disableTVEventHandler
+  // _disableTVEventHandler() {
+  //   if (this.tvEventHandler) {
+  //     this.tvEventHandler.disable()
+  //     delete this.tvEventHandler
+  //   }
+  // }//_disableTVEventHandler
 
   _setKeyListener = () => {
     console.log('INFO POCContainer :: _setKeyListener')
     KeyEvent.onKeyDownListener((keyEvent) => {
-      console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
-      // switch (keyEvent.keyCode) {
-      //   case keyCodes.up:
-      //     this._doUp()
-      //     break
-      //   case keyCodes.down:
-      //     this._doDown()
-      //     break
-      //   case keyCodes.left:
-      //     this._doLeft()
-      //     break
-      //   case keyCodes.right:
-      //     this._doRight()
-      //     break
-      //   case keyCodes.center:
-      //   case keyCodes.return:
-      //     this._doSelect()
-      //     break
-      //   case keyCodes.toggleGuide:
-      //     this._toggleGuide()
-      //     break
-      //   case keyCodes.reload:
-      //     //-- for reloading the app: r, r
-      //     //-- do nothing
-      //     break
-      //   default:
-      //     console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
-      // }//switch
+      // console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
+      switch (keyEvent.keyCode) {
+        case keyCodes.up:
+          this.doUp()
+          break
+        case keyCodes.down:
+          this.doDown()
+          break
+        case keyCodes.left:
+          this.doLeft()
+          break
+        case keyCodes.right:
+          this.doRight()
+          break
+        case keyCodes.center:
+        case keyCodes.return:
+          this.doSelect()
+          break
+        case keyCodes.toggleGuide:
+          this._toggleGuide()
+          break
+        case keyCodes.reload:
+          //-- for reloading the app: r, r
+          //-- do nothing
+          break
+        default:
+          console.log('INFO POCContainer :: _setKeyListener, default - keyCode ? : ' + keyEvent.keyCode);
+      }//switch
     });//onKeyDownListener
   }//_setKeyListener
 
@@ -261,32 +190,53 @@ export default class POCContainer extends Component {
     KeyEvent.removeKeyDownListener()
   }//_removeKeyListener
 
-  _toggleGuide = () => { this.setState({isGuideVisible: !this.state.isGuideVisible}) }
+  doUp = () => {
+    if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return //-- do nothing
+    console.log('INFO POCContainer :: doUp');
 
-  _showGuide = () => { if (!this.state.isGuideVisible) this.setState({isGuideVisible: true}) }
-
-  _hideGuide = () => { if (this.state.isGuideVisible) this.setState({isGuideVisible: false}) }
-
-  _doLeft = () => {
-    console.log('INFO POCContainer :: _doLeft');
-    if (this.currFocusLocIndex == HOME_SHELVES_INDEX) {
-      console.log('INFO POCContainer :: do _doLeft in the HomeShelvesPane');
+    switch (this.currFocusLocIndex) {
+      case HOME_HERO_INDEX :
+        this._onGlobalNavPaneFocus()
+        break;
+      case HOME_SHELVES_INDEX :
+        this.selectablePanes[HOME_SHELVES_INDEX].doUp()
+        break;
     }
-  }//_doLeft
+  }//doUp
 
-  _doRight = () => {
-    console.log('INFO POCContainer :: _doRight');
-    if (this.currFocusLocIndex == HOME_SHELVES_INDEX) {
-      console.log('INFO POCContainer :: do _doRight in the HomeShelvesPane');
+  doDown = () => {
+    console.log('INFO POCContainer :: doDown, this.currFocusLocIndex ? ' + this.currFocusLocIndex);
+
+    switch (this.currFocusLocIndex) {
+      case GLOBAL_NAV_INDEX :
+        this._onHomeHeroPaneFocus()
+        break;
+      case HOME_HERO_INDEX :
+        this._onHomeShelvesPaneFocus()
+        break;
+      case HOME_SHELVES_INDEX :
+        this.selectablePanes[HOME_SHELVES_INDEX].doDown()
+        break;
     }
-  }//_doRight
+  }//doDown
 
-  _doSelect = () => {
+  doLeft = () => {
+    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
+    // console.log('INFO POCContainer :: _doLeft');
+    this.selectablePanes[HOME_SHELVES_INDEX].doLeft()
+  }//doLeft
+
+  doRight = () => {
+    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
+    // console.log('INFO POCContainer :: _doRight');
+    this.selectablePanes[HOME_SHELVES_INDEX].doRight()
+  }//doRight
+
+  doSelect = () => {
+    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
     console.log('INFO POCContainer :: _doSelect');
-    if (this.currFocusLocIndex == HOME_SHELVES_INDEX) {
-      console.log('INFO POCContainer :: do _doSelect in the HomeShelvesPane');
-    }
-  }//_doSelect
+    this.selectablePanes[HOME_SHELVES_INDEX].doSelect()
+  }//doSelect
 
   _changeOpacity = (targetIndex, targetValue, pDuration=STD_DURATION) => {
     //console.log("INFO POCContainer :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
@@ -294,7 +244,7 @@ export default class POCContainer extends Component {
       this.state["animOpacity" + targetIndex], 
       {
         toValue: targetValue,
-        duration: pDuration,
+        // duration: pDuration,
       }
     ).start();
   }//_changeOpacity
@@ -309,16 +259,10 @@ export default class POCContainer extends Component {
         easing: Easing.out(Easing.quad),
       }
     ).start();
-
-    // if (targetIndex === HOME_SHELVES_INDEX) {
-    //   this.currHomeShelvesY = targetValue
-    //   //console.log("INFO POCContainer :: _changeLocation, this.currHomeShelvesY is " + this.currHomeShelvesY)
-    // }
   }//_changeLocation
 
   _onGlobalNavPaneFocus = () => {
-    console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
-
+    //console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return
     
     this._changeOpacity(GLOBAL_NAV_INDEX, SELECTED_OPACITY)
@@ -330,15 +274,12 @@ export default class POCContainer extends Component {
     this._hideGuide()
 
     this.currFocusLocIndex = GLOBAL_NAV_INDEX
-    this.currHomeShelvesY = this.initHomeShelvesY
 
-    //console.warn("on globalNavPane focus");
     console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onGlobalNavPaneFocus
 
   _onHomeHeroPaneFocus = () => {
-    console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
-
+    //console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === HOME_HERO_INDEX) return
     
     this._changeOpacity(GLOBAL_NAV_INDEX, UNSELECTED_OPACITY)
@@ -350,100 +291,59 @@ export default class POCContainer extends Component {
     this._hideGuide()
 
     this.currFocusLocIndex = HOME_HERO_INDEX
-    this.currHomeShelvesY = this.initHomeShelvesY
 
     //console.warn("on homeHeroPane focus");
     console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onHomeHeroPaneFocus
 
-  _onShelvesPaneFocus = () => {
-    console.log("INFO POCContainer :: _onShelvesPaneFocus, ======================> prevFocusLocIndex ? " + this.currFocusLocIndex)
-
+  _onHomeShelvesPaneFocus = () => {
+    //console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === HOME_SHELVES_INDEX) return
     
     this._changeOpacity(GLOBAL_NAV_INDEX, UNSELECTED_OPACITY)
     this._changeOpacity(HOME_HERO_INDEX, UNSELECTED_OPACITY)
     this._changeOpacity(HOME_SHELVES_INDEX, SELECTED_OPACITY)
     this._changeLocation(GLOBAL_NAV_INDEX, this.upGlobalNavY)
-    this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
+    //this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY) //--TODO : check
     this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
     this._showGuide()
 
     this.currFocusLocIndex = HOME_SHELVES_INDEX
-    this.currHomeShelvesY = this.upHomeShelvesY
+    console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
 
-    //TODO: CHECK
-    this.isFirstShelfSelected = true
+    this.selectablePanes[HOME_SHELVES_INDEX].doDown()
+  }//_onHomeShelvesPaneFocus
 
-    //console.warn("on homeShelvesPane focus");
-    console.log("INFO POCContainer :: _onShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
-  }//_onShelvesPaneFocus
+  _updateHomeHeroLocation = (shelfIndex, isBloomed) => {
+    //-- covered by _onHomeShelvesPaneBlur
+    if (shelfIndex < 0 || shelfIndex > 1) return
 
-  _onGlobalNavPaneBlur = () => {
-    console.log("INFO POCContainer :: _onGlobalNavPaneBlur, onBlurCallBack =====> POCContainer")
-  }//_onGlobalNavPaneBlur
+    console.log("INFO POCContainer :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
+    console.log("INFO POCContainer :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
 
-  _onGlobalNavPaneSelect = () => {
-    console.log("INFO POCContainer :: _onGlobalNavPaneSelect, onSelectCallBack =====> POCContainer")
-  }//_onGlobalNavPaneSelect
+    switch (shelfIndex) {
+      case 0:
+        let targetY = (isBloomed)? this.upMidHomeHeroY : this.upHomeHeroY
+        this._changeLocation(HOME_HERO_INDEX, targetY)
+        break;
+      case 1:
+        this._changeLocation(HOME_HERO_INDEX, this.upOffHomeHeroY)
+      default:
+    }
+  }//_updateHomeHeroLocation
 
-  _onHomeHeroPaneBlur = () => {
-    console.log("INFO POCContainer :: _onHomeHeroPaneBlur, onBlurCallBack =====> POCContainer")
-  }//_onHomeHeroPaneBlur
-
-  _onHomeHeroPaneSelect = () => {
-    console.log("INFO POCContainer :: _onHomeHeroPaneSelect, onSelectCallBack =====> POCContainer")
-  }//_onHomeHeroPaneSelect
-
-  _onShelvesPaneBlur = () => {
-    console.log("INFO POCContainer :: _onShelvesPaneBlur, onBlurCallBack =====> POCContainer")
-  }//_onShelvesPaneBlur
-
-  _onShelvesPaneSelect = () => {
-    console.log("INFO POCContainer :: _onShelvesPaneSelect, onSelectCallBack =====> POCContainer")
-  }//_onShelvesPaneSelect
-
-  _onFirstShelfSelected = () => {
-    console.log("INFO POCContainer :: _onFirstShelfSelected")
-    this.isFirstShelfSelected = true
-
-    //-- move down homeHero
-    this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY)
-    this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
-  }//_onFirstShelfSelected
-
-  _onFirstShelfBloomed = () => {
-    console.log("INFO POCContainer :: _onFirstShelfBloomed")
-    this.isFirstShelfSelected = true
-
-    //-- move homeHero further up
-    this._changeLocation(HOME_HERO_INDEX, this.upMidHomeHeroY)
-  }//_onFirstShelfBloomed
-
-  _onSecondShelfSelected = () => {
-    console.log("INFO POCContainer :: _onSecondShelfSelected")
-
-    //-- move up homeHero off the stage
-    this._changeLocation(HOME_HERO_INDEX, this.upOffHomeHeroY)
-    //this._changeLocation(HOME_SHELVES_INDEX, this.upOffHomeShelvesY)  //need?, adjust the value anyway!!!!!
-  }//_onSecondShelfSelected
-
-  _onShelvesDown = () => {
-    console.log("INFO POCContainer :: _onShelvesDown")
-    // console.log("INFO POCContainer :: _onShelvesDown, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
-
-    //-- move up homeShelves pane by 'FOCUSED_SHELF_H'
-    let targetY = this.currHomeShelvesY - FOCUSED_SHELF_H
+  _updateHomeShelvesLocation = (shelfIndex) => {
+    if (shelfIndex < 0) return  //-- covered by _onHomeShelvesPaneBlur
+    
+    const targetY = this.upHomeShelvesY - (shelfIndex) * FOCUSED_SHELF_H
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
-  }//_onShelvesDown
+  }//_updateHomeShelvesLocation
 
-  _onShelvesUp = () => {
-    console.log("INFO POCContainer :: _onShelvesUp, FOCUSED_SHELF_H is ???? " + FOCUSED_SHELF_H)
+  _toggleGuide = () => { this.setState({isGuideVisible: !this.state.isGuideVisible}) }
 
-    //-- move down homeShelves pane by 'FOCUSED_SHELF_H'
-    let targetY = this.currHomeShelvesY + FOCUSED_SHELF_H
-    this._changeLocation(HOME_SHELVES_INDEX, targetY)
-  }//_onShelvesUp
+  _showGuide = () => { if (!this.state.isGuideVisible) this.setState({isGuideVisible: true}) }
+
+  _hideGuide = () => { if (this.state.isGuideVisible) this.setState({isGuideVisible: false}) }
 
   _renderGuide = () => {
     if (this.state.isGuideVisible) {
@@ -456,66 +356,50 @@ export default class POCContainer extends Component {
   }//_renderGuide
 
   render() {
-    console.log("INFO POCContainer :: render --------------------------------------------------------------->")
-    let { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
+    //console.log("INFO POCContainer :: render --------------------------------------------------------------->")
+    const { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
     return (
         <View style={styles.pocContainer}>
             <Animated.View
                       style={ { ...this.props.globalNavStyleObj,
                                 top: animLocation0,
                                 opacity: animOpacity0  } } >
-                      <GlobalNavPane  
-                                onFocus={this._onGlobalNavPaneFocus}
-
-                                //onBlur={this._onGlobalNavPaneBlur}
-                                //onSelect={this._onGlobalNavPaneSelect}
-                                // isFocused={this.currFocusLocIndex === GLOBAL_NAV_INDEX}
-                      />
+                      <GlobalNavPane
+                                ref={node => {this.selectablePanes[GLOBAL_NAV_INDEX] = node}} /> 
             </Animated.View>
             <Animated.View
                       style={ { ...this.props.homeHeroStyleObj,
                                 top: animLocation1,
                                 opacity: animOpacity1  } } >
-                      <HomeHeroPane   
-                                onFocus={this._onHomeHeroPaneFocus}
-
-                                //onBlur={this._onHomeHeroPaneBlur}
-                                //onSelect={this._onHomeHeroPaneSelect}
-                                // isFocused={this.currFocusLocIndex === HOME_HERO_INDEX}
-                      />
+                      <HomeHeroPane
+                                ref={node => {this.selectablePanes[HOME_HERO_INDEX] = node}} />
             </Animated.View>
             <Animated.View
                       style={ { ...this.props.homeShelvesStyleObj, 
                                 top: animLocation2,
                                 opacity: animOpacity2  } } >
                       <HomeShelvesPane
-                                onFocus={this._onShelvesPaneFocus}
-
-                                //onBlur={this._onShelvesPaneBlur}
-                                //onSelect={this._onShelvesPaneSelect}
-                                // isFocused={this.currFocusLocIndex === HOME_SHELVES_INDEX}
-                                // onFirstShelfSelected={this._onFirstShelfSelected}
-                                // onFirstShelfBloomed={this._onFirstShelfBloomed}
-                                // onSecondShelfSelected={this._onSecondShelfSelected}
-                                // onShelvesDown={this._onShelvesDown}
-                                // onShelvesUp={this._onShelvesUp}
+                                ref={node => {this.selectablePanes[HOME_SHELVES_INDEX] = node}}
+                                onBlur={this._onHomeHeroPaneFocus}
+                                updateHomeHeroLocation={this._updateHomeHeroLocation}
+                                updateHomeShelvesLocation={this._updateHomeShelvesLocation}
                       />
             </Animated.View>
             {this._renderGuide()}
         </View>
 
     );
-  }
+  }//render
 }//POCContainer
 
 
-POCContainer.propTypes = {
+POCContainerK.propTypes = {
   globalNavStyleObj: PropTypes.object,
   homeHeroStyleObj: PropTypes.object,
   homeShelvesStyleObj: PropTypes.object
 }
 
-POCContainer.defaultProps = {
+POCContainerK.defaultProps = {
   globalNavStyleObj: StyleSheet.flatten(styles.globalNavContainer),
   homeHeroStyleObj: StyleSheet.flatten(styles.homeHeroContainer),
   homeShelvesStyleObj: StyleSheet.flatten(styles.homeShelvesContainer)
