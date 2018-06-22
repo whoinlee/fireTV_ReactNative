@@ -38,6 +38,7 @@ const V_MIDDLE_Y            = Math.floor(config.stageH/(2*RATIO));          //--
 const INIT_GLOBAL_NAV_Y     = config.initGlobalNavY/RATIO;
 const INIT_HOME_HERO_Y      = config.initHomeHeroY/RATIO;                   //-- 165 = (100(globalNav)+65(offset)
 const INIT_HOME_SHELVES_Y   = config.initHomeShelvesY/RATIO;                //-- 836 = (100(globalNav)+65(offset)+606(homeHero)+65) = 836 
+const INIT_HOME_HERO_H      = config.initHomeHeroH/RATIO;                   //-- 606
 
 
 /* ---------- from config ------------------------------------------//
@@ -105,10 +106,13 @@ export default class POCContainerK extends Component {
     //-- up pane locations
     // this.upHomeShelvesY = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET + BASE_TILE_H/2)    //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)       //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
-    this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
-    this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY
-    this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
+    this.upHomeHeroY = this.upHomeShelvesY - INIT_HOME_HERO_H           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
 
+    //TODO: recalculate
+    this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
+    this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY     
+
+    //TODO: recalculate
     //-- mid-up and off the stage homeHero pane locations
     this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y          //-- homeHeroPane shifts on the fist shelf being largeBloomed
     this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y         //-- homeHeroPane shifts/hides on the 2nd shelf being focused

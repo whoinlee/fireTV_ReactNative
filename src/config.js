@@ -19,7 +19,7 @@ export default {
   initGlobalNavY: 0,
   initHomeHeroY: 165,
   // initHomeShelvesY: 806,      //-- 836 --> 806 by '30'
-  initHomeShelvesY: 756,         //-- 806 --> 756
+  initHomeShelvesY: 730,         //-- 806 --> 756 --> 730
 
   //-- initial pane height
   initGlobalNavH: 100,

@@ -305,7 +305,7 @@ export default class HomeShelf extends Component {
 		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90*/
 
 		// this._changeTitleLocation(0)	//-- temporarily commented out
-		const titleShiftOffset = (FOCUSED_TILE_H - BASE_TILE_H)/2 + 20/RATIO	//tileHeightIncrease :(60 - 40)/RATIO
+		const titleShiftOffset = (FOCUSED_TILE_H - BASE_TILE_H)/2 + 18/RATIO	//tileHeightIncrease :(58 - 40)/RATIO
 		this._changeTitleLocation(BASE_TITLE_TOP - titleShiftOffset)	//-- temporarily commented out
 
 		//if (this.selectedTileIndex < 0) this.selectedTileIndex = 0
@@ -637,9 +637,9 @@ export default class HomeShelf extends Component {
 					// height: '100%',
 					height: BLOOMED_TILE_H,
 					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
-					// overflow: 'visible',
 					// borderWidth: .5,
     	// 			borderColor: 'blue',
+    				// overflow: 'visible',
     		}} >
 				<Animated.View 
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
