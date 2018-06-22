@@ -65,6 +65,16 @@ const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //--
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
 
+
+
+const SHELF_H 				= BLOOMED_TILE_H
+const TILE_TOP 				= (BLOOMED_TILE_H - BASE_TILE_H)/2
+const BASE_TITLE_TOP 		= TILE_TOP - (TITLE_TO_TILE_OFFSET + BASE_TITLE_H)
+
+
+
+
+
 /* ------------------------------------------ */
 /* HomeShelf specific contants                */
 /* ------------------------------------------ */
@@ -87,7 +97,8 @@ export default class HomeShelf extends Component {
 		this.state = {
 			isDimmed: false,
 			shelfKind: SHELF_KIND_OBJ.BASE,
-			titleYPosition: new Animated.Value(INIT_Y),	
+			titleYPosition: new Animated.Value(BASE_TITLE_TOP),
+			// titleYPosition: new Animated.Value(INIT_Y),	
 		}
 
 		this.tiles = []							//-- original tile array by index
@@ -293,7 +304,9 @@ export default class HomeShelf extends Component {
 		/* //-- shelf "title" animation: location & font size change
 		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90*/
 
-		this._changeTitleLocation(0)	//-- temporarily commented out
+		// this._changeTitleLocation(0)	//-- temporarily commented out
+		const titleShiftOffset = (FOCUSED_TILE_H - BASE_TILE_H)/2 + 20/RATIO	//tileHeightIncrease :(60 - 40)/RATIO
+		this._changeTitleLocation(BASE_TITLE_TOP - titleShiftOffset)	//-- temporarily commented out
 
 		//if (this.selectedTileIndex < 0) this.selectedTileIndex = 0
 		const prevTileIndex = this.tileIndexQueue[0]
@@ -374,7 +387,8 @@ export default class HomeShelf extends Component {
 		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90*/
 
 		this.setState({isDimmed: pIsDimmed, shelfKind: SHELF_KIND_OBJ.BASE})
-		this._changeTitleLocation(INIT_Y)
+		// this._changeTitleLocation(INIT_Y)
+		this._changeTitleLocation(BASE_TITLE_TOP)
 
 		if (this.currTile) this.currTile.backToOrg()
 
@@ -620,12 +634,12 @@ export default class HomeShelf extends Component {
 					position: (this.props.index === 0)? 'relative' : 'absolute',
 					top: this.props.topY,
 					width: '100%',
-					height: '100%',
+					// height: '100%',
+					height: BLOOMED_TILE_H,
 					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
-					overflow: 'visible',
+					// overflow: 'visible',
 					// borderWidth: .5,
     	// 			borderColor: 'blue',
-    				//backgroundColor: this.state.isDimmed ? 'transparent': '#33ff00',
     		}} >
 				<Animated.View 
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
@@ -648,23 +662,24 @@ export default class HomeShelf extends Component {
 	//					// <Text style={ (!this.state.isFocused)? homeShelfStyles.shelfTitleBase : homeShelfStyles.shelfTitleSelected }>
 }
 
+/*
+const SHELF_H 				= BLOOMED_TILE_H
+const TILE_TOP 				= (BLOOMED_TILE_H - BASE_TILE_H)/2
+const BASE_TITLE_TOP 		= TILE_TOP - TITLE_TO_TILE_OFFSET
+*/
 
 const homeShelfStyles = StyleSheet.create({
 	//-- "title" ----------------------//
 	homeShelfTitleContainer: {
 		position: 'absolute',
 		left: INIT_X,
-		top: INIT_Y,
+		//top: INIT_Y,
+		top: BASE_TITLE_TOP,
 	    // borderWidth: .5,
     	// borderColor: 'darkgreen',
-    	//overflow: 'visible',
-    	
-    	// position: 'static',
-    	// backgroundColor: 'green',
 	},
 
 	shelfTitleBase: {
-		//left: INIT_X,
 		fontSize: 28/RATIO,
 	    fontFamily: 'Helvetica-Light',
 	    fontWeight: '100',	/*HelveticaLight*/
@@ -673,7 +688,6 @@ const homeShelfStyles = StyleSheet.create({
 	},
 
 	shelfTitleFocused: {
-		//left: INIT_X,
 		fontSize: 40/RATIO,
 	    fontFamily: 'Helvetica-Light',
 	    fontWeight: '100',	/*HelveticaLight*/
@@ -687,11 +701,11 @@ const homeShelfStyles = StyleSheet.create({
 	homeShelfTilesContainer: {
 		position: 'absolute',
 		//top: TITLE_TO_TILE_OFFSET,
-		top: INIT_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET,
+		// top: INIT_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET,
+		top: TILE_TOP,
     	flex: 1,
     	// borderWidth: .5,
     	// borderColor: 'darkgreen',
-    	// backgroundColor: 'darkgreen'
 	},
 	//---------------------------------//
 });

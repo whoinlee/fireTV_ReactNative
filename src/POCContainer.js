@@ -50,6 +50,7 @@ const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;   //--
 
 const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //-- base tile height, on an unselected shelf
 const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //-- focused tile height, on a selected shelf
+const BLOOMED_TILE_H        = config.homeShelves.bloomedTileH/RATIO;        //-- bloomed tile height, on a selected shelf
 
 const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
 const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
@@ -59,6 +60,15 @@ const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //--
 
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
+
+
+
+
+const SHELF_H           = BLOOMED_TILE_H
+const TILE_TOP          = (BLOOMED_TILE_H - BASE_TILE_H)/2
+const BASE_TITLE_TOP    = TILE_TOP - TITLE_TO_TILE_OFFSET
+const NEXT_SHELF_OFFSET = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)         //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
+
 
 
 /* ------------------------------------------ */
@@ -93,7 +103,8 @@ export default class POCContainerK extends Component {
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
 
     //-- up pane locations
-    this.upHomeShelvesY = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET + BASE_TILE_H/2)       //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
+    // this.upHomeShelvesY = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET + BASE_TILE_H/2)    //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
+    this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)       //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
     this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY
     this.upHomeHeroY = this.initHomeHeroY - this.paneShiftOffsetY           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
@@ -335,7 +346,9 @@ export default class POCContainerK extends Component {
   _updateHomeShelvesLocation = (shelfIndex) => {
     if (shelfIndex < 0) return  //-- covered by _onHomeShelvesPaneBlur
     
-    const targetY = this.upHomeShelvesY - (shelfIndex) * FOCUSED_SHELF_H
+    //const targetY = this.upHomeShelvesY - (shelfIndex) * FOCUSED_SHELF_H
+    //const targetY = this.upHomeShelvesY - (shelfIndex) * BLOOMED_TILE_H   //-- Jun21
+    const targetY = this.upHomeShelvesY - (shelfIndex) * NEXT_SHELF_OFFSET   //-- Jun21
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
   }//_updateHomeShelvesLocation
 

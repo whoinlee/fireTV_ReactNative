@@ -40,6 +40,7 @@ const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;   //--
 //-- tile (slide) height
 const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //-- base tile height, on an unselected shelf
 const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //-- focused tile height, on a selected shelf
+const BLOOMED_TILE_H        = config.homeShelves.bloomedTileH/RATIO;        //-- bloomed tile height, on a selected shelf
 
 //-- shelf related
 const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
@@ -50,6 +51,13 @@ const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //--
 //
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
+
+
+
+const SHELF_H           = BLOOMED_TILE_H
+const TILE_TOP          = (BLOOMED_TILE_H - BASE_TILE_H)/2
+const BASE_TITLE_TOP    = TILE_TOP - TITLE_TO_TILE_OFFSET
+const NEXT_SHELF_OFFSET = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)         //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
 /* ------------------------------------------ */
@@ -332,8 +340,9 @@ export default class HomeShelvesPane extends Component {
             index={i}
             title={shelfObj.title}
             shows={shelfObj.shows}
-            // topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}
-            topY={i*FOCUSED_SHELF_H}
+            // topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}  //-- updated on Jun21, after updating INIT_Y etc
+            // topY={i*(FOCUSED_SHELF_H)}
+            topY={i*NEXT_SHELF_OFFSET}
             
             //callBackOnLargeBloomStart={this._onLargeBloomStart}
             //callBackOnBackToFocused={this._moveBackAdjacentShelves} 

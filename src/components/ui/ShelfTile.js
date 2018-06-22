@@ -182,6 +182,7 @@ class ShelfTile extends Component {
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED])
+		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--test
 
 		// if (targetX !== undefined) {
 		// 	TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})

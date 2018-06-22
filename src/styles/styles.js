@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
 
 	//-- HomeShelvesPane
 	homeShelvesContainer: {
-	    backgroundColor: '#676767',
 	    position: 'absolute',
 	    width: '100%',
 	    height: '400%',	//-- hack!!!
@@ -62,14 +61,6 @@ const styles = StyleSheet.create({
 	    // borderWidth: 1,
     	// borderColor: '#f00',
     	//-----------------//
-	},
-
-	activeShelf: {
-		opacity: 1,
-	},
-
-	inactiveShelf: {
-		opacity: .6,
 	}
 });
 
