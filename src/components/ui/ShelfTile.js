@@ -141,6 +141,16 @@ class ShelfTile extends Component {
 		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
 	}//onBlur
 
+	backToOrg = () => {
+		console.log("INFO ShelfTile :: backToOrg, index: " + this.props.index)
+
+		this._updateKind(TILE_KIND_OBJ.ORIGINAL)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL])
+
+		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
+		// TL.to(this.imageContainer, stdDuration, {css: { '-webkit-filter': 'brightness(1)', scale: 1 }})
+	}//_backToOrg
+
 	_updateKind = (pKind) => {
 		console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
 		let newSelectedMenuIndex
@@ -165,16 +175,6 @@ class ShelfTile extends Component {
 	      }
 	    ).start();
 	}//_changeScale
-
-	backToOrg = () => {
-		console.log("INFO ShelfTile :: backToOrg, index: " + this.props.index)
-
-		this._updateKind(TILE_KIND_OBJ.ORIGINAL)
-		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL])
-
-		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
-		// TL.to(this.imageContainer, stdDuration, {css: { '-webkit-filter': 'brightness(1)', scale: 1 }})
-	}//_backToOrg
 
 	_toFocused = (targetX = undefined) => {
 		console.log("INFO ShelfTile :: _toFocused, index: " + this.props.index)
@@ -337,24 +337,20 @@ class ShelfTile extends Component {
 	}//_renderContent
 
 	render() {
-		// console.log("INFO ShelfTile :: render, this.props.imageURL ? " + this.props.imageURL)
-		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
+		console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
+		console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
 		const pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		const { imageScale } = this.state
-		const pTranslateX = (TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]*imageScale)/2
 
 		// const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
 		// const colorIndex = Math.floor(Math.random() * 4);
 		// const pColor = colorArr[colorIndex]
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 1000
-		// <Text style={styles.comment}>{this.props.index}</Text>	
 		return (
 			<View style={{	
-							position: pPosition,
-							left: this.props.leftX,
-							// transform: [{ scale: imageScale }],
-							//top: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1]/2,
-
+							left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
+							//position: pPosition,
+							// left: this.props.leftX - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
 							//-- for testing
 							//backgroundColor: pColor, 
 							//width: 320/RATIO, 
@@ -366,14 +362,13 @@ class ShelfTile extends Component {
 						style={{
 							transform: [
 								{ scale: imageScale },
-								{ translateX: 0 },
+								{ translateX: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2 },
 								{ translateY: 0 }
 							],
 							width: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0], 
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
 							zIndex: pZindex
-							//top: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1]/2,
 							// overflow: 'visible',
 						}} 
 				/>
@@ -399,7 +394,7 @@ class ShelfTile extends Component {
 ShelfTile.propTypes = {
 	index:  PropTypes.number,
 	homeShelfIndex: PropTypes.number,
-	leftX: PropTypes.number,
+	// leftX: PropTypes.number,
 	showTitle: PropTypes.string,
 	episodeTitle: PropTypes.string,
 	episodeID: PropTypes.string,
