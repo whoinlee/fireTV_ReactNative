@@ -303,7 +303,6 @@ export default class HomeShelf extends Component {
 		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})
 
 		//-- update title
-		// console.log("INFO HomeShelf :: onFocus, for testing ==========> 16/RATIO is ? " + 16/RATIO)
 		const titleShiftOffset = Math.fround((FOCUSED_TILE_H - BASE_TILE_H)/2 + 16/RATIO)	//tileHeight increase + titleHeight increase (fontSize increase)
 		const titleUpY = BASE_TITLE_TOP - titleShiftOffset
 		this._changeTitleLocation(titleUpY)
@@ -348,14 +347,36 @@ export default class HomeShelf extends Component {
 	onBlur = (pIsDimmed = true) => {
 		console.log("INFO HomeShelf :: onBlur, shelf index is ? " + this.props.index)
 
-		/* //-- shelf "title" animation: location & font size change
-		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90*/
-
 		this.setState({isDimmed: pIsDimmed, shelfKind: SHELF_KIND_OBJ.BASE})
-		// this._changeTitleLocation(INIT_Y)
+
+		//-- update title
 		this._changeTitleLocation(BASE_TITLE_TOP)
 
+		//-- update prev, curr, and next tiles
+		const prevTileIndex = this.tileIndexQueue[0]
+		if (this.prevTile) {
+			this.prevTile.backToOrg()
+			const prevX = INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]
+			this._changeTileLocation(prevTileIndex, prevX)
+		}
+		//
 		if (this.currTile) this.currTile.backToOrg()
+		//
+		let nextX = INIT_X + BASE_TILE_W
+		let nextTileIndex = this.tileIndexQueue[2]
+		if (this.nextTile) {
+			this.nextTile.backToOrg()
+			this._changeTileLocation(nextTileIndex, nextX)
+		}
+
+		const lastTileIndex = this.tileIndexQueue.length - 1
+		for (var j = 3; j <= lastTileIndex; j++) {
+	    	nextTileIndex = this.tileIndexQueue[j]
+	    	let targetTile = this.tiles[nextTileIndex]
+	    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]
+	    	targetTile.backToOrg()
+	    	this._changeTileLocation(nextTileIndex, nextX)
+	    }
 
 		// // this.setState({shelfKind: SHELF_KIND_OBJ.BASE, isFocused:false})	//TO CHEC
 		// this.setState({shelfKind: SHELF_KIND_OBJ.BASE})	//TO CHECK:: topContainerTop
@@ -397,16 +418,18 @@ export default class HomeShelf extends Component {
 		// }
 	}//onBlur
 
-	_backToOrg = () => {
-		console.log("INFO HomeShelf :: _backToOrg, shelf index is ? " + this.props.index + ", isBloomed ? " + this.state.isBloomed)
+	// _backToOrg = () => {
+	// 	console.log("INFO HomeShelf :: _backToOrg, shelf index is ? " + this.props.index + ", isBloomed ? " + this.state.isBloomed)
 
-		this.setState({shelfKind: SHELF_KIND_OBJ.BASE})
-		//this._clearBloomTimer()
+		
+	// 	//this._clearBloomTimer()
 
-		if (this.prevTile) this.prevTile.backToOrg()
-		// if (this.currTile) this.currTile.backToOrg()
-		// if (this.nextTile) this.nextTile.backToOrg()
-	}//_backToOrg
+	// 	if (this.prevTile) this.prevTile.backToOrg()
+	// 	if (this.currTile) this.currTile.backToOrg()
+	// 	if (this.nextTile) this.nextTile.backToOrg()
+
+	// 	this.setState({shelfKind: SHELF_KIND_OBJ.BASE})
+	// }//_backToOrg
 
 	_reset = () => {
 		console.log("INFO HomeShelf :: _reset", this.props.index)

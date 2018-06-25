@@ -146,9 +146,6 @@ class ShelfTile extends Component {
 
 		this._updateKind(TILE_KIND_OBJ.ORIGINAL)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL])
-
-		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
-		// TL.to(this.imageContainer, stdDuration, {css: { '-webkit-filter': 'brightness(1)', scale: 1 }})
 	}//_backToOrg
 
 	_updateKind = (pKind) => {
