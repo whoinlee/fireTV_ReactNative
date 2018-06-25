@@ -128,7 +128,7 @@ class ShelfTile extends Component {
 
 	onFocus = () => {
 		console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
-      	this._toFocused()
+      	this.toFocused()
 
       	const { onFocus } = this.props;
       	if (onFocus) {
@@ -176,35 +176,27 @@ class ShelfTile extends Component {
 	    ).start();
 	}//_changeScale
 
-	_toFocused = (targetX = undefined) => {
-		console.log("INFO ShelfTile :: _toFocused, index: " + this.props.index)
+	toFocused = (pDuration=STD_DURATION) => {
+		console.log("INFO ShelfTile :: toFocused, index: " + this.props.index)
 
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
-		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED])
-		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--test
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED], pDuration)
+		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--for testing
+	}//toFocused
 
-		// if (targetX !== undefined) {
-		// 	TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
-		// }
-		// //.7 to .5
-		// TL.to(this.imageContainer, stdDuration, {css: {'-webkit-filter': 'brightness(.5)', scale: toFocusedScale}, onComplete: this.showFocusedContent()})
-	}//_toFocused
-
-	_toExpanded = (targetX, noScale=false, pDuration=stdDuration) => {
-		console.log("INFO ShelfTile :: _toExpanded, index: " + this.props.index)
+	// toExpanded = (noScale=false, pDuration=STD_DURATION) => {
+	toExpanded = (pDuration=STD_DURATION) => {
+		console.log("INFO ShelfTile :: toExpanded, index: " + this.props.index)
 		
-		// this.updateState(TILE_KIND_OBJ.EXPANDED)
-		// TL.to(this.containerDiv, pDuration, {left: targetX+'px'})
-		
-		// if (noScale) {
-		// 	TL.to(this.imageContainer, pDuration, {css: { '-webkit-filter': 'brightness(1)'}})
-		// } else {
-		// 	TL.to(this.imageContainer, pDuration, {css: { '-webkit-filter': 'brightness(1)', scale: toExpandedScale}})
-		// }
-	}//_toExpanded
+		this._updateKind(TILE_KIND_OBJ.EXPANDED)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
+		// if (!noScale) {
+			// this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
+		// } 
+	}//toExpanded
 
-	_toMedBloomed = (targetX, noScale=false, pDuration=stdDuration) => {
+	_toMedBloomed = (targetX, noScale=false, pDuration=STD_DURATION) => {
 		console.log("INFO ShelfTile :: _toMedBloomed")
 		// this.updateState(TILE_KIND_OBJ.MED_BLOOMED)
 		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
@@ -236,7 +228,6 @@ class ShelfTile extends Component {
 		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION*1000)
 	}//_waitToLargeBloom
 	// **
-
 
 	_showFocusedContent = () => { 
 		console.log("INFO ShelfTile :: _showFocusedContent")
@@ -405,8 +396,7 @@ ShelfTile.propTypes = {
 	// leftX: PropTypes.number,
 	// callBackOnLargeBloomStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
-	// //
-	// isFocused : PropTypes.bool,
+
  //  	onFocus : PropTypes.func,
  //  	onBlur : PropTypes.func,
 };
@@ -414,7 +404,7 @@ ShelfTile.propTypes = {
 ShelfTile.defaultProps = {
 	// callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
 	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
-	// isFocused : false,
+
 	// onFocus: () => {console.log("INFO ShelfTile :: please pass a function for onFocus")},
  //  	onBlur: () => {console.log("INFO ShelfTile :: please pass a function for onBlur")},
 };

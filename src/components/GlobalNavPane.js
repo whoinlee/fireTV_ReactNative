@@ -67,7 +67,7 @@ export default class GlobalNavPane extends Component {
     return (
         <View>
             <Text style={styles.comment}>
-              {this.constructor.name}
+              Global Navigation Pane
             </Text>
         </View>
     );

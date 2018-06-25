@@ -65,7 +65,7 @@ export default class HomeHeroPane extends Component {
     return (
         <View>
             <Text style={styles.comment}>
-              {this.constructor.name}
+              Home Hero Pane
               {"\n\n" + this.today}
             </Text>
         </View>

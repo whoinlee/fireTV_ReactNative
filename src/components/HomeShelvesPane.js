@@ -55,8 +55,8 @@ const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //--
 
 
 const SHELF_H           = BLOOMED_TILE_H
-const TILE_TOP          = (BLOOMED_TILE_H - BASE_TILE_H)/2
-const BASE_TITLE_TOP    = TILE_TOP - TITLE_TO_TILE_OFFSET
+// const TILE_TOP          = Math.floor((BLOOMED_TILE_H - BASE_TILE_H)/2)
+// const BASE_TITLE_TOP    = Math.floor(TILE_TOP - (TITLE_TO_TILE_OFFSET + BASE_TITLE_H))
 const NEXT_SHELF_OFFSET = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)         //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
@@ -251,7 +251,7 @@ export default class HomeShelvesPane extends Component {
 
   onFocus = () => {
     console.log("INFO HomeShelvesPane :: onFocus")
-    
+
     const { onFocus } = this.props;
     if (onFocus) {
       onFocus()
