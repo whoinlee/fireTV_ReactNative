@@ -251,17 +251,17 @@ export default class HomeShelvesPane extends Component {
 
   onFocus = () => {
     console.log("INFO HomeShelvesPane :: onFocus")
+    
     const { onFocus } = this.props;
     if (onFocus) {
       onFocus()
     }
-  }//onBlur
+  }//onFocus
 
   onBlur = () => {
     console.log("INFO HomeShelvesPane :: onBlur")
 
     if (this.currShelf) this.currShelf.onBlur(false)
-
     const { onBlur } = this.props;
     if (onBlur) {
       onBlur()

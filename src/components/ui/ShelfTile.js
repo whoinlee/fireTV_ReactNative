@@ -337,14 +337,16 @@ class ShelfTile extends Component {
 	}//_renderContent
 
 	render() {
-		console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
-		console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
-		const pPosition = (this.props.index === 0)? 'relative' : 'absolute'
+		// console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
+		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
+		// const pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		const { imageScale } = this.state
 
 		// const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
 		// const colorIndex = Math.floor(Math.random() * 4);
 		// const pColor = colorArr[colorIndex]
+
+		//-- bring up the selected tile to front
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 1000
 		return (
 			<View style={{	
@@ -368,7 +370,7 @@ class ShelfTile extends Component {
 							width: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0], 
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
-							zIndex: pZindex
+							zIndex: pZindex,
 							// overflow: 'visible',
 						}} 
 				/>
@@ -394,13 +396,13 @@ class ShelfTile extends Component {
 ShelfTile.propTypes = {
 	index:  PropTypes.number,
 	homeShelfIndex: PropTypes.number,
-	// leftX: PropTypes.number,
 	showTitle: PropTypes.string,
 	episodeTitle: PropTypes.string,
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!	*/
 
+	// leftX: PropTypes.number,
 	// callBackOnLargeBloomStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 	// //

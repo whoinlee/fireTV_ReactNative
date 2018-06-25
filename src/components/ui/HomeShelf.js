@@ -297,15 +297,12 @@ export default class HomeShelf extends Component {
 		console.log("INFO HomeShelf :: onFocus, =================> focusedShelfIndex is ? " + this.props.index)
 		console.log("INFO HomeShelf :: onFocus, this.tileIndexQueue is ? " + this.tileIndexQueue)
 
-		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})	//TO CHECK:: topContainerTop
 		this._clearBloomTimer()
-
-		/* //-- shelf "title" animation: location & font size change
-		// TL.to(this.titleNode, stdDuration, {top: titleSelectedY + 'px', scale: 1.5})	//-90*/
-
-		// this._changeTitleLocation(0)	//-- temporarily commented out
-		const titleShiftOffset = (FOCUSED_TILE_H - BASE_TILE_H)/2 + 18/RATIO	//tileHeightIncrease :(58 - 40)/RATIO
-		this._changeTitleLocation(BASE_TITLE_TOP - titleShiftOffset)	//-- temporarily commented out
+		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})
+		// console.log("INFO HomeShelf :: onFocus, for testing ==========> 16/RATIO is ? " + 16/RATIO)
+		const titleShiftOffset = Math.fround((FOCUSED_TILE_H - BASE_TILE_H)/2 + 16/RATIO)	//tileHeight increase + titleHeight increase (fontSize increase)
+		const titleUpY = BASE_TITLE_TOP - titleShiftOffset
+		this._changeTitleLocation(titleUpY)
 
 		//if (this.selectedTileIndex < 0) this.selectedTileIndex = 0
 		const prevTileIndex = this.tileIndexQueue[0]
@@ -567,37 +564,32 @@ export default class HomeShelf extends Component {
 		// console.log("INFO HomeShelf :: _renderEachShelfTile")
 		const pPosition = (i === 0)? 'relative' : 'absolute'
 		const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
-		// const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
-		// const leftX = (i==0)? INIT_X : 0;
-		//const leftX = INIT_X;
-		// console.log("INFO HomeShelf :: _renderEachShelfTile, i: " + i + ", leftX ? " + leftX)
 		return (
-			<View 	key={(i + 1).toString()}
+			<Animated.View 	key={(i + 1).toString()}
 					style={ { 
 							position: pPosition,
-							left: leftX, 
-							// width: (320/RATIO+2), 
+							left: leftX,
 							// borderColor: '#000000', 
 							// borderWidth: 1
 						} } >
 				<ShelfTile 	
-						// key={(i + 1).toString()}
 						ref={node => this.tiles.push(node)}
 				  		index={i}
 				  		homeShelfIndex={this.props.index}
-				  		// leftX={leftX}
 				  		showTitle={tileObj.showTitle}
 				  		episodeTitle={tileObj.episodeTitle}
 				  		episodeID={tileObj.episode}
 				  		episodeDesc={" " + tileObj.episodeDesc}
 				  		imageURL={tileObj.imageURL}
 
+				  		// key={(i + 1).toString()}
+				  		// leftX={leftX}
 				  		//onFocus={this._onTileFocusCallBack}
 				  		// callBackOnLargeBloomStart={this._onLargeBloomStart}
 				  		// callBackOnNoMenuLeft={this._backToFocused}
 				  		// isFocused={false}
 				/>
-		    </View>
+		    </Animated.View>
 		)
 	}//_renderEachShelfTile
 
@@ -635,7 +627,7 @@ export default class HomeShelf extends Component {
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
 								top: this.state.titleYPosition,
 						 	} } 
-					//onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
+					onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
 				>
 					<Text style={ titleStyle }>
 						{this.props.title}
