@@ -112,104 +112,104 @@ export default class HomeShelf extends Component {
 	}//componentWillMount
 
 	doLeft = () => {
-		console.log("INFO HomeShelf :: doLeft/moveToRight, shelf", this.props.index)
-		//console.log("INFO HomeShelf :: doLeft/moveToRight, this.state.shelfKind ? ", this.state.shelfKind)
+		if (this.totalTiles <= 1) return
+		console.log("INFO HomeShelf :: doLeft/moveToRight, shelf " + this.props.index + ", this.state.shelfKind ? " + this.state.shelfKind)
 		// this.clearBloomTimer()
 
-		// if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-		// 	console.log("INFO HomeShelf :: doLeft, menu change!! ") 
-		// 	// console.log("INFO HomeShelf :: doLeft, this.currTile.props.index? " + this.currTile.props.index) 
-		// 	console.log("INFO HomeShelf :: doLeft, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
-		// 	this.currTile.doLeft()
-		// 	//
-		// 	return
-		// }
+		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
+			// console.log("INFO HomeShelf :: doLeft, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
+			// this.currTile.doLeft()
+			return
+		}
 
-		// if (this.totalTiles > 1) {
-		// 	console.log("\n")
-		// 	//console.log("INFO HomeShelf :: doLeft//moveToRight, this.totalTiles ?? ", this.totalTiles)
-		// 	console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue  before ? ", this.tileIndexQueue)
+		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue  before ? " +  this.tileIndexQueue)
+		console.log("this.tileIndexQueue[2] ?? " + this.tileIndexQueue[2])
 
-		// 	//-- move the rightMostTile to the leftEnd
-		// 	const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
-		// 	const prevX = INIT_X - leftOffset
-		// 	let rightMostTile
-		// 	let prevPrevTile
-		// 	console.log("this.tileIndexQueue[2] ?? " + this.tileIndexQueue[2])
-		// 	if (this.tileIndexQueue[2] !== undefined) {
-		// 		//-- exclude the case of 2 tiles at previous and current(focused) location
-		// 		const rightMostTileIndex = this.tileIndexQueue[this.tileIndexQueue.length - 1]
-		// 		rightMostTile = this.tiles[rightMostTileIndex]
-		// 		let leftMostX = prevX
-		// 		if (this.tileIndexQueue[0] === -1) {
-		// 			//-- rightMostTile goes to a prevPrev location, instead of prev location
-		// 			//leftMostX = prevX - leftOffset
-		// 			//this.tileIndexQueue[0] = this.tileIndexQueue.pop()	//CHECK!!!
-		// 			this.prevTile = rightMostTile
-		// 		} else {
-		// 			console.log("this.prevTile ?? " + this.prevTile)
-		// 			leftMostX = prevX - leftOffset
-		// 			prevPrevTile = rightMostTile
-		// 		}
-		// 		rightMostTile.changeXLocTo(leftMostX)
-		// 	}
+		//-- move the rightMostTile to the leftEnd
+		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
+		const prevX = INIT_X - leftOffset
+		let nextX
+		let leftMostX
+		let currTileIndex
+		let prevTileIndex
+		let nextTileIndex = this.tileIndexQueue[1]
+		this.nextTile = this.currTile
+		if (this.tileIndexQueue[2]) {
+			//-- when a next tile exists, at least : excludes the case of 2 tiles at previous and current(focused) location
+			const rightMostTileIndex = this.tileIndexQueue[this.tileIndexQueue.length - 1]
+			if (this.tileIndexQueue[0] === -1) {
+				//-- no prev tile, so rightMostTile goes to the prevTile location and becomes the currTile
+				leftMostX = prevX
+				currTileIndex = rightMostTileIndex
+				prevTileIndex = -1
+				this.currTile = this.tiles[currTileIndex]
+				this.prevTile = null
+			} else {
+				console.log("this.prevTile ?? " + this.prevTile)
+				//-- prev tile exists, so rightMostTile goes to the prevPrevTile location and becomes the prevTile
+				leftMostX = prevX - leftOffset
+				currTileIndex = this.tileIndexQueue[0]
+				prevTileIndex = rightMostTileIndex
+				this.currTile = this.tiles[currTileIndex]
+				this.prevTile = this.tiles[prevTileIndex]
+			}
+			this._changeTileLocation(rightMostTileIndex, leftMostX, 0)
+		}
 
-		// 	//-- update currTile (prev to curr)
-		// 	this.currTile = (this.tileIndexQueue[0] === -1)? rightMostTile : this.tiles[this.tileIndexQueue[0]]
-		// 	console.log("this.currTile ?? " +this.currTile)
-		// 	if (this.currTile !== undefined)
-		// 	this.currTile.toFocused(INIT_X)
+		//-- update currTile : prevTile becomes the currTile
+		if (this.currTile) {
+			this._changeTileLocation(currTileIndex, INIT_X)
+			this.currTile.toFocused()
+		}
 
-		// 	//-- prevPrevTile
-		// 	//-- update prevTile (prevPrev to prev, or no prev)
-		// 	console.log("prevPrevTile ?? " + prevPrevTile)
-		// 	if (prevPrevTile !== undefined) {
-		// 		//prevPrevTile.toExpanded(prevX, noScale)
-		// 		prevPrevTile.toExpanded(prevX)
-		// 		this.prevTile = prevPrevTile
-		// 	} else {
-		// 		this.prevTile = null
-		// 	}
+		//-- update prevTile : prevPrev becomes the prevTile, or no prevTile
+		if (this.prevTile) {
+			this._changeTileLocation(prevTileIndex, prevX)
+			this.prevTile.toExpanded()
+		}
 
-		// 	//-- update nextTile (curr to next)
-		// 	//this.nextTile = this.currTile
-		// 	this.nextTile = this.tiles[this.tileIndexQueue[1]]
-		// 	let nextX = INIT_X + focusedTileWidth + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
-		// 	this.nextTile.toExpanded(nextX)
+		//-- update nextTile : curr becomes the nextTile
+		if (this.nextTile) {
+			nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
+			this._changeTileLocation(nextTileIndex, nextX)
+			this.nextTile.toExpanded()
+		}
 
-		// 	//-- then start animating all tiles to the right
-		// 	let lastTileIndex = (this.prevTile === null)? this.totalTiles : this.totalTiles - 1
-		// 	//if (lastTileIndex > MAX_TILE_INDEX) lastTileIndex = MAX_TILE_INDEX	//-- don't need to animate the tiles beyond stage width
-		// 	//if (lastTileIndex !== undefined) {
-		// 	    for (var j = 2; j < lastTileIndex; j++) {
-		// 	    	console.log("INFO HomeShelf :: doLeft/moveToRight, j ", j)
-		// 	    	let nextTileIndex = this.tileIndexQueue[j]
-		// 	    	//console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
-		// 	    	let targetTile = this.tiles[nextTileIndex]
-		// 	    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
-		// 	    	targetTile.toExpanded(nextX)
-		// 	    }
-		//    // }
+		//-- then start animating the rest of tiles to the right
+		let lastTileIndex = (this.prevTile === null)? this.totalTiles : this.totalTiles - 1
+		//if (lastTileIndex > MAX_TILE_INDEX) lastTileIndex = MAX_TILE_INDEX	//-- don't need to animate the tiles beyond stage width
+		//if (lastTileIndex !== undefined) {
+	    for (var j = 2; j < lastTileIndex; j++) {
+	    	console.log("INFO HomeShelf :: doLeft/moveToRight, j ", j)
+	    	let targetTileIndex = this.tileIndexQueue[j]
+	    	//console.log("INFO HomeShelf :: select, nextTileIndex is ??? ", nextTileIndex)
+	    	let targetTile = this.tiles[targetTileIndex]
+	    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
+	    	//targetTile.toExpanded(nextX)
+	    	this._changeTileLocation(targetTileIndex, nextX)
+			targetTile.toExpanded()
+	    }
+	   // }
 
-		//    let leftQueue = [-1]
-		//    if (this.tileIndexQueue[2] !== undefined) {
-		// 	    //-- updateQueue
-		// 	    if (this.prevTile !== null) {
-		// 	    	const prevIndex = this.tileIndexQueue.pop()
-		// 	    	this.tileIndexQueue.unshift(prevIndex)
-		// 	    } else {
-		// 	    	//let leftQueue = [-1]	//for null prevTile index
-		// 	    	let rightQueue = this.tileIndexQueue.slice(1)
-		// 	    	const prevIndex = rightQueue.pop()
-		// 	    	rightQueue.unshift(prevIndex)
-		// 	    	this.tileIndexQueue = leftQueue.concat(rightQueue)
-		// 	    }
-		// 	} else {
-		// 		//-- special case with 2 tiles
-		// 		this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
-		// 	}
-		//     console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
-		// }
+	   let leftQueue = [-1]
+	   if (this.tileIndexQueue[2] !== undefined) {
+		    //-- updateQueue
+		    if (this.prevTile !== null) {
+		    	const prevIndex = this.tileIndexQueue.pop()
+		    	this.tileIndexQueue.unshift(prevIndex)
+		    } else {
+		    	//let leftQueue = [-1]	//for null prevTile index
+		    	let rightQueue = this.tileIndexQueue.slice(1)
+		    	const prevIndex = rightQueue.pop()
+		    	rightQueue.unshift(prevIndex)
+		    	this.tileIndexQueue = leftQueue.concat(rightQueue)
+		    }
+		} else {
+			//-- special case with 2 tiles
+			this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
+		}
+
+		console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
 	}//doLeft
 
 	doRight = () => {

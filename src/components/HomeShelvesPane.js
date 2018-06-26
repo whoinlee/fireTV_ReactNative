@@ -227,10 +227,12 @@ export default class HomeShelvesPane extends Component {
 
   doLeft = () => {
     console.log('INFO HomeShelvesPane :: doLeft');
+    this.shelves[this.selectedShelfIndex].doLeft()
   }//doLeft
 
   doRight = () => {
     console.log('INFO HomeShelvesPane :: doRight');
+    this.shelves[this.selectedShelfIndex].doRight()
   }//doRight
 
   doSelect = () => {

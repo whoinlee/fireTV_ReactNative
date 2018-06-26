@@ -236,20 +236,20 @@ export default class POCContainerK extends Component {
   }//doDown
 
   doLeft = () => {
-    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
-    // console.log('INFO POCContainer :: _doLeft');
+    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
+    // console.log('INFO POCContainer :: doLeft');
     this.selectablePanes[HOME_SHELVES_INDEX].doLeft()
   }//doLeft
 
   doRight = () => {
-    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
-    // console.log('INFO POCContainer :: _doRight');
+    if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
+    // console.log('INFO POCContainer :: doRight');
     this.selectablePanes[HOME_SHELVES_INDEX].doRight()
   }//doRight
 
   doSelect = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
-    console.log('INFO POCContainer :: _doSelect');
+    // console.log('INFO POCContainer :: doSelect');
     this.selectablePanes[HOME_SHELVES_INDEX].doSelect()
   }//doSelect
 

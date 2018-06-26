@@ -245,8 +245,6 @@ export default class ShelfTile extends Component {
 		// TL.to(this.bloomedContent, stdDuration, {delay:stdDuration, css: {visibility: 'visible', opacity: 1}})
 	}//_showBloomedContent
 
-	_changeXLocTo = (targetX) => { TL.to(this.containerDiv, 0, {left: targetX+'px'}) }
-
 	// fadeInAt = (targetX, pDelay=0, pDuration=stdDuration) => {
 	// 	TL.to(this.containerDiv, 0, {opacity: 0, left: targetX+'px', delay:pDelay})	//CHECK
 	// 	TL.to(this.containerDiv, pDuration, {opacity: 1, delay:pDelay+.1})
