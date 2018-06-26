@@ -105,8 +105,8 @@ export default class POCContainerK extends Component {
 
     //-- up pane locations
     // this.upHomeShelvesY = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET + BASE_TILE_H/2)    //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
-    this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)       //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
-    this.upHomeHeroY = this.upHomeShelvesY - INIT_HOME_HERO_H           //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
+    this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)                   //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
+    this.upHomeHeroY = this.upHomeShelvesY - INIT_HOME_HERO_H               //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
 
     //TODO: recalculate
     this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
@@ -114,8 +114,9 @@ export default class POCContainerK extends Component {
 
     //TODO: recalculate
     //-- mid-up and off the stage homeHero pane locations
-    this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y          //-- homeHeroPane shifts on the fist shelf being largeBloomed
-    this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y         //-- homeHeroPane shifts/hides on the 2nd shelf being focused
+    this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y           //-- homeHeroPane shifts on the fist shelf being largeBloomed
+    //-100: hack
+    this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y - 100    //-- homeHeroPane shifts/hides on the 2nd shelf being focused
   }
 
   componentDidMount() {

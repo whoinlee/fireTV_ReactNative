@@ -152,6 +152,7 @@ export default class HomeShelf extends Component {
 			this.currTile = this.tiles[currTileIndex]
 			this.prevTile = this.tiles[prevTileIndex]
 		}
+		//if (this.totalTiles > 2)
 		this._changeTileLocation(rightMostTileIndex, leftMostX, 0)
 
 		//-- update currTile : prevTile becomes the currTile
@@ -456,17 +457,15 @@ export default class HomeShelf extends Component {
 	_changeTileLocation = (tileIndex, targetValue, pDuration=STD_DURATION, pDelay=0) => {
 	    console.log("INFO HomeShelf :: _changeTile " + tileIndex + " xLocation, to " + targetValue)
 	    if (tileIndex === undefined) return
-	    //if (tileIndex !== undefined) {
-		    Animated.timing(
-		      this.state.tileXPositionArr[tileIndex], 
-		      {
-		        toValue: targetValue,
-		        delay:pDelay,
-		        duration: pDuration,
-		        easing: Easing.out(Easing.quad),
-		      }
-		    ).start();
-	    //}
+	    Animated.timing(
+	      this.state.tileXPositionArr[tileIndex], 
+	      {
+	        toValue: targetValue,
+	        delay:pDelay,
+	        duration: pDuration,
+	        easing: Easing.out(Easing.quad),
+	      }
+	    ).start();
 	}//_changeTitleLocation
 
 	// _fadeInTileAt = (tileIndex, targetValue, pDuration=STD_DURATION) => {
