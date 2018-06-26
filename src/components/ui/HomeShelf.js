@@ -85,7 +85,7 @@ const SHELF_KIND_OBJ		= {
 };
 const TILE_WIDTH_ARR		= [BASE_TILE_W, FOCUSED_BASE_TILE_W, BLOOMED_BASE_TILE_W];						//-- the array of unfocused tile width: 320x180(on a base shelf), 375x210(on a focused shelf), 782x440(on a bloomed shelf)
 const TILE_OFFSET_ARR		= [BASE_SHELF_OFFSET_X, FOCUSED_SHELF_OFFSET_X, BLOOMED_SHELF_OFFSET_X];		//-- the array of offset between tiles adjacent, on a base/focused/bloomed shelf
-const MAX_TILE_INDEX		= Math.floor((config.stageW - config.initX)/config.homeShelves.baseTileW);						//-- stageWidth/baseTileWidth, max number of base tiles in a row(shelf)
+const MAX_TILE_INDEX		= Math.floor((config.stageW - config.initX)/config.homeShelves.baseTileW);		//-- stageWidth/baseTileWidth, max number of base tiles in a row(shelf) - 1 (for 0 based index)
 const TITLE_SELECTED_Y 		= -90/RATIO;																	//-- title location for a selected shelf, TODO: CHECK
 const TITLE_UNSELECTED_Y	= 0/RATIO;																		//-- title location for unselected shelves, TODO: CHECK
 const ASSET_URL				= '../../assets/';
@@ -495,7 +495,7 @@ export default class HomeShelf extends Component {
 		let leftX
 		let tileXPositionArr = []
 		for (var i=0; i<this.totalTiles; i++) {
-			leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
+			leftX = ( (i <= MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 			tileXPositionArr.push(new Animated.Value(leftX))
 		}
 		this.setState({tileXPositionArr : tileXPositionArr})
@@ -592,7 +592,7 @@ export default class HomeShelf extends Component {
 	_renderEachShelfTile = (tileObj, i) => {
 		// console.log("INFO HomeShelf :: _renderEachShelfTile")
 		const pPosition = (i === 0)? 'relative' : 'absolute'
-		let leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
+		let leftX = ( (i <= MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		if (this.state.tileXPositionArr[i]) {
 			leftX = this.state.tileXPositionArr[i]
 		}
