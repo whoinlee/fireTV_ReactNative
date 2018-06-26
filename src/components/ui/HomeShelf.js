@@ -113,19 +113,18 @@ export default class HomeShelf extends Component {
 
 	doLeft = () => {
 		if (this.totalTiles <= 1) return
-		console.log("INFO HomeShelf :: doLeft/moveToRight, shelf " + this.props.index + ", this.state.shelfKind ? " + this.state.shelfKind)
+		//console.log("INFO HomeShelf :: doLeft/moveToRight, shelf " + this.props.index + ", this.state.shelfKind ? " + this.state.shelfKind)
+		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? " +  this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
+			//-- TODO
 			// console.log("INFO HomeShelf :: doLeft, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
 			// this.currTile.doLeft()
 			return
 		}
 
-		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue  before ? " +  this.tileIndexQueue)
-		console.log("this.tileIndexQueue[2] ?? " + this.tileIndexQueue[2])
-
-		//-- move the rightMostTile to the leftEnd
+		// console.log("this.tileIndexQueue[2] ?? " + this.tileIndexQueue[2])
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		const prevX = INIT_X - leftOffset
 		let nextX
@@ -133,28 +132,27 @@ export default class HomeShelf extends Component {
 		let currTileIndex
 		let prevTileIndex
 		let nextTileIndex = this.tileIndexQueue[1]
-		this.nextTile = this.currTile
-		if (this.tileIndexQueue[2]) {
-			//-- when a next tile exists, at least : excludes the case of 2 tiles at previous and current(focused) location
-			const rightMostTileIndex = this.tileIndexQueue[this.tileIndexQueue.length - 1]
-			if (this.tileIndexQueue[0] === -1) {
-				//-- no prev tile, so rightMostTile goes to the prevTile location and becomes the currTile
-				leftMostX = prevX
-				currTileIndex = rightMostTileIndex
-				prevTileIndex = -1
-				this.currTile = this.tiles[currTileIndex]
-				this.prevTile = null
-			} else {
-				console.log("this.prevTile ?? " + this.prevTile)
-				//-- prev tile exists, so rightMostTile goes to the prevPrevTile location and becomes the prevTile
-				leftMostX = prevX - leftOffset
-				currTileIndex = this.tileIndexQueue[0]
-				prevTileIndex = rightMostTileIndex
-				this.currTile = this.tiles[currTileIndex]
-				this.prevTile = this.tiles[prevTileIndex]
-			}
-			this._changeTileLocation(rightMostTileIndex, leftMostX, 0)
+		this.nextTile = this.tiles[nextTileIndex]
+
+		//-- move the rightMostTile to the leftEnd
+		const rightMostTileIndex = this.tileIndexQueue[this.tileIndexQueue.length - 1]
+		if (this.tileIndexQueue[0] === -1) {
+			//-- no prev tile, so rightMostTile goes to the prevTile location and becomes the currTile
+			leftMostX = prevX
+			currTileIndex = rightMostTileIndex
+			prevTileIndex = -1
+			this.currTile = this.tiles[currTileIndex]
+			this.prevTile = null
+		} else {
+			console.log("this.prevTile ?? " + this.prevTile)
+			//-- prev tile exists, so rightMostTile goes to the prevPrevTile location and becomes the prevTile
+			leftMostX = prevX - leftOffset
+			currTileIndex = this.tileIndexQueue[0]
+			prevTileIndex = rightMostTileIndex
+			this.currTile = this.tiles[currTileIndex]
+			this.prevTile = this.tiles[prevTileIndex]
 		}
+		this._changeTileLocation(rightMostTileIndex, leftMostX, 0)
 
 		//-- update currTile : prevTile becomes the currTile
 		if (this.currTile) {
@@ -319,8 +317,8 @@ export default class HomeShelf extends Component {
 		}
 		let nextTileIndex = this.tileIndexQueue[2]
 		let nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
-		if (nextTileIndex && nextTileIndex >= 0) {
-			// console.log("INFO HomeShelf :: onFocus, nextTileIndex is ? " + nextTileIndex)
+		if (nextTileIndex >= 0) {
+			// console.log("INFO HomeShelf :: onFocus, ever???? nextTileIndex is ? " + nextTileIndex)
 			this.nextTile = this.tiles[nextTileIndex]
 			this.nextTile.toExpanded()
 			// const nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
