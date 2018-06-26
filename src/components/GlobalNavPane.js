@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   Text,
-  TouchableWithoutFeedback,
+  // TouchableWithoutFeedback,
   View
 } from 'react-native';
 import styles from '../styles/styles';
@@ -30,49 +30,41 @@ export default class GlobalNavPane extends Component {
     console.log("INFO GlobalNavPane :: onUp")
   }
 
-  // onSelect = () => {
-  //   console.log("INFO GlobalNavPane :: onBlur")
-  // }
-
   onFocus = () => {
-   //if (this.props.isFocused) {
-      console.log("INFO GlobalNavPane :: onFocus =================================> GlobalNavPane")
-      const { onFocus } = this.props;
-      if (onFocus) {
-        // console.log('INFO GlobalNavPane :: onFocus calling back from GlobalNavPane');
-        onFocus();
-      }
-    //}
-  }
+    console.log("INFO GlobalNavPane :: onFocus =================================> GlobalNavPane")
+    const { onFocus } = this.props;
+    if (onFocus) {
+      onFocus();
+    }
+  }//onFocus
 
   onBlur = () => {
     console.log("INFO GlobalNavPane :: onBlur =================================> GlobalNavPane")
     const { onBlur } = this.props;
-      if (onBlur) {
-        // console.log('INFO GlobalNavPane :: onBlur calling back from GlobalNavPane');
-        onBlur();
-      }
-  }
+    if (onBlur) {
+      onBlur();
+    }
+  }//onBlur
 
   onSelect = () => {
     console.log("INFO GlobalNavPane :: onSelect =================================> GlobalNavPane")
     const { onSelect } = this.props;
-      if (onSelect) {
-        //console.log('INFO GlobalNavPane :: onSelect calling back from HomeHeroPane');
-        onSelect();
-      }
-  }
+    if (onSelect) {
+      onSelect();
+    }
+  }//onSelect
 
   render() {
     return (
-        <View>
-            <Text style={styles.comment}>
-              Global Navigation Pane
-            </Text>
-        </View>
-    );
-  }
+      <View>
+          <Text style={styles.comment}>
+            Global Navigation Pane
+          </Text>
+      </View>
+    )
+  }//render
 }
+
 
 GlobalNavPane.propTypes = {
   onFocus : PropTypes.func,
@@ -80,8 +72,5 @@ GlobalNavPane.propTypes = {
   onSelect : PropTypes.func,
 }
 
-GlobalNavPane.defaultProps = {
-  onFocus: () => {console.log("INFO GlobalNavPane :: please pass a function for onFocus")},
-  // onBlur: () => {console.log("INFO GlobalNavPane :: please pass a function for onBlur")},
-  // onSelect: () => {console.log("INFO GlobalNavPane :: please pass a function for onSelect")},
-}
+// GlobalNavPane.defaultProps = {
+// }

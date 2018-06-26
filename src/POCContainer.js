@@ -125,47 +125,47 @@ export default class POCContainerK extends Component {
   componentWillUnmount() {
     this._removeKeyListener()
   }//componentWillUnmount
+/*
+  _enableTVEventHandler() {
+    this.tvEventHandler.enable(this, function(cmp, evt) {
+      //console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
+      if (evt) {
+        console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
+        switch (evt.eventType) {
+          case 'focus':
+            console.log('INFO POCContainer :: _enableTVEventHandler, evt.tag? : ' + evt.tag);
+          case 'blur':
+          case 'select':
+            break;
+          case 'left':
+          case 'right':
+          case 'up':
+          case 'down':
+            console.log('INFO POCContainer :: _enableTVEventHandler, ever???? : ' + evt.eventType);
+            break;
+          case 'playPause':
+            console.log('INFO POCContainer :: playPause ===>');
+            break;
+          case 'rewind':
+            console.log('INFO POCContainer :: rewind ======>');
+           break;
+          case 'fastForward':
+            console.log('INFO POCContainer :: fastForward =>');
+            break;
+          default:
+            console.log('INFO POCContainer :: _enableTVEventHandler, default, evt.eventType? : ' + evt.eventType);
+        }//switch
+      }//if
+    });//enable
+  }//_enableTVEventHandler
 
-  // _enableTVEventHandler() {
-  //   this.tvEventHandler.enable(this, function(cmp, evt) {
-  //     //console.log('INFO :: _enableTVEventHandler, cmp? : ' + cmp.constructor.name);  //POCContainer
-  //     if (evt) {
-  //       console.log('INFO POCContainer :: _enableTVEventHandler, evt.eventType? : ' + evt.eventType);
-  //       switch (evt.eventType) {
-  //         case 'focus':
-  //           console.log('INFO POCContainer :: _enableTVEventHandler, evt.tag? : ' + evt.tag);
-  //         case 'blur':
-  //         case 'select':
-  //           break;
-  //         case 'left':
-  //         case 'right':
-  //         case 'up':
-  //         case 'down':
-  //           console.log('INFO POCContainer :: _enableTVEventHandler, ever???? : ' + evt.eventType);
-  //           break;
-  //         case 'playPause':
-  //           console.log('INFO POCContainer :: playPause ===>');
-  //           break;
-  //         case 'rewind':
-  //           console.log('INFO POCContainer :: rewind ======>');
-  //          break;
-  //         case 'fastForward':
-  //           console.log('INFO POCContainer :: fastForward =>');
-  //           break;
-  //         default:
-  //           console.log('INFO POCContainer :: _enableTVEventHandler, default, evt.eventType? : ' + evt.eventType);
-  //       }//switch
-  //     }//if
-  //   });//enable
-  // }//_enableTVEventHandler
-
-  // _disableTVEventHandler() {
-  //   if (this.tvEventHandler) {
-  //     this.tvEventHandler.disable()
-  //     delete this.tvEventHandler
-  //   }
-  // }//_disableTVEventHandler
-
+  _disableTVEventHandler() {
+    if (this.tvEventHandler) {
+      this.tvEventHandler.disable()
+      delete this.tvEventHandler
+    }
+  }//_disableTVEventHandler
+*/
   _setKeyListener = () => {
     console.log('INFO POCContainer :: _setKeyListener')
     KeyEvent.onKeyDownListener((keyEvent) => {
@@ -201,7 +201,7 @@ export default class POCContainerK extends Component {
   }//_setKeyListener
 
   _removeKeyListener = () => {
-    console.log('INFO POCContainer :: _removeKeyListener')
+    // console.log('INFO POCContainer :: _removeKeyListener')
     KeyEvent.removeKeyDownListener()
   }//_removeKeyListener
 
@@ -307,35 +307,30 @@ export default class POCContainerK extends Component {
 
     this.currFocusLocIndex = HOME_HERO_INDEX
 
-    //console.warn("on homeHeroPane focus");
-    console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
+    // console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onHomeHeroPaneFocus
 
   _onHomeShelvesPaneFocus = () => {
-    //console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === HOME_SHELVES_INDEX) return
-    
+    //console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     this._changeOpacity(GLOBAL_NAV_INDEX, UNSELECTED_OPACITY)
     this._changeOpacity(HOME_HERO_INDEX, UNSELECTED_OPACITY)
     this._changeOpacity(HOME_SHELVES_INDEX, SELECTED_OPACITY)
     this._changeLocation(GLOBAL_NAV_INDEX, this.upGlobalNavY)
     //this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY) //--TODO : check
     this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
-    this._showGuide()
+    //this._showGuide()
 
     this.currFocusLocIndex = HOME_SHELVES_INDEX
-    console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
-
+    // console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
     this.selectablePanes[HOME_SHELVES_INDEX].doDown()
   }//_onHomeShelvesPaneFocus
 
   _updateHomeHeroLocation = (shelfIndex, isBloomed) => {
     //-- covered by _onHomeShelvesPaneBlur
     if (shelfIndex < 0 || shelfIndex > 1) return
-
-    console.log("INFO POCContainer :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
-    console.log("INFO POCContainer :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
-
+    // console.log("INFO POCContainer :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
+    // console.log("INFO POCContainer :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
     switch (shelfIndex) {
       case 0:
         let targetY = (isBloomed)? this.upMidHomeHeroY : this.upHomeHeroY
@@ -349,9 +344,7 @@ export default class POCContainerK extends Component {
 
   _updateHomeShelvesLocation = (shelfIndex) => {
     if (shelfIndex < 0) return  //-- covered by _onHomeShelvesPaneBlur
-    
-    //const targetY = this.upHomeShelvesY - (shelfIndex) * FOCUSED_SHELF_H
-    //const targetY = this.upHomeShelvesY - (shelfIndex) * BLOOMED_TILE_H   //-- Jun21
+
     const targetY = this.upHomeShelvesY - (shelfIndex) * NEXT_SHELF_OFFSET   //-- Jun21
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
   }//_updateHomeShelvesLocation

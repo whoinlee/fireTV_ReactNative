@@ -5,7 +5,7 @@ import {
 	Easing,
 	Image,
   	Text,
-  	TouchableWithoutFeedback,
+  	// TouchableWithoutFeedback,
   	View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -21,7 +21,11 @@ const STD_DURATION        	= config.stdDuration;
 const SHORT_DURATION      	= config.shortDuration;
 const WAIT_TO_LARGE_BLOOM_DURATION	= config.waitToLargeBloomDuration/1000;	//-- in seconds
 const ASSET_URL				= '../../assets/';
-//
+
+
+/* ------------------------------------------ */
+/* ShelfTile specific contants                */
+/* ------------------------------------------ */
 const TILE_KIND_OBJ 		= {
   ORIGINAL: 0,							//-- base row
   EXPANDED: 1,							//-- focused row, unfocused tile
@@ -50,7 +54,8 @@ const selectedInfoIconPath = '../../assets/images/icons/infoIconSelected.png';
 const selectedPlayIconPath = '../../assets/images/icons/playIconSelected.png';
 const selectedAddToIconPath = '../../assets/images/icons/addToIconSelected.png';
 
-class ShelfTile extends Component {
+
+export default class ShelfTile extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -146,32 +151,7 @@ class ShelfTile extends Component {
 
 		this._updateKind(TILE_KIND_OBJ.ORIGINAL)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL])
-	}//_backToOrg
-
-	_updateKind = (pKind) => {
-		console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
-		let newSelectedMenuIndex
-		if (pKind === TILE_KIND_OBJ.LG_BLOOMED) {
-			newSelectedMenuIndex = 1	//playMenu
-		} else {
-			newSelectedMenuIndex = -1	//noMenu
-		}
-
-		//-- TODO: update state variables? or class variables?, need?
-		this.setState({tileKind: pKind, selectedMenuIndex: newSelectedMenuIndex})
-	}//_updateState
-
-	_changeScale = (targetValue, pDuration=STD_DURATION) => {
-	    console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
-	    Animated.timing(
-	      this.state.imageScale, 
-	      {
-	        toValue: targetValue,
-	        duration: pDuration,
-	        easing: Easing.out(Easing.quad),
-	      }
-	    ).start();
-	}//_changeScale
+	}//backToOrg
 
 	toFocused = (pDuration=STD_DURATION) => {
 		console.log("INFO ShelfTile :: toFocused, index: " + this.props.index)
@@ -212,11 +192,36 @@ class ShelfTile extends Component {
 		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
 	}//_toLargeBloomed
 
+	_updateKind = (pKind) => {
+		console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
+		let newSelectedMenuIndex
+		if (pKind === TILE_KIND_OBJ.LG_BLOOMED) {
+			newSelectedMenuIndex = 1	//playMenu
+		} else {
+			newSelectedMenuIndex = -1	//noMenu
+		}
+
+		//-- TODO: update state variables? or class variables?, need?
+		this.setState({tileKind: pKind, selectedMenuIndex: newSelectedMenuIndex})
+	}//_updateState
+
+	_changeScale = (targetValue, pDuration=STD_DURATION) => {
+	    console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
+	    Animated.timing(
+	      this.state.imageScale, 
+	      {
+	        toValue: targetValue,
+	        duration: pDuration,
+	        easing: Easing.out(Easing.quad),
+	      }
+	    ).start();
+	}//_changeScale
+
 	// **
 	_clearBloomTimer = () => {
 		console.log("INFO ShelfTile :: _clearBloomTimer")
 		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
-	}
+	}//_clearBloomTimer
 
 	_waitToLargeBloom = () => {
 		console.log("INFO ShelfTile :: _waitToLargeBloom")
@@ -224,7 +229,6 @@ class ShelfTile extends Component {
 		//this._killToLargeBloom()
 		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION*1000)
 	}//_waitToLargeBloom
-	// **
 
 	_showFocusedContent = () => { 
 		console.log("INFO ShelfTile :: _showFocusedContent")
@@ -243,10 +247,10 @@ class ShelfTile extends Component {
 
 	_changeXLocTo = (targetX) => { TL.to(this.containerDiv, 0, {left: targetX+'px'}) }
 
-	fadeInAt = (targetX, pDelay=0, pDuration=stdDuration) => {
-		TL.to(this.containerDiv, 0, {opacity: 0, left: targetX+'px', delay:pDelay})	//CHECK
-		TL.to(this.containerDiv, pDuration, {opacity: 1, delay:pDelay+.1})
-	}//fadeInAt
+	// fadeInAt = (targetX, pDelay=0, pDuration=stdDuration) => {
+	// 	TL.to(this.containerDiv, 0, {opacity: 0, left: targetX+'px', delay:pDelay})	//CHECK
+	// 	TL.to(this.containerDiv, pDuration, {opacity: 1, delay:pDelay+.1})
+	// }//fadeInAt
 
 	// onBloom = () => {
 
@@ -326,25 +330,14 @@ class ShelfTile extends Component {
 
 	render() {
 		// console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
-		// console.log("INFO ShelfTile :: render, this.props.leftX ? " + this.props.leftX)
-		// const pPosition = (this.props.index === 0)? 'relative' : 'absolute'
 		const { imageScale } = this.state
-
-		// const colorArr = ['darkcyan', 'cyan', 'magenta', 'yellow']
-		// const colorIndex = Math.floor(Math.random() * 4);
-		// const pColor = colorArr[colorIndex]
-
 		//-- bring up the selected tile to front
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 1000
 		return (
 			<View style={{	
 							left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
-							//position: pPosition,
-							// left: this.props.leftX - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
 							//-- for testing
 							//backgroundColor: pColor, 
-							//width: 320/RATIO, 
-							//height: (180)/RATIO, 
 							// borderColor: 'black', borderWidth: .5		/* for testing */
 						}}	>
 				<Animated.Image 	
@@ -359,7 +352,6 @@ class ShelfTile extends Component {
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
 							zIndex: pZindex,
-							// overflow: 'visible',
 						}} 
 				/>
 			</View>
@@ -367,43 +359,27 @@ class ShelfTile extends Component {
 	}//render
 }
 
-/*
-<Animated.Image
-              source={{uri: 'https://stage.tvecms.bravo.nbcuni.com/sites/bravo/files/2018/01/rhoa_s10_as_1965x1108_170382.jpg'}}
-              style={{
-                opacity: imageOpacity,
-                transform: [{ scale : imageScale }],
-                resizeMode: Image.resizeMode.cover,
-                width: Dimensions.get('window').width,
-                height: 400,
-                overflow: 'visible',
-              }}
-            />
-*/
 
 ShelfTile.propTypes = {
 	index:  PropTypes.number,
-	homeShelfIndex: PropTypes.number,
+	homeShelfIndex: PropTypes.number,	//TODO: check, need?
 	showTitle: PropTypes.string,
 	episodeTitle: PropTypes.string,
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!	*/
 
-	// leftX: PropTypes.number,
 	// callBackOnLargeBloomStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 
- //  	onFocus : PropTypes.func,
- //  	onBlur : PropTypes.func,
-};
+ 	// onFocus : PropTypes.func,
+ 	// onBlur : PropTypes.func,
+}
 
 ShelfTile.defaultProps = {
 	// callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
 	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
 
 	// onFocus: () => {console.log("INFO ShelfTile :: please pass a function for onFocus")},
- //  	onBlur: () => {console.log("INFO ShelfTile :: please pass a function for onBlur")},
-};
-
-export default ShelfTile
+ 	// onBlur: () => {console.log("INFO ShelfTile :: please pass a function for onBlur")},
+}

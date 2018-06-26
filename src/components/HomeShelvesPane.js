@@ -52,12 +52,8 @@ const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //--
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
-
-
-const SHELF_H           = BLOOMED_TILE_H
-// const TILE_TOP          = Math.floor((BLOOMED_TILE_H - BASE_TILE_H)/2)
-// const BASE_TITLE_TOP    = Math.floor(TILE_TOP - (TITLE_TO_TILE_OFFSET + BASE_TITLE_H))
-const NEXT_SHELF_OFFSET = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)         //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
+const SHELF_H               = BLOOMED_TILE_H
+const NEXT_SHELF_OFFSET     = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)         //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
 /* ------------------------------------------ */
@@ -191,9 +187,7 @@ const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      //
-    }
+    this.state = {}
     this.shelves = []
     this.totalShelves = TOTAL_SHELVES
 
@@ -201,11 +195,6 @@ export default class HomeShelvesPane extends Component {
     this.prevShelf = null
     this.currShelf = null
     this.nextShelf = null
-
-    //-- TODO: check!!!
-    // this.isPrevMoved = false
-    // this.isNextMoved = false
-    // this.totalMenu = 3
   }
 
   componentDidMount() {
@@ -324,14 +313,11 @@ export default class HomeShelvesPane extends Component {
   _find_dimesions = (layout) => {
     //-- used for testing
     const {height} = layout;
-    // console.warn(height);
     console.log('INFO HomeShelvesPane :: _find_dimensions, height is ' + height);
   }//_find_dimensions
 
   _renderEachHomeShelf = (shelfObj, i) => {
     //console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
-    // console.log("INFO HomeShelvesPane :: _eachHomeShelf, this.selectedShelfIndex ? " + this.selectedShelfIndex)
-    // console.log("INFO HomeShelvesPane :: _eachHomeShelf, (this.selectedShelfIndex === i) ? " + (this.selectedShelfIndex === i))
     return (
       <HomeShelf  
             key={(i + 1).toString()}
@@ -340,8 +326,6 @@ export default class HomeShelvesPane extends Component {
             index={i}
             title={shelfObj.title}
             shows={shelfObj.shows}
-            // topY={INIT_SHELF_Y + i*FOCUSED_SHELF_H}  //-- updated on Jun21, after updating INIT_Y etc
-            // topY={i*(FOCUSED_SHELF_H)}
             topY={i*NEXT_SHELF_OFFSET}
             
             //callBackOnLargeBloomStart={this._onLargeBloomStart}
@@ -353,25 +337,22 @@ export default class HomeShelvesPane extends Component {
   render() {
     console.log("INFO HomeShelvesPane :: render ------------------------------------------------------------>")
     return (
-        <View
-            //onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }} 
-        >
-            {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
-        </View>
+      <View>
+          {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}
+      </View>
     )//return
   }//render
 }
+
 
 HomeShelvesPane.propTypes = {
   onBlur : PropTypes.func.isRequired,
   updateHomeHeroLocation : PropTypes.func.isRequired,
   updateHomeShelvesLocation : PropTypes.func.isRequired,
-  // onFirstShelfBloomed : PropTypes.func,
 }
 
 HomeShelvesPane.defaultProps = {
   onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
   updateHomeHeroLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeHeroLocation")}, 
   updateHomeShelvesLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeShelvesLocation")}, 
-  // onFirstShelfBloomed : () => {console.log("INFO HomeShelvesPane :: please pass a function for onFirstShelfBloomed")},
 }

@@ -8,14 +8,13 @@ import {
 
 import config from '../../config';
 import keyCodes from '../../keyCodes';
-// import styles from '../../styles/styles';
 
 
 const RATIO                 = config.density;
 const STD_DURATION        	= config.stdDuration;
 const SHORT_DURATION      	= config.shortDuration;
 
-class ImageButton extends Component {
+export default class ImageButton extends Component {
 	constructor(props) {
 		super(props)
 		// this.state = {
@@ -59,5 +58,3 @@ ImageButton.propTypes = {
 ImageButton.defaultProps = {
     onSelect: () => {console.log("INFO ImageButton :: please pass a function for onSelect")}
 };
-
-export default ImageButton
