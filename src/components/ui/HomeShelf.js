@@ -5,8 +5,8 @@ import {
   Easing,
   StyleSheet,
   Text,
-  TouchableNativeFeedback,
-  TouchableWithoutFeedback,
+  // TouchableNativeFeedback,
+  // TouchableWithoutFeedback,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -100,34 +100,32 @@ export default class HomeShelf extends Component {
 
 		//-- prevTileIndex: tileIndexQueue[0], currentTileIndex: tileIndexQueue[1], nextTileIndex: tileIndexQueue[2], and so on
 		this.tileIndexQueue = [-1]				//-- tile index array ordered by the location
-		this.selectedTileIndex = -1				//-- TODO: CHECK, need?
+		
+		this.selectedTileIndex = -1				
 		this.prevTile = null
 		this.currTile = null
 		this.nextTile = null
+
+		this.bloomToLargeTimerID = null			//-- TODO: here??
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this._buildTileIndexQueue()
 		this._buildTileXPositionArr()
-	}//componentWillMount
+	}//componentDidMount
 
 	doLeft = () => {
 		if (this.totalTiles <= 1) return
-		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> " +  this.tileIndexQueue)
+		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> ", this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
 			//-- TODO
-			// console.log("INFO HomeShelf :: doLeft, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
-			// this.currTile.doLeft()
 			return
 		}
 
-		// console.log("this.tileIndexQueue[2] ?? " + this.tileIndexQueue[2])
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		const prevX = INIT_X - leftOffset
-
-		let nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		let leftMostX
 		let currTileIndex
 		let prevTileIndex
@@ -144,32 +142,35 @@ export default class HomeShelf extends Component {
 			this.currTile = this.tiles[currTileIndex]
 			this.prevTile = null
 		} else {
-			console.log("this.prevTile ?? " + this.prevTile)
 			//-- prev tile exists, so rightMostTile goes to the prevPrevTile location and becomes the prevTile
 			leftMostX = prevX - leftOffset
 			currTileIndex = this.tileIndexQueue[0]
-			prevTileIndex = rightMostTileIndex
+			prevTileIndex = (this.tileIndexQueue.length > 2)? rightMostTileIndex : -1
 			this.currTile = this.tiles[currTileIndex]
 			this.prevTile = this.tiles[prevTileIndex]
 		}
-		//if (this.totalTiles > 2)
+		
+		if (this.tileIndexQueue.length > 2)
 		this._changeTileLocation(rightMostTileIndex, leftMostX, 0)
 
 		//-- update currTile : prevTile becomes the currTile
 		if (this.currTile) {
+			console.log("INFO HomeShelf :: doLeft, this.currTile ?????? " + this.currTile)
 			this._changeTileLocation(currTileIndex, INIT_X)
 			this.currTile.toFocused()
 		}
 
 		//-- update prevTile : prevPrev becomes the prevTile, or no prevTile
 		if (this.prevTile) {
+			console.log("INFO HomeShelf :: doLeft, this.prevTile ?????? " + this.prevTile)
 			this._changeTileLocation(prevTileIndex, prevX)
 			this.prevTile.toExpanded()
 		}
 
 		//-- update nextTile : curr becomes the nextTile
+		let nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		if (this.nextTile) {
-			//nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
+			console.log("INFO HomeShelf :: doLeft, this.nextTile ?????? " + this.nextTile)
 			this._changeTileLocation(nextTileIndex, nextX)
 			this.nextTile.toExpanded()
 		}
@@ -203,12 +204,12 @@ export default class HomeShelf extends Component {
 			this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
 		}
 
-		console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue after doLeft ? ===> " + this.tileIndexQueue)
+		console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue after doLeft ? ===> ", this.tileIndexQueue)
 	}//doLeft
 
 	doRight = () => {
 		if (this.totalTiles <= 1) return
-		console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> " +  this.tileIndexQueue)
+		console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> ", this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
@@ -291,7 +292,6 @@ export default class HomeShelf extends Component {
 
 	onFocus = () => {
 		console.log("INFO HomeShelf :: onFocus, =================> focusedShelfIndex is ? " + this.props.index)
-		console.log("INFO HomeShelf :: onFocus, this.tileIndexQueue is ? " + this.tileIndexQueue)
 
 		this._clearBloomTimer()
 		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})
@@ -335,7 +335,7 @@ export default class HomeShelf extends Component {
 	}//onFocus
 
 	onBlur = (pIsDimmed = true) => {
-		console.log("INFO HomeShelf :: onBlur, shelf index is ? " + this.props.index)
+		console.log("INFO HomeShelf :: onBlur, shelf index is ? " + this.props.index + ", isDimmed ? " + pIsDimmed)
 
 		this.setState({isDimmed: pIsDimmed, shelfKind: SHELF_KIND_OBJ.BASE})
 
@@ -343,24 +343,23 @@ export default class HomeShelf extends Component {
 		this._changeTitleLocation(BASE_TITLE_TOP)
 
 		//-- update prev, curr, and next tiles
+		//-- prev
 		const prevTileIndex = this.tileIndexQueue[0]
-		console.log("INFO HomeShelf :: onBlur, prevTileIndex is ? " + prevTileIndex)
 		if (prevTileIndex >= 0 && this.prevTile) {
 			this.prevTile.backToOrg()
 			const prevX = INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]
 			this._changeTileLocation(prevTileIndex, prevX)
 		}
-		//
+		//-- curr
 		if (this.currTile) this.currTile.backToOrg()
-		//
+		//-- next
 		let nextX = INIT_X + BASE_TILE_W
 		let nextTileIndex = this.tileIndexQueue[2]
-		console.log("INFO HomeShelf :: onBlur, nextTileIndex is ? " + nextTileIndex)
 		if (nextTileIndex >= 0 && this.nextTile) {
 			this.nextTile.backToOrg()
 			this._changeTileLocation(nextTileIndex, nextX)
 		}
-
+		//-- the rest of tiles
 		const lastTileIndex = this.tileIndexQueue.length - 1
 		for (var j = 3; j <= lastTileIndex; j++) {
 	    	nextTileIndex = this.tileIndexQueue[j]
@@ -443,7 +442,8 @@ export default class HomeShelf extends Component {
 	}//_buildTileXPositionArr
 
 	_changeTitleLocation = (targetValue, pDuration=STD_DURATION) => {
-	    console.log("INFO HomeShelf :: _changeTitleLocation, to " + targetValue)
+	    // console.log("INFO HomeShelf :: _changeTitleLocation, to " + targetValue)
+	    Animated.timing(this.state.titleYPosition).stop()
 	    Animated.timing(
 	      this.state.titleYPosition, 
 	      {
@@ -451,12 +451,13 @@ export default class HomeShelf extends Component {
 	        duration: pDuration,
 	        easing: Easing.out(Easing.quad),
 	      }
-	    ).start();
+	    ).start()
 	}//_changeTitleLocation
 
 	_changeTileLocation = (tileIndex, targetValue, pDuration=STD_DURATION, pDelay=0) => {
+		if (tileIndex === undefined) return
 	    console.log("INFO HomeShelf :: _changeTile " + tileIndex + " xLocation, to " + targetValue)
-	    if (tileIndex === undefined) return
+		Animated.timing(this.state.tileXPositionArr[tileIndex]).stop()
 	    Animated.timing(
 	      this.state.tileXPositionArr[tileIndex], 
 	      {
@@ -465,7 +466,7 @@ export default class HomeShelf extends Component {
 	        duration: pDuration,
 	        easing: Easing.out(Easing.quad),
 	      }
-	    ).start();
+	    ).start()
 	}//_changeTitleLocation
 
 	// _fadeInTileAt = (tileIndex, targetValue, pDuration=STD_DURATION) => {
@@ -592,15 +593,13 @@ export default class HomeShelf extends Component {
 				style={{ 
 					position: (this.props.index === 0)? 'relative' : 'absolute',
 					top: this.props.topY,
+					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
 					width: '100%',
+					height: BLOOMED_TILE_H,
 					//
 					// height: '100%',
-					height: BLOOMED_TILE_H,
-					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
-					//
 					// borderWidth: .5,
-    	// 			borderColor: 'blue',
-    				// overflow: 'visible',
+    	 			// borderColor: 'blue',
     		}} >
 				<Animated.View 
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),

@@ -187,7 +187,8 @@ const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
-    this.state = {}
+    // this.state = {
+    // }
     this.shelves = []
     this.totalShelves = TOTAL_SHELVES
 
@@ -207,7 +208,7 @@ export default class HomeShelvesPane extends Component {
   doUp = () => {
     if (this.selectedShelfIndex < 0) return //ERROR
     this.selectedShelfIndex--
-    console.log("INFO HomeShelvesPane :: doUp, this.selectedShelfIndex? " + this.selectedShelfIndex)
+    // console.log("INFO HomeShelvesPane :: doUp, this.selectedShelfIndex? " + this.selectedShelfIndex)
     if (this.selectedShelfIndex < 0) {
       this.onBlur()
     } else {
@@ -216,33 +217,29 @@ export default class HomeShelvesPane extends Component {
   }//doUp
 
   doDown = () => {
+    if (this.selectedShelfIndex >= MAX_SHELF_INDEX) return
     this.selectedShelfIndex++
-    if (this.selectedShelfIndex > MAX_SHELF_INDEX) {
-      this.selectedShelfIndex = MAX_SHELF_INDEX
-      return
-    }
-    console.log("INFO HomeShelvesPane :: doDown, 2 this.selectedShelfIndex? " + this.selectedShelfIndex)
+    // console.log("INFO HomeShelvesPane :: doDown, 2 this.selectedShelfIndex? " + this.selectedShelfIndex)
     this._onShelfFocus(this.selectedShelfIndex)
   }//doDown
 
   doLeft = () => {
-    console.log('INFO HomeShelvesPane :: doLeft');
+    // console.log('INFO HomeShelvesPane :: doLeft');
     this.shelves[this.selectedShelfIndex].doLeft()
   }//doLeft
 
   doRight = () => {
-    console.log('INFO HomeShelvesPane :: doRight');
+    // console.log('INFO HomeShelvesPane :: doRight');
     this.shelves[this.selectedShelfIndex].doRight()
   }//doRight
 
   doSelect = () => {
-    console.log('INFO HomeShelvesPane :: doSelect');
+    // console.log('INFO HomeShelvesPane :: doSelect');
     this.shelves[this.selectedShelfIndex].doSelect()
   }//doSelect
 
   onFocus = () => {
-    console.log("INFO HomeShelvesPane :: onFocus")
-
+    // console.log("INFO HomeShelvesPane :: onFocus")
     const { onFocus } = this.props;
     if (onFocus) {
       onFocus()
@@ -250,21 +247,23 @@ export default class HomeShelvesPane extends Component {
   }//onFocus
 
   onBlur = () => {
-    console.log("INFO HomeShelvesPane :: onBlur")
-
-    if (this.currShelf) this.currShelf.onBlur(false)
+    // console.log("INFO HomeShelvesPane :: onBlur")
+    if (this.currShelf) this.currShelf.onBlur(false)  //-- isDimmed===flase
     const { onBlur } = this.props;
     if (onBlur) {
       onBlur()
     }
   }//onBlur
 
+  // toggleOutline = () => {
+  //   this.setState({ isOutlineVisible: !this.state.isOutlineVisible })
+  // }//toggleOutline
+
   _onShelfFocus = (pIndex) => {
     if (pIndex < 0) return //ERROR
-
     //console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
-    this.selectedShelfIndex = pIndex    //-- to confirm (duplicate, as it's already done in doUp/doDown)
 
+    this.selectedShelfIndex = pIndex    //-- to confirm (duplicate, as it's already done in doUp/doDown)
     this.currShelf = this.shelves[pIndex]
     this.prevShelf = (pIndex > 0)? this.shelves[pIndex - 1] : null
     this.nextShelf = (pIndex >= MAX_SHELF_INDEX)? null : this.shelves[pIndex + 1]

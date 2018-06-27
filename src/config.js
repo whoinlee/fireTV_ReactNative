@@ -12,7 +12,7 @@ export default {
   waitToLargeBloomDuration: 4000,
 
   //-- opacity related
-  unselectedOpacity: .5,        //-- .6 -> .5, for testing
+  unselectedOpacity: .6,        //-- .6 -> .5, for testing
   selectedOpacity: 1,
 
   //-- initial pane yLocation
@@ -28,6 +28,7 @@ export default {
   //-- UI element left alignment location
   initX: 200,
 
+
   //-- homeShelvesPane location & dimension related
   homeShelves: {
     initShelfY: 92,             //-- distance from the top of homeShelvesPane container to the top of 1st shelf container, 62 ---> 92 (by 30)
@@ -41,10 +42,11 @@ export default {
     //-- tile dimensions
     baseTileW: 320,             //-- unselected base tile width, 320x180*
     baseTileH: 180,             //-- unselected base tile height
-    focusedTileW: 590,          //-- focused tile width, on a selected shelf, 590x332*
+    focusedTileW: 590,          //-- focused tile width, on a selected shelf, 590x332*, 640x360, 800x450
     focusedTileH: 332,          //-- focused tile height, on a selected shelf
     bloomedTileW: 1056,         //-- large bloomed tile width, on a selected shelf, 1056x594*
     bloomedTileH: 594,          //-- large bloomed tile height, on a selected shelf
+    //
     focusedBaseTileW: 375,      //-- unfocused tile width, on a selected shelf, 375x210
     focusedBaseTileH: 210,      //-- unfocused tile height, on a selected shelf
     bloomedBaseTileW: 782,      //-- unbloomed tile width, on a selected shelf, 782x440

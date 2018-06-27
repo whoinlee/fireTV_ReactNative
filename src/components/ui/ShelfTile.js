@@ -4,6 +4,7 @@ import {
 	Animated,
 	Easing,
 	Image,
+	StyleSheet,
   	Text,
   	// TouchableWithoutFeedback,
   	View
@@ -59,42 +60,22 @@ export default class ShelfTile extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			selectedMenuIndex: 1,				//TODO: check, need to be here?
 			tileKind: TILE_KIND_OBJ.ORIGINAL,
-			imageScale: new Animated.Value(1),  
+			imageScale: new Animated.Value(1)
 		}
 
-		this.menus= []							
-		this.selectedMenuIndex = 1				//-- reset, CHECK
+		this.menus= []
+		this.totalMenus = 3
+
+		this.selectedMenuIndex = -1					//-- reset, no menu selected
 		this.prevMenu = null
 		this.currMenu = null
 		this.nextMenu = null
 
-		this.bloomToLargeTimerID = null
-		// this.isFocused = false
-		// this.isBloomed = false
-		//this.tileKind = TILE_KIND_OBJ.ORIGINAL 	//TODO: check, need?
-		
-		// this.renderContent = this.renderContent.bind(this)
-		// this.updateState = this.updateState.bind(this)
-		// this.backToOrg = this.backToOrg.bind(this)
-		// this.toFocused = this.toFocused.bind(this)
-		// this.toExpanded = this.toExpanded.bind(this)
-		// this.toMedBloomed = this.toMedBloomed.bind(this)
-		// this.toLargeBloomed = this.toLargeBloomed.bind(this)
-		// this.showFocusedContent = this.showFocusedContent.bind(this)
-		// this.hideFocusedContent = this.hideFocusedContent.bind(this)
-		// this.showBloomedContent = this.showBloomedContent.bind(this)
-		// this.waitToLargeBloom = this.waitToLargeBloom.bind(this)
-		// this.killToLargeBloom = this.killToLargeBloom.bind(this)
-		// this.changeXLocTo = this.changeXLocTo.bind(this)
-		// this.fadeInAt = this.fadeInAt.bind(this)
-		// this.doLeft = this.doLeft.bind(this)
-		// this.doRight = this.doRight.bind(this)
-		// this.doSelect = this.doSelect.bind(this)
+		this.bloomToLargeTimerID = null				//-- TODO: here??
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		// this.style = {
 		// 	left: this.props.leftX + 'px'
 		// }
@@ -162,15 +143,11 @@ export default class ShelfTile extends Component {
 		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--for testing
 	}//toFocused
 
-	// toExpanded = (noScale=false, pDuration=STD_DURATION) => {
 	toExpanded = (pDuration=STD_DURATION) => {
 		console.log("INFO ShelfTile :: toExpanded, index: " + this.props.index)
 		
 		this._updateKind(TILE_KIND_OBJ.EXPANDED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
-		// if (!noScale) {
-			// this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
-		// } 
 	}//toExpanded
 
 	_toMedBloomed = (targetX, noScale=false, pDuration=STD_DURATION) => {
@@ -193,20 +170,15 @@ export default class ShelfTile extends Component {
 	}//_toLargeBloomed
 
 	_updateKind = (pKind) => {
-		console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
-		let newSelectedMenuIndex
-		if (pKind === TILE_KIND_OBJ.LG_BLOOMED) {
-			newSelectedMenuIndex = 1	//playMenu
-		} else {
-			newSelectedMenuIndex = -1	//noMenu
-		}
-
-		//-- TODO: update state variables? or class variables?, need?
-		this.setState({tileKind: pKind, selectedMenuIndex: newSelectedMenuIndex})
+		if (pKind === this.state.tileKind) return
+		// console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
+		this.selectedMenuIndex = (pKind === TILE_KIND_OBJ.LG_BLOOMED)? 1 : -1
+		this.setState({tileKind: pKind})
 	}//_updateState
 
 	_changeScale = (targetValue, pDuration=STD_DURATION) => {
-	    console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
+	    // console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
+	    Animated.timing(this.state.imageScale).stop()
 	    Animated.timing(
 	      this.state.imageScale, 
 	      {
@@ -214,7 +186,7 @@ export default class ShelfTile extends Component {
 	        duration: pDuration,
 	        easing: Easing.out(Easing.quad),
 	      }
-	    ).start();
+	    ).start()
 	}//_changeScale
 
 	// **
@@ -226,7 +198,6 @@ export default class ShelfTile extends Component {
 	_waitToLargeBloom = () => {
 		console.log("INFO ShelfTile :: _waitToLargeBloom")
 		this._clearBloomTimer()
-		//this._killToLargeBloom()
 		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION*1000)
 	}//_waitToLargeBloom
 
@@ -269,15 +240,31 @@ export default class ShelfTile extends Component {
 	}//_onAddToButtonClicked
 
 	_renderContent = () => {
-		console.log("INFO ShelfTile :: _renderContent, this.state.tileKind is " + this.state.tileKind)
-		// switch (this.state.tileKind) {
-		// 	case TILE_KIND_OBJ.EXPANDED:
-		// 		return (
-		// 	    	<div className="expandedTileContent">
-		// 			{this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
-		// 			</div>
-		// 		)
-		// 	case TILE_KIND_OBJ.FOCUSED:
+		// console.log("INFO ShelfTile :: _renderContent, this.state.tileKind is " + this.state.tileKind)
+		switch (this.state.tileKind) {
+			case TILE_KIND_OBJ.EXPANDED:
+				// console.log("INFO ShelfTile :: _renderContent, TILE_KIND_OBJ.EXPANDED")
+				// return (
+				// 	<View style={ {
+				// 				// position: 'absolute',
+				// 				// left: 0,
+				// 				// top: 200,
+				// 				borderWidth: .5,
+    // 	 						borderColor: 'white',
+    // 	 						zIndex: 10,
+				// 			} } >
+				// 		<Text style={ {
+				// 				color: '#fff',
+				// 			} } 
+				// 		>
+				// 			{this.props.episodeID}
+				// 		</Text>
+				// 	</View>
+				// )
+		//  //   	<div className="expandedTileContent">
+		// 	// {this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
+		// 	// </div>
+			case TILE_KIND_OBJ.FOCUSED:
 		// 		this.selectedMenuIndex = -1;
 		// 		this.menus = []
 		// 		return (
@@ -287,7 +274,8 @@ export default class ShelfTile extends Component {
 		//             	<div className="focusedEpisodeID">{this.props.episodeID}</div>
 		//           	</div>
 		//       	)
-		// 	case TILE_KIND_OBJ.LG_BLOOMED:
+			break
+			case TILE_KIND_OBJ.LG_BLOOMED:
 		// 		console.log("INFO ShelfTile :: renderContent, TILE_KIND_OBJ.LG_BLOOMED, this.state.selectedMenuIndex?? " + this.state.selectedMenuIndex)
 		// 		this.menus = []
 		// 		return (
@@ -317,13 +305,13 @@ export default class ShelfTile extends Component {
 		//             	<div className="bloomedEpisodeID">{this.props.episodeID}&nbsp;<span className="bloomedEpisodeDesc">{this.props.episodeDesc}</span></div>
 		//           	</div>
 		//       	)
-		//     case TILE_KIND_OBJ.MED_BLOOMED:
+			break
+		    case TILE_KIND_OBJ.MED_BLOOMED:
 		//     	console.log("ever????????????")
 		//     	//return null
-		//     	break;
-		//     default:
-		// 		return null
-		// }//switch
+		    	break
+		    default:
+		}//switch
 	}//_renderContent
 
 	render() {
@@ -334,8 +322,6 @@ export default class ShelfTile extends Component {
 		return (
 			<View style={{	
 							left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
-							//-- for testing
-							//backgroundColor: pColor, 
 							// borderColor: 'black', borderWidth: .5		/* for testing */
 						}}	>
 				<Animated.Image 	
@@ -352,11 +338,47 @@ export default class ShelfTile extends Component {
 							zIndex: pZindex,
 						}} 
 				/>
+				{this._renderContent()}
 			</View>
 		)
 	}//render
 }
 
+
+const shelfTileStyles = StyleSheet.create({
+	// //-- "title" ----------------------//
+	// homeShelfTitleContainer: {
+	// 	position: 'absolute',
+	// 	left: INIT_X,
+	// 	top: BASE_TITLE_TOP,
+	// },
+
+	// shelfTitleBase: {
+	// 	fontSize: 28/RATIO,
+	//     fontFamily: 'Helvetica-Light',
+	//     fontWeight: '100',	/*HelveticaLight*/
+	//     textAlign: 'left',
+	//     color: '#fff',
+	// },
+
+	// shelfTitleFocused: {
+	// 	fontSize: 40/RATIO,
+	//     fontFamily: 'Helvetica-Light',
+	//     fontWeight: '100',	/*HelveticaLight*/
+	//     textAlign: 'left',
+	//     color: '#fff',
+	// },
+	// //---------------------------------//
+
+
+	// //-- "tile" ----------------------//
+	// homeShelfTilesContainer: {
+	// 	position: 'absolute',
+	// 	top: TILE_TOP,
+ //    	flex: 1,
+	// },
+	// //---------------------------------//
+});
 
 ShelfTile.propTypes = {
 	index:  PropTypes.number,
@@ -369,9 +391,6 @@ ShelfTile.propTypes = {
 
 	// callBackOnLargeBloomStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
-
- 	// onFocus : PropTypes.func,
- 	// onBlur : PropTypes.func,
 }
 
 ShelfTile.defaultProps = {

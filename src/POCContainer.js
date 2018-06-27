@@ -168,9 +168,9 @@ export default class POCContainerK extends Component {
   }//_disableTVEventHandler
 */
   _setKeyListener = () => {
-    console.log('INFO POCContainer :: _setKeyListener')
+    //console.log('INFO POCContainer :: _setKeyListener')
     KeyEvent.onKeyDownListener((keyEvent) => {
-      // console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
+      //console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
       switch (keyEvent.keyCode) {
         case keyCodes.up:
           this.doUp()
@@ -190,6 +190,9 @@ export default class POCContainerK extends Component {
           break
         case keyCodes.toggleGuide:
           this._toggleGuide()
+          break
+        case keyCodes.toggleOutline:
+          // this.selectablePanes[HOME_SHELVES_INDEX].toggleOutline()
           break
         case keyCodes.reload:
           //-- for reloading the app: r, r
@@ -238,49 +241,45 @@ export default class POCContainerK extends Component {
 
   doLeft = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
-    // console.log('INFO POCContainer :: doLeft');
     this.selectablePanes[HOME_SHELVES_INDEX].doLeft()
   }//doLeft
 
   doRight = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return
-    // console.log('INFO POCContainer :: doRight');
     this.selectablePanes[HOME_SHELVES_INDEX].doRight()
   }//doRight
 
   doSelect = () => {
     if (this.currFocusLocIndex !== HOME_SHELVES_INDEX) return //-- do nothing
-    // console.log('INFO POCContainer :: doSelect');
     this.selectablePanes[HOME_SHELVES_INDEX].doSelect()
   }//doSelect
 
-  _changeOpacity = (targetIndex, targetValue, pDuration=STD_DURATION) => {
+  _changeOpacity = (targetIndex, targetValue, pDuration=0) => {
     //console.log("INFO POCContainer :: _changeOpacity, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " changeOpacity to " + targetValue)
-    Animated.timing(
-      this.state["animOpacity" + targetIndex], 
+    Animated.timing(this.state["animOpacity" + targetIndex]).stop()
+    Animated.timing(this.state["animOpacity" + targetIndex], 
       {
         toValue: targetValue,
-        // duration: pDuration,
+        duration: pDuration,
       }
-    ).start();
+    ).start()
   }//_changeOpacity
 
   _changeLocation = (targetIndex, targetValue, pDuration=STD_DURATION) => {
     //console.log("INFO POCContainer :: _changeLocation, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " change yLocation to " + targetValue)
-    Animated.timing(
-      this.state["animLocation" + targetIndex], 
+    Animated.timing(this.state["animLocation" + targetIndex]).stop()
+    Animated.timing(this.state["animLocation" + targetIndex], 
       {
         toValue: targetValue,
         duration: pDuration,
         easing: Easing.out(Easing.quad),
       }
-    ).start();
+    ).start()
   }//_changeLocation
 
   _onGlobalNavPaneFocus = () => {
-    //console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return
-    
+    //console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     this._changeOpacity(GLOBAL_NAV_INDEX, SELECTED_OPACITY)
     this._changeOpacity(HOME_HERO_INDEX, SELECTED_OPACITY)
     this._changeOpacity(HOME_SHELVES_INDEX, SELECTED_OPACITY)
@@ -288,16 +287,13 @@ export default class POCContainerK extends Component {
     this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
     this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
     this._hideGuide()
-
     this.currFocusLocIndex = GLOBAL_NAV_INDEX
-
-    console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> currFocusLocIndex ? " + this.currFocusLocIndex)
+    // console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onGlobalNavPaneFocus
 
   _onHomeHeroPaneFocus = () => {
-    //console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     if (this.currFocusLocIndex === HOME_HERO_INDEX) return
-    
+    //console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
     this._changeOpacity(GLOBAL_NAV_INDEX, UNSELECTED_OPACITY)
     this._changeOpacity(HOME_HERO_INDEX, SELECTED_OPACITY)
     this._changeOpacity(HOME_SHELVES_INDEX, UNSELECTED_OPACITY)
@@ -305,9 +301,7 @@ export default class POCContainerK extends Component {
     this._changeLocation(HOME_HERO_INDEX, this.initHomeHeroY)
     this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
     this._hideGuide()
-
     this.currFocusLocIndex = HOME_HERO_INDEX
-
     // console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onHomeHeroPaneFocus
 
@@ -321,7 +315,6 @@ export default class POCContainerK extends Component {
     //this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY) //--TODO : check
     this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
     //this._showGuide()
-
     this.currFocusLocIndex = HOME_SHELVES_INDEX
     // console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
     this.selectablePanes[HOME_SHELVES_INDEX].doDown()
@@ -331,7 +324,6 @@ export default class POCContainerK extends Component {
     //-- covered by _onHomeShelvesPaneBlur
     if (shelfIndex < 0 || shelfIndex > 1) return
     // console.log("INFO POCContainer :: _updateHomeHeroLocation, shelfIndex is ?? " + shelfIndex)
-    // console.log("INFO POCContainer :: _updateHomeHeroLocation, isBloomed is ?? " + isBloomed)
     switch (shelfIndex) {
       case 0:
         let targetY = (isBloomed)? this.upMidHomeHeroY : this.upHomeHeroY
@@ -345,12 +337,13 @@ export default class POCContainerK extends Component {
 
   _updateHomeShelvesLocation = (shelfIndex) => {
     if (shelfIndex < 0) return  //-- covered by _onHomeShelvesPaneBlur
-
     const targetY = this.upHomeShelvesY - (shelfIndex) * NEXT_SHELF_OFFSET   //-- Jun21
     this._changeLocation(HOME_SHELVES_INDEX, targetY)
   }//_updateHomeShelvesLocation
 
   _toggleGuide = () => { this.setState({isGuideVisible: !this.state.isGuideVisible}) }
+
+  // _toggleOutline = () => { this.setState({isOutlineVisible: !this.state.isOutlineVisible}) }
 
   _showGuide = () => { if (!this.state.isGuideVisible) this.setState({isGuideVisible: true}) }
 
@@ -368,7 +361,7 @@ export default class POCContainerK extends Component {
 
   render() {
     //console.log("INFO POCContainer :: render --------------------------------------------------------------->")
-    const { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
+    const { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2, isOutlineVisible } = this.state
     return (
         <View style={styles.pocContainer}>
             <Animated.View
