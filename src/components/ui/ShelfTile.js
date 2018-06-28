@@ -239,28 +239,35 @@ export default class ShelfTile extends Component {
 		console.log("INFO ShelfTile :: _onAddToButtonClicked")
 	}//_onAddToButtonClicked
 
+	_find_dimesions = (layout) => {
+	    const {width, height} = layout;
+	    // console.warn(height);
+	    console.log('INFO HomeShelf :: _find_dimensions (testing), width is ' + width);
+	    // console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
+	 }//_find_dimesions
+
 	_renderContent = () => {
 		// console.log("INFO ShelfTile :: _renderContent, this.state.tileKind is " + this.state.tileKind)
 		switch (this.state.tileKind) {
 			case TILE_KIND_OBJ.EXPANDED:
 				// console.log("INFO ShelfTile :: _renderContent, TILE_KIND_OBJ.EXPANDED")
-				// return (
-				// 	<View style={ {
-				// 				// position: 'absolute',
-				// 				// left: 0,
-				// 				// top: 200,
-				// 				borderWidth: .5,
-    // 	 						borderColor: 'white',
-    // 	 						zIndex: 10,
-				// 			} } >
-				// 		<Text style={ {
-				// 				color: '#fff',
-				// 			} } 
-				// 		>
-				// 			{this.props.episodeID}
-				// 		</Text>
-				// 	</View>
-				// )
+				const leftX = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2	//-- bc, image is transformed
+				//const topMargin = 4/RATIO
+				const topMargin = 0
+				const topY = (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin	//--(imageSizeYIncrease)/2
+				return (
+					<View style={ {
+								left: leftX,
+								top: topY,
+								// borderWidth: .5, borderColor: 'white',
+							} } 
+							onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
+					>
+						<Text style={ shelfTileStyles.episodeID }>
+							{this.props.episodeID}
+						</Text>
+					</View>
+				)
 		//  //   	<div className="expandedTileContent">
 		// 	// {this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
 		// 	// </div>
@@ -320,10 +327,10 @@ export default class ShelfTile extends Component {
 		//-- bring up the selected tile to front
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 1000
 		return (
-			<View style={{	
-							left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
-							// borderColor: 'black', borderWidth: .5		/* for testing */
-						}}	>
+			<View 	style={{	
+						left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
+						// borderColor: 'black', borderWidth: .5		/* for testing */
+					}} >
 				<Animated.Image 	
 						source={this.props.imageURL} 
 						style={{
@@ -336,8 +343,8 @@ export default class ShelfTile extends Component {
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
 							zIndex: pZindex,
-						}} 
-				/>
+							// borderColor: 'black', borderWidth: .5
+						}} />
 				{this._renderContent()}
 			</View>
 		)
@@ -347,6 +354,14 @@ export default class ShelfTile extends Component {
 
 const shelfTileStyles = StyleSheet.create({
 	// //-- "title" ----------------------//
+	episodeID: {
+		fontFamily: 'Helvetica-Bold',
+		fontWeight: '700',
+	    fontSize: 24/RATIO,
+	    textAlign: 'left',
+	    color: '#fff',
+	    margin: 0,
+	},
 	// homeShelfTitleContainer: {
 	// 	position: 'absolute',
 	// 	left: INIT_X,
