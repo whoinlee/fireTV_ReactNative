@@ -115,7 +115,7 @@ export default class POCContainerK extends Component {
     //TODO: recalculate
     //-- mid-up and off the stage homeHero pane locations
     this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y           //-- homeHeroPane shifts on the fist shelf being largeBloomed
-    //-100: hack
+    //TODO: recalculate, -100: hack
     this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y - 100    //-- homeHeroPane shifts/hides on the 2nd shelf being focused
   }
 
@@ -189,6 +189,7 @@ export default class POCContainerK extends Component {
           this.doSelect()
           break
         case keyCodes.toggleGuide:
+        case keyCodes.playPause:
           this._toggleGuide()
           break
         case keyCodes.toggleOutline:
@@ -314,7 +315,7 @@ export default class POCContainerK extends Component {
     this._changeLocation(GLOBAL_NAV_INDEX, this.upGlobalNavY)
     //this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY) //--TODO : check
     this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
-    //this._showGuide()
+    this._showGuide()
     this.currFocusLocIndex = HOME_SHELVES_INDEX
     // console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
     this.selectablePanes[HOME_SHELVES_INDEX].doDown()
@@ -342,8 +343,6 @@ export default class POCContainerK extends Component {
   }//_updateHomeShelvesLocation
 
   _toggleGuide = () => { this.setState({isGuideVisible: !this.state.isGuideVisible}) }
-
-  // _toggleOutline = () => { this.setState({isOutlineVisible: !this.state.isOutlineVisible}) }
 
   _showGuide = () => { if (!this.state.isGuideVisible) this.setState({isGuideVisible: true}) }
 

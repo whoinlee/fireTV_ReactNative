@@ -27,6 +27,7 @@ const ASSET_URL				= '../../assets/';
 /* ------------------------------------------ */
 /* ShelfTile specific contants                */
 /* ------------------------------------------ */
+const CONTENT_X				= config.homeShelves.contentX/RATIO; 
 const TILE_KIND_OBJ 		= {
   ORIGINAL: 0,							//-- base row
   EXPANDED: 1,							//-- focused row, unfocused tile
@@ -61,7 +62,9 @@ export default class ShelfTile extends Component {
 		super(props)
 		this.state = {
 			tileKind: TILE_KIND_OBJ.ORIGINAL,
-			imageScale: new Animated.Value(1)
+			imageScale: new Animated.Value(1),
+			isOverlayVisible: false,
+			overlayOpacity: new Animated.Value(0),
 		}
 
 		this.menus= []
@@ -132,6 +135,7 @@ export default class ShelfTile extends Component {
 
 		this._updateKind(TILE_KIND_OBJ.ORIGINAL)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL])
+		this._hideOverlay()
 	}//backToOrg
 
 	toFocused = (pDuration=STD_DURATION) => {
@@ -139,6 +143,7 @@ export default class ShelfTile extends Component {
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED], pDuration)
+		this._hideOverlay()
 		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--for testing
 	}//toFocused
 
@@ -146,10 +151,12 @@ export default class ShelfTile extends Component {
 		// console.log("INFO ShelfTile :: toExpanded, index: " + this.props.index)
 		this._updateKind(TILE_KIND_OBJ.EXPANDED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
+		this._hideOverlay()
 	}//toExpanded
 
 	_toMedBloomed = (targetX, noScale=false, pDuration=STD_DURATION) => {
 		console.log("INFO ShelfTile :: _toMedBloomed")
+		this._hideOverlay()
 		// this.updateState(TILE_KIND_OBJ.MED_BLOOMED)
 		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
 		// if (noScale) {
@@ -161,6 +168,7 @@ export default class ShelfTile extends Component {
 
 	_toLargeBloomed = () => {
 		console.log("INFO ShelfTile :: _toLargeBloomed")
+		this._hideOverlay()
 		// this.killToLargeBloom()
 		// this.updateState(TILE_KIND_OBJ.LG_BLOOMED)
 		// this.props.callBackOnLargeBloomStart()
@@ -171,7 +179,8 @@ export default class ShelfTile extends Component {
 		if (pKind === this.state.tileKind) return
 		// console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
 		this.selectedMenuIndex = (pKind === TILE_KIND_OBJ.LG_BLOOMED)? 1 : -1
-		this.setState({tileKind: pKind})
+		//const isOverlayVisible = (pKind === TILE_KIND_OBJ.FOCUSED)? true : false
+		this.setState({ tileKind: pKind, isOverlayVisible: false })
 	}//_updateState
 
 	_changeScale = (targetValue, pDuration=STD_DURATION) => {
@@ -184,8 +193,35 @@ export default class ShelfTile extends Component {
 	        duration: pDuration,
 	        easing: Easing.out(Easing.quad),
 	      }
-	    ).start()
+	    ).start(this._showOverlay)
 	}//_changeScale
+
+	_showOverlay = (pDuration=STD_DURATION) => {
+		if (this.state.tileKind === TILE_KIND_OBJ.FOCUSED) {
+			console.log("INFO ShelfTile :: _showOverlay ever????????????????????")
+			this.setState( {isOverlayVisible: true} )
+
+			
+		    Animated.timing(
+		      this.state.overlayOpacity, 
+		      {
+		        toValue: 1,
+		        duration: pDuration,
+		        easing: Easing.out(Easing.quad),
+		      }
+		    ).start()
+		}
+	}
+
+	_hideOverlay = () => {
+		Animated.timing(
+	      this.state.overlayOpacity, 
+	      {
+	        toValue: 0,
+	        duration: 0,
+	      }
+	    ).start()
+	}
 
 	// **
 	_clearBloomTimer = () => {
@@ -244,24 +280,51 @@ export default class ShelfTile extends Component {
 	    // console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
 	 }//_find_dimesions
 
+	 _renderOverlay = () => {
+	 	if (!this.state.isOverlayVisible) return
+		// console.log("INFO ShelfTile :: _renderOverlay, this.state.tileKind is :: " + this.state.tileKind)
+		const leftX0 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2			//-- leftEnd location (bc, image is transformed to TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2 xLocation)
+		const offsetY0 = (TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
+		// const { overlayOpacity } = this.state
+		switch (this.state.tileKind) {
+			case TILE_KIND_OBJ.FOCUSED:
+				return (
+					<View 	style={{
+								position: 'absolute',
+								left: leftX0,
+								top: -offsetY0,
+								width: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0]-1,
+								height: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1],
+								backgroundColor: 'rgba(0, 0, 0, .3)',
+								zIndex: 900,
+								opacity: (this.state.isOverlayVisible)? 1 : 0,
+								// borderWidth: 1, borderColor: 'red',
+							}} >
+					</View>
+				)
+			break
+			case TILE_KIND_OBJ.LG_BLOOMED:
+		    default:
+		}//switch
+	}//_renderOverlay
+
 	_renderContent = () => {
 		// console.log("INFO ShelfTile :: _renderContent, this.state.tileKind is :: " + this.state.tileKind)
 		const leftX0 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2			//-- leftEnd location (bc, image is transformed to TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2 xLocation)
 		const topMargin0 = 4/RATIO
-		//-- (imageSizeYIncrease)/2 for expandedImage + topMargin0
-		const expandedTopY = (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin0
+		//-- (imageSizeYIncrease)/2 for expandedImage
+		// const expandedTopY = (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin0
+		const expandedTopY = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1] + (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin0
 		switch (this.state.tileKind) {
 			case TILE_KIND_OBJ.EXPANDED:
-				const topY1 = (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin0	
 				return (
-					<View 	style={ {
+					<View 	style={{
+								position: 'absolute',
 								left: leftX0,
 								top: expandedTopY,
 								width: TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0],
 								// borderWidth: .5, borderColor: 'white',
-							} } 
-							// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
-					>
+							}} >
 						<Text style={ shelfTileStyles.expandedEpisodeID }>
 							{this.props.episodeID}
 						</Text>
@@ -269,17 +332,16 @@ export default class ShelfTile extends Component {
 				)
 				// {this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
 			case TILE_KIND_OBJ.FOCUSED:
-				const leftX1 = leftX0 + 20/RATIO
+				const leftX1 = leftX0 + CONTENT_X
 				return (
-					<View 	style={ {
+					<View 	style={{
+								position: 'absolute',
 								left: leftX1,
 								top: expandedTopY,
 								width: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0] - leftX1,
 								zIndex: 1000,
 								// borderWidth: .5, borderColor: 'white',
-							} } 
-							// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
-					>
+							}} >
 						<Text style={ shelfTileStyles.focusedEpisodeID }>
 							{this.props.episodeID}
 						</Text>
@@ -343,9 +405,6 @@ export default class ShelfTile extends Component {
 			<View 	style={{	
 						left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
 						width: '100%',
-						// zIndex: pZindex,
-						// backgroundColor: pBackgroundColor,
-						// overflow: 'visible'
 						// borderColor: 'black', borderWidth: .5		/* for testing */
 					}} >
 				<Animated.Image 	
@@ -363,6 +422,7 @@ export default class ShelfTile extends Component {
 							// overlayColor: pTintColor,
 							// borderColor: 'black', borderWidth: .5
 						}} />
+				{this._renderOverlay()}
 				{this._renderContent()}
 			</View>
 		)

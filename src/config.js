@@ -33,6 +33,7 @@ export default {
   homeShelves: {
     initShelfY: 92,             //-- distance from the top of homeShelvesPane container to the top of 1st shelf container, 62 ---> 92 (by 30)
     initY: 92,                  //-- distance from the top of homeShelvesPane container to the top of 1st shelf container, 62 ---> 92 (by 30)
+    contentX: 20,               //-- marginLeft for the content on a tile
 
     //-- shelf title related
     baseTitleH: 40,             //-- unselected shelf title height (!!!not same as the font size, 28)

@@ -8,4 +8,5 @@ export default {
   toggleGuide: 35,	//-- 'g' keyboard key
   toggleOutline: 43,//-- 'o' keyboard key
   reload: 46,		//-- 'r' keyboard key 
+  playPause: 85,	//-- 'playPause' button on D-pad
 };
