@@ -135,8 +135,7 @@ export default class ShelfTile extends Component {
 	}//backToOrg
 
 	toFocused = (pDuration=STD_DURATION) => {
-		console.log("INFO ShelfTile :: toFocused, index: " + this.props.index)
-
+		// console.log("INFO ShelfTile :: toFocused, index: " + this.props.index)
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED], pDuration)
@@ -144,8 +143,7 @@ export default class ShelfTile extends Component {
 	}//toFocused
 
 	toExpanded = (pDuration=STD_DURATION) => {
-		console.log("INFO ShelfTile :: toExpanded, index: " + this.props.index)
-		
+		// console.log("INFO ShelfTile :: toExpanded, index: " + this.props.index)
 		this._updateKind(TILE_KIND_OBJ.EXPANDED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
 	}//toExpanded
@@ -242,37 +240,52 @@ export default class ShelfTile extends Component {
 	_find_dimesions = (layout) => {
 	    const {width, height} = layout;
 	    // console.warn(height);
-	    console.log('INFO HomeShelf :: _find_dimensions (testing), width is ' + width);
+	    console.log('INFO ShelfTile :: _find_dimensions (testing), width is ' + width);
 	    // console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
 	 }//_find_dimesions
 
 	_renderContent = () => {
-		// console.log("INFO ShelfTile :: _renderContent, this.state.tileKind is " + this.state.tileKind)
+		// console.log("INFO ShelfTile :: _renderContent, this.state.tileKind is :: " + this.state.tileKind)
+		const leftX0 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2			//-- leftEnd location (bc, image is transformed to TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2 xLocation)
+		const topMargin0 = 4/RATIO
+		//-- (imageSizeYIncrease)/2 for expandedImage + topMargin0
+		const expandedTopY = (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin0
 		switch (this.state.tileKind) {
 			case TILE_KIND_OBJ.EXPANDED:
-				// console.log("INFO ShelfTile :: _renderContent, TILE_KIND_OBJ.EXPANDED")
-				const leftX = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2	//-- bc, image is transformed
-				//const topMargin = 4/RATIO
-				const topMargin = 0
-				const topY = (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin	//--(imageSizeYIncrease)/2
+				const topY1 = (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + topMargin0	
 				return (
-					<View style={ {
-								left: leftX,
-								top: topY,
+					<View 	style={ {
+								left: leftX0,
+								top: expandedTopY,
+								width: TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0],
 								// borderWidth: .5, borderColor: 'white',
 							} } 
-							onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
+							// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
 					>
-						<Text style={ shelfTileStyles.episodeID }>
+						<Text style={ shelfTileStyles.expandedEpisodeID }>
 							{this.props.episodeID}
 						</Text>
 					</View>
 				)
-		//  //   	<div className="expandedTileContent">
-		// 	// {this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
-		// 	// </div>
+				// {this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
 			case TILE_KIND_OBJ.FOCUSED:
-		// 		this.selectedMenuIndex = -1;
+				const leftX1 = leftX0 + 20/RATIO
+				return (
+					<View 	style={ {
+								left: leftX1,
+								top: expandedTopY,
+								width: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0] - leftX1,
+								zIndex: 1000,
+								// borderWidth: .5, borderColor: 'white',
+							} } 
+							// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
+					>
+						<Text style={ shelfTileStyles.focusedEpisodeID }>
+							{this.props.episodeID}
+						</Text>
+					</View>
+				)
+			// 		this.selectedMenuIndex = -1;
 		// 		this.menus = []
 		// 		return (
 		//          	<div className="focusedTileContent" ref={node => this.focusedContent = node}>
@@ -281,7 +294,6 @@ export default class ShelfTile extends Component {
 		//             	<div className="focusedEpisodeID">{this.props.episodeID}</div>
 		//           	</div>
 		//       	)
-			break
 			case TILE_KIND_OBJ.LG_BLOOMED:
 		// 		console.log("INFO ShelfTile :: renderContent, TILE_KIND_OBJ.LG_BLOOMED, this.state.selectedMenuIndex?? " + this.state.selectedMenuIndex)
 		// 		this.menus = []
@@ -325,10 +337,15 @@ export default class ShelfTile extends Component {
 		// console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
 		const { imageScale } = this.state
 		//-- bring up the selected tile to front
-		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 1000
+		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 100
+		// const pBackgroundColor = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? 'rgba(0, 0, 0, 0)' : 'rgba(0, 0, 0, .3)'
 		return (
 			<View 	style={{	
 						left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
+						width: '100%',
+						// zIndex: pZindex,
+						// backgroundColor: pBackgroundColor,
+						// overflow: 'visible'
 						// borderColor: 'black', borderWidth: .5		/* for testing */
 					}} >
 				<Animated.Image 	
@@ -343,6 +360,7 @@ export default class ShelfTile extends Component {
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
 							zIndex: pZindex,
+							// overlayColor: pTintColor,
 							// borderColor: 'black', borderWidth: .5
 						}} />
 				{this._renderContent()}
@@ -354,9 +372,18 @@ export default class ShelfTile extends Component {
 
 const shelfTileStyles = StyleSheet.create({
 	// //-- "title" ----------------------//
-	episodeID: {
+	expandedEpisodeID: {
 		fontFamily: 'Helvetica-Bold',
 		fontWeight: '700',
+	    fontSize: 24/RATIO,
+	    textAlign: 'left',
+	    color: '#fff',
+	    margin: 0,
+	},
+
+	focusedEpisodeID: {
+		fontFamily: 'Helvetica',
+		fontWeight: '400',
 	    fontSize: 24/RATIO,
 	    textAlign: 'left',
 	    color: '#fff',

@@ -336,7 +336,7 @@ export default class HomeShelvesPane extends Component {
   }//_renderEachHomeShelf
 
   render() {
-    console.log("INFO HomeShelvesPane :: render ------------------------------------------------------------>")
+    // console.log("INFO HomeShelvesPane :: render ------------------------------------------------------------>")
     return (
       <View>
           {SHELVES_DATA_ARR.map(this._renderEachHomeShelf)}

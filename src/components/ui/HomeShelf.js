@@ -149,7 +149,7 @@ export default class HomeShelf extends Component {
 			this.currTile = this.tiles[currTileIndex]
 			this.prevTile = this.tiles[prevTileIndex]
 		}
-		
+
 		if (this.tileIndexQueue.length > 2)
 		this._changeTileLocation(rightMostTileIndex, leftMostX, 0)
 
@@ -204,12 +204,12 @@ export default class HomeShelf extends Component {
 			this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
 		}
 
-		console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue after doLeft ? ===> ", this.tileIndexQueue)
+		// console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue after doLeft ? ===> ", this.tileIndexQueue)
 	}//doLeft
 
 	doRight = () => {
 		if (this.totalTiles <= 1) return
-		console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> ", this.tileIndexQueue)
+		// console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> ", this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
@@ -264,7 +264,7 @@ export default class HomeShelf extends Component {
 		    	targetX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		    }
 		   
-		    console.log("prevPrevTile???? " + prevPrevTile)
+		    // console.log("prevPrevTile???? " + prevPrevTile)
 		    if (prevPrevTile) {
 		    	//-- give delay, then show as the last element
 		    	this.changeTileLocationID = setTimeout(() => this._changeTileLocation(prevPrevTileIndex, targetX, 0), STD_DURATION)
@@ -282,8 +282,7 @@ export default class HomeShelf extends Component {
 	    //-- updateQueue
 	    let prevIndex = this.tileIndexQueue.shift()
 	    if (prevIndex !== -1) this.tileIndexQueue.push(prevIndex)
-	    console.log("INFO HomeShelf :: doRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
-
+	    // console.log("INFO HomeShelf :: doRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
 	}//doRight
 
 	doSelect = () => {
@@ -404,10 +403,9 @@ export default class HomeShelf extends Component {
 			this.tileIndexQueue.push(lastIndex)
 		}
 
-		console.log("INFO HomeShelf :: _buildTileIndexQueue, lastIndex ?? " + lastIndex)
-		console.log("INFO HomeShelf :: _buildTileIndexQueue, MAX_TILE_INDEX ?? " + MAX_TILE_INDEX)
-
-		console.log("INFO HomeShelf :: buildTileIndexQueue, this.tileIndexQueue ? " + this.tileIndexQueue)
+		// console.log("INFO HomeShelf :: _buildTileIndexQueue, lastIndex ?? " + lastIndex)
+		// console.log("INFO HomeShelf :: _buildTileIndexQueue, MAX_TILE_INDEX ?? " + MAX_TILE_INDEX)
+		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.tileIndexQueue ? " + this.tileIndexQueue)
 		//const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
 		
 		/*
@@ -456,7 +454,7 @@ export default class HomeShelf extends Component {
 
 	_changeTileLocation = (tileIndex, targetValue, pDuration=STD_DURATION, pDelay=0) => {
 		if (tileIndex === undefined) return
-	    console.log("INFO HomeShelf :: _changeTile " + tileIndex + " xLocation, to " + targetValue)
+	    // console.log("INFO HomeShelf :: _changeTile " + tileIndex + " xLocation, to " + targetValue)
 		Animated.timing(this.state.tileXPositionArr[tileIndex]).stop()
 	    Animated.timing(
 	      this.state.tileXPositionArr[tileIndex], 
@@ -580,7 +578,7 @@ export default class HomeShelf extends Component {
 	}//_renderEachShelfTile
 
 	render() {
-		console.log("INFO HomeShelf :: render --------------------------------------------------------------->")
+		// console.log("INFO HomeShelf :: render --------------------------------------------------------------->")
 		const { shelfKind } = this.state
 		const titleStyle = (shelfKind === SHELF_KIND_OBJ.BASE) ? homeShelfStyles.shelfTitleBase : homeShelfStyles.shelfTitleFocused
 		//-- for testing
