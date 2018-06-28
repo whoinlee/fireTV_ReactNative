@@ -61,10 +61,12 @@ export default {
     bloomedShelfShiftY: 131,    //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
     
     focusedShelfOffsetX: 25,    //-- distance between tiles on a focused shelf
+    //
     focusedShelfOffsetY: 182,   //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
     focusedShelfH: 584,         //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
 
     bloomedShelfOffsetX: 57,    //-- distance between tiles on a bloomed shelf
+    //
     bloomedShelfOffsetY: 313,   //-- focusedShelfOffsetY (182) + bloomedShelfShiftY (131) = 313
     bloomedShelfH: 543          //-- focusedTitleH (60) + titleToTileOffset (10) + bloomedTileH (594) + bloomedShelfOffsetY (313) = 977
   }

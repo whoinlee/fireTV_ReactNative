@@ -267,7 +267,8 @@ export default class HomeShelf extends Component {
 		    // console.log("prevPrevTile???? " + prevPrevTile)
 		    if (prevPrevTile) {
 		    	//-- give delay, then show as the last element
-		    	this.changeTileLocationID = setTimeout(() => this._changeTileLocation(prevPrevTileIndex, targetX, 0), STD_DURATION)
+		    	if (this.changeTileLocationID) clearTimeout(this.changeTileLocationID)
+		    	this.changeTileLocationID = setTimeout(() => this._changeTileLocation(prevPrevTileIndex, targetX, 0), (STD_DURATION - 100))
 		    	//prevPrevTile.fadeIn(.3, .2)	//TODO
 		    }
 		} else {
