@@ -76,6 +76,7 @@ export default class ShelfTile extends Component {
 		this.nextMenu = null
 
 		this.bloomToLargeTimerID = null				//-- TODO: here??
+		this.isOverlayVisible = false
 	}
 
 	componentDidMount() {
@@ -185,6 +186,8 @@ export default class ShelfTile extends Component {
 
 	_changeScale = (targetValue, pDuration=STD_DURATION) => {
 	    // console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
+
+	    this.isOverlayVisible = false
 	    Animated.timing(this.state.imageScale).stop()
 	    Animated.timing(
 	      this.state.imageScale, 
@@ -198,16 +201,26 @@ export default class ShelfTile extends Component {
 
 	_showOverlay = (pDuration=STD_DURATION) => {
 		if (this.state.tileKind === TILE_KIND_OBJ.FOCUSED) {
-			console.log("INFO ShelfTile :: _showOverlay ever????????????????????")
-			this.setState( {isOverlayVisible: true} )
+			console.log("INFO ShelfTile :: _showOverlay ever???????????????????? " + this.props.index)
+			//this.setState( {isOverlayVisible: true} )
 
-			
+			this.isOverlayVisible = true
 		    Animated.timing(
 		      this.state.overlayOpacity, 
 		      {
 		        toValue: 1,
 		        duration: pDuration,
-		        easing: Easing.out(Easing.quad),
+		        //easing: Easing.out(Easing.quad),
+		      }
+		    ).start()
+		} else {
+			this.isOverlayVisible = false
+			Animated.timing(
+		      this.state.overlayOpacity, 
+		      {
+		        toValue: 1,
+		        duration: pDuration,
+		        //easing: Easing.out(Easing.quad),
 		      }
 		    ).start()
 		}
@@ -274,14 +287,17 @@ export default class ShelfTile extends Component {
 	}//_onAddToButtonClicked
 
 	_find_dimesions = (layout) => {
-	    const {width, height} = layout;
+	    const {width, height} = layout
 	    // console.warn(height);
-	    console.log('INFO ShelfTile :: _find_dimensions (testing), width is ' + width);
-	    // console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
+	    console.log('INFO ShelfTile :: _find_dimensions (testing), width is ' + width)
+	    // console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height)
 	 }//_find_dimesions
 
 	 _renderOverlay = () => {
-	 	if (!this.state.isOverlayVisible) return
+	 	// console.log('INFO ShelfTile :: _renderOverlay 1 ')
+	 	if (!this.isOverlayVisible || this.state.tileKind !== TILE_KIND_OBJ.FOCUSED) return
+
+	 	console.log('INFO ShelfTile :: _renderOverlay 2 ')
 		// console.log("INFO ShelfTile :: _renderOverlay, this.state.tileKind is :: " + this.state.tileKind)
 		const leftX0 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2			//-- leftEnd location (bc, image is transformed to TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2 xLocation)
 		const offsetY0 = (TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
@@ -297,14 +313,13 @@ export default class ShelfTile extends Component {
 								height: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1],
 								backgroundColor: 'rgba(0, 0, 0, .3)',
 								zIndex: 900,
-								opacity: (this.state.isOverlayVisible)? 1 : 0,
+								opacity: this.state.overlayOpacity,
 								// borderWidth: 1, borderColor: 'red',
 							}} >
 					</View>
 				)
-			break
-			case TILE_KIND_OBJ.LG_BLOOMED:
-		    default:
+			// case TILE_KIND_OBJ.LG_BLOOMED:
+		 //    default:
 		}//switch
 	}//_renderOverlay
 
@@ -400,7 +415,6 @@ export default class ShelfTile extends Component {
 		const { imageScale } = this.state
 		//-- bring up the selected tile to front
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 100
-		// const pBackgroundColor = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? 'rgba(0, 0, 0, 0)' : 'rgba(0, 0, 0, .3)'
 		return (
 			<View 	style={{	
 						left: -TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2,
@@ -419,14 +433,15 @@ export default class ShelfTile extends Component {
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
 							zIndex: pZindex,
-							// overlayColor: pTintColor,
 							// borderColor: 'black', borderWidth: .5
 						}} />
-				{this._renderOverlay()}
+				// {this._renderOverlay()}
 				{this._renderContent()}
 			</View>
 		)
 	}//render
+
+	// {this._renderOverlay()}
 }
 
 
