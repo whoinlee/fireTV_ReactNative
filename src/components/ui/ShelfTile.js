@@ -64,6 +64,7 @@ export default class ShelfTile extends Component {
 			tileKind: TILE_KIND_OBJ.ORIGINAL,
 			imageScale: new Animated.Value(1),
 			overlayOpacity: new Animated.Value(0),
+			episodeIDWidth: 98/RATIO,
 			// isOverlayVisible: false,
 		}
 
@@ -274,7 +275,8 @@ export default class ShelfTile extends Component {
 	    // console.warn(height);
 	    console.log('INFO ShelfTile :: _find_dimensions (testing), width is ' + width)
 	    // console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height)
-	    this.episodeWidth = Math.round(width) + 10/RATIO;
+	    //this.episodeWidth = Math.round(width) + 10/RATIO;
+	    this.setState( { episodeIDWidth : Math.round (width) })
 	 }//_find_dimesions
 
 	_renderContent = () => {
@@ -303,7 +305,7 @@ export default class ShelfTile extends Component {
 								... StyleSheet.flatten(shelfTileStyles.expandedEpisodeID),
 								position: 'absolute',
 								left: 0,
-								width: expandedEpisodeIDWidth,
+								width: this.state.episodeIDWidth,
 								// borderWidth: .5, borderColor: 'blue',
 								} }
 								onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
@@ -313,8 +315,8 @@ export default class ShelfTile extends Component {
 						<Text 	style={ {
 								... StyleSheet.flatten(shelfTileStyles.showTitle),
 								position: 'absolute',
-								left: this.episodeWidth,
-								width: TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]-this.episodeWidth,
+								left: this.state.episodeIDWidth,
+								width: TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]-this.state.episodeIDWidth,
 								overflow: 'hidden',
 								// borderWidth: .5, borderColor: 'blue',
 								} }>
