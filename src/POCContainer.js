@@ -315,7 +315,7 @@ export default class POCContainerK extends Component {
     this._changeLocation(GLOBAL_NAV_INDEX, this.upGlobalNavY)
     //this._changeLocation(HOME_HERO_INDEX, this.upHomeHeroY) //--TODO : check
     this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
-    this._showGuide()
+    //this._showGuide()
     this.currFocusLocIndex = HOME_SHELVES_INDEX
     // console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
     this.selectablePanes[HOME_SHELVES_INDEX].doDown()
