@@ -481,27 +481,8 @@ export default class HomeShelf extends Component {
 	//     ).start();
 	// }//_fadeInTileAt
 
-	_moveTo = (targetY = 0, pDuration = STD_DURATION) => {
-		console.log("INFO HomeShelf :: _moveTo")
-		// TL.to(this.homeShelfContainer, pDuration, {top: targetY+'px', ease:Power3.easeOut})
-		// this.setState({topY: targetY, isMoved: true})
-	}//_moveTo
-
-	// backTo = (targetY = this.props.topY, pDuration = stdDuration) => {
-	// 	console.log("INFO HomeShelf :: backTo")
-	// 	this.moveTo(targetY, pDuration)
-	// 	//TL.to(this.homeShelfContainer, pDuration, {top: targetY+'px', ease:Power3.easeOut})
-	// }//backTo
-
 	_backToFocused = (pDir = "left") => {
-		console.log("INFO HomeShelf :: _backToFocused, callBackOnNoMenuLeft")
-		// this.setState({shelfKind: SHELF_KIND_OBJ.FOCUSED})
-		// if (pDir === "left") {
-		// 	this.doLeft()
-		// } else {
-		// 	this.doRight()
-		// }
-		//this.props.callBackOnBackToFocused()
+		console.log("INFO HomeShelf :: _backToFocused")
 	}//_backToFocused
 
 	_onLargeBloomStart = () => {
@@ -535,7 +516,6 @@ export default class HomeShelf extends Component {
 
 	_clearBloomTimer = () => {
 		console.log("INFO HomeShelf :: _clearBloomTimer")
-		// if (this.currTile !== null) this.currTile.killToLargeBloom()
 	}//_clearBloomTimer
 
 	_find_dimesions = (layout) => {
@@ -580,7 +560,7 @@ export default class HomeShelf extends Component {
 
 	render() {
 		// console.log("INFO HomeShelf :: render --------------------------------------------------------------->")
-		const { shelfKind } = this.state
+		const { shelfKind, titleYPosition } = this.state
 		const titleStyle = (shelfKind === SHELF_KIND_OBJ.BASE) ? homeShelfStyles.shelfTitleBase : homeShelfStyles.shelfTitleFocused
 		//-- for testing
 		// const colorArr = ['darkcyan', 'darkred', 'darkorchid']
@@ -595,14 +575,10 @@ export default class HomeShelf extends Component {
 					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
 					width: '100%',
 					height: BLOOMED_TILE_H,
-					//
-					// height: '100%',
-					// borderWidth: .5,
-    	 			// borderColor: 'blue',
     		}} >
 				<Animated.View 
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
-								top: this.state.titleYPosition,
+								top: titleYPosition,
 						 	} }
 					//-- for testing, to decide title height
 					//onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}

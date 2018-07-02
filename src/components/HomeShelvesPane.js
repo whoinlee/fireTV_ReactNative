@@ -53,7 +53,7 @@ const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //--
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
 const SHELF_H               = BLOOMED_TILE_H
-const NEXT_SHELF_OFFSET     = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)         //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
+const NEXT_SHELF_OFFSET     = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)      //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
 /* ------------------------------------------ */
