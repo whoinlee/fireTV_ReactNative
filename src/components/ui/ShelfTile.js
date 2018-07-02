@@ -211,7 +211,7 @@ export default class ShelfTile extends Component {
 		      this.state.overlayOpacity, 
 		      {
 		        toValue: 1,
-		        duration: STD_DURATION + 100,	//hack
+		        duration: STD_DURATION,	//hack
 		        easing: Easing.out(Easing.quad),
 		      }
 		    ).start()
@@ -303,13 +303,15 @@ export default class ShelfTile extends Component {
 				// {this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
 			case TILE_KIND_OBJ.FOCUSED:
 				const leftX1 = leftX0 + CONTENT_X
+				const width1 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]*FOCUSED_SCALE
+				const height1 = TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1]
 				return (
 						<Animated.View 	style={{
 									position: 'absolute',
 									left: leftX0,
 									top: focusedTopY,
-									width: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0],
-									height: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1],
+									width: width1,
+									height: height1,
 									zIndex: 1000,
 									opacity: overlayOpacity,
 									backgroundColor: 'rgba(0, 0, 0, .3)',

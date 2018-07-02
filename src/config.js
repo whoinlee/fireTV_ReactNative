@@ -38,7 +38,7 @@ export default {
     //-- shelf title related
     baseTitleH: 40,             //-- unselected shelf title height (!!!not same as the font size, 28)
     focusedTitleH: 60,          //-- update!!!
-    titleToTileOffset: 40,      //-- distance from the bottom of shelf title to the top of shelf tile
+    titleToTileOffset: 10,      //-- distance from the bottom of shelf title to the top of shelf tile
     
     //-- tile dimensions
     baseTileW: 320,             //-- unselected base tile width, 320x180*
