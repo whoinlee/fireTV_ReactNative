@@ -5,8 +5,6 @@ import {
   Easing,
   Image,
   Text,
-  TouchableWithoutFeedback,
-  TouchableNativeFeedback,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -52,8 +50,8 @@ const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //--
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
-const SHELF_H               = BLOOMED_TILE_H
-const NEXT_SHELF_OFFSET     = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)      //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
+const SHELF_H               = BLOOMED_TILE_H;
+const NEXT_SHELF_OFFSET     = Math.round((SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2));     //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
 /* ------------------------------------------ */
@@ -187,8 +185,7 @@ const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
-    // this.state = {
-    // }
+    this.state = {}
     this.shelves = []
     this.totalShelves = TOTAL_SHELVES
 
@@ -197,13 +194,6 @@ export default class HomeShelvesPane extends Component {
     this.currShelf = null
     this.nextShelf = null
   }
-
-  componentDidMount() {
-    // this.totalShelves = this.shelves.length  //TODO: with actual data
-  }//componentDidMount
-
-  componentWillUnmount() {
-  }//componentWillUnmount
 
   doUp = () => {
     if (this.selectedShelfIndex < 0) return //ERROR
@@ -255,10 +245,6 @@ export default class HomeShelvesPane extends Component {
     }
   }//onBlur
 
-  // toggleOutline = () => {
-  //   this.setState({ isOutlineVisible: !this.state.isOutlineVisible })
-  // }//toggleOutline
-
   _onShelfFocus = (pIndex) => {
     if (pIndex < 0) return //ERROR
     //console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
@@ -276,6 +262,8 @@ export default class HomeShelvesPane extends Component {
     this.props.updateHomeShelvesLocation(pIndex)
   }//_onShelfFocus
 
+
+  //**********//
   _onLargeBloomStart = () => {
     //console.log("INFO HomeShelvesPane :: onLargeBloomStart")
     console.log("INFO HomeShelvesPane :: _onLargeBloomStart, this.state.selectedShelfIndex? " + this.state.selectedShelfIndex)
@@ -310,6 +298,8 @@ export default class HomeShelvesPane extends Component {
     // this.moveBackPrevShelf()
     // this.moveBackNextShelf()
   }//_moveBackAdjacentShelves
+  //**********//
+
 
   _find_dimesions = (layout) => {
     //-- used for testing
@@ -320,15 +310,13 @@ export default class HomeShelvesPane extends Component {
   _renderEachHomeShelf = (shelfObj, i) => {
     //console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
     return (
-      <HomeShelf  
-            key={(i + 1).toString()}
+      <HomeShelf
             ref={node => this.shelves.push(node)}
-
+            key={(i + 1).toString()}
             index={i}
             title={shelfObj.title}
             shows={shelfObj.shows}
             topY={i*NEXT_SHELF_OFFSET}
-            
             //callBackOnLargeBloomStart={this._onLargeBloomStart}
             //callBackOnBackToFocused={this._moveBackAdjacentShelves} 
       />

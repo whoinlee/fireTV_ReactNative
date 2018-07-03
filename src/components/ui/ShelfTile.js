@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
 	Animated,
@@ -6,7 +6,6 @@ import {
 	Image,
 	StyleSheet,
   	Text,
-  	// TouchableWithoutFeedback,
   	View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -64,8 +63,6 @@ export default class ShelfTile extends Component {
 			tileKind: TILE_KIND_OBJ.ORIGINAL,
 			imageScale: new Animated.Value(1),
 			overlayOpacity: new Animated.Value(0),
-			episodeIDWidth: 95/RATIO,
-			// isOverlayVisible: false,
 		}
 
 		this.menus= []
@@ -76,34 +73,9 @@ export default class ShelfTile extends Component {
 		this.currMenu = null
 		this.nextMenu = null
 
-		// this.isOverlayVisible = false
-		this.episodeWidth = 98/RATIO
+		this.episodeIDWidth = 95/RATIO
 		this.bloomToLargeTimerID = null				//-- TODO: here??
-
-		this._showOverlay = this._showOverlay.bind(this)
 	}
-
-	componentDidMount() {
-	}//componentWillMount
-
-	onFocus = () => {
-		console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
-      	this.toFocused()
-
-      	const { onFocus } = this.props;
-      	if (onFocus) {
-        	console.log('INFO ShelfTile :: onFocus calling back from ShelfTile');
-        	onFocus();
-      	}
-	}//onFocus
-
-	onBlur = () => {
-		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
-	}//onBlur
-
-	doSelect = () => {
-		console.log("INFO ShelfTile :: doSelect, tile " + this.props.index)
-	}//doSelect
 
 	doLeft = () => {
 		console.log("INFO ShelfTile :: doLeft, to the menu in the left, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
@@ -132,6 +104,25 @@ export default class ShelfTile extends Component {
 		// }
 	}//doRight
 
+	doSelect = () => {
+		console.log("INFO ShelfTile :: doSelect, tile " + this.props.index)
+	}//doSelect
+
+	onFocus = () => {
+		console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
+      	this.toFocused()
+
+      	const { onFocus } = this.props;
+      	if (onFocus) {
+        	console.log('INFO ShelfTile :: onFocus calling back from ShelfTile');
+        	onFocus();
+      	}
+	}//onFocus
+
+	onBlur = () => {
+		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
+	}//onBlur
+
 	backToOrg = () => {
 		console.log("INFO ShelfTile :: backToOrg, index: " + this.props.index)
 
@@ -145,8 +136,8 @@ export default class ShelfTile extends Component {
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED], pDuration)
-		this._hideOverlay()
 		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--for testing
+		this._hideOverlay()
 	}//toFocused
 
 	toExpanded = (pDuration=SHORT_DURATION) => {
@@ -156,6 +147,54 @@ export default class ShelfTile extends Component {
 		this._hideOverlay()
 	}//toExpanded
 
+	_updateKind = (pKind) => {
+		if (pKind === this.state.tileKind) return
+		// console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
+		this._hideOverlay()
+		this.selectedMenuIndex = (pKind === TILE_KIND_OBJ.LG_BLOOMED)? 1 : -1
+		this.setState({ tileKind: pKind })
+	}//_updateState
+
+	_changeScale = (targetValue, pDuration=SHORT_DURATION) => {
+	    // console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
+	    Animated.timing(this.state.imageScale).stop()
+	    Animated.timing(
+	      this.state.imageScale, 
+	      {
+	        toValue: targetValue,
+	        duration: pDuration,
+	        easing: Easing.out(Easing.quad),
+	      }
+	    ).start(this._showOverlay)
+	}//_changeScale
+
+	_showOverlay = () => {
+		if (this.state.tileKind === TILE_KIND_OBJ.FOCUSED) {
+			Animated.timing(this.state.overlayOpacity).stop()
+		    Animated.timing(
+		      this.state.overlayOpacity, 
+		      {
+		        toValue: 1,
+		        duration: SHORT_DURATION,	//hack
+		        easing: Easing.out(Easing.quad),
+		      }
+		    ).start()
+		}
+	}
+
+	_hideOverlay = () => {
+		Animated.timing(this.state.overlayOpacity).stop()
+		Animated.timing(
+	      this.state.overlayOpacity, 
+	      {
+	        toValue: 0,
+	        duration: 0,
+	      }
+	    ).start()
+	}
+
+
+	//**********//
 	_toMedBloomed = (targetX, noScale=false, pDuration=SHORT_DURATION) => {
 		console.log("INFO ShelfTile :: _toMedBloomed")
 		this._hideOverlay()
@@ -177,61 +216,6 @@ export default class ShelfTile extends Component {
 		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
 	}//_toLargeBloomed
 
-	_updateKind = (pKind) => {
-		if (pKind === this.state.tileKind) return
-		// console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
-		this._hideOverlay()
-		this.selectedMenuIndex = (pKind === TILE_KIND_OBJ.LG_BLOOMED)? 1 : -1
-		this.setState({ tileKind: pKind })
-		// this.isOverlayVisible = (pKind === TILE_KIND_OBJ.FOCUSED)? true : false
-		// this.setState({ tileKind: pKind, isOverlayVisible: false })
-	}//_updateState
-
-	_changeScale = (targetValue, pDuration=SHORT_DURATION) => {
-	    console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
-	    // console.log("INFO ShelfTile :: pDuration, to " + pDuration)
-
-	    // this.isOverlayVisible = false
-	    Animated.timing(this.state.imageScale).stop()
-	    Animated.timing(
-	      this.state.imageScale, 
-	      {
-	        toValue: targetValue,
-	        duration: pDuration,
-	        easing: Easing.out(Easing.quad),
-	      }
-	    ).start(this._showOverlay)
-	}//_changeScale
-
-	_showOverlay = () => {
-		if (this.state.tileKind === TILE_KIND_OBJ.FOCUSED) {
-			// console.log("INFO ShelfTile :: _showOverlay ever???????????????????? pDuration is " + pDuration)	// TODO:: how to pass a variable??
-			// console.log("INFO ShelfTile :: _showOverlay ever???????????????????? STD_DURATION is " + STD_DURATION)
-			// this.isOverlayVisible = true
-			Animated.timing(this.state.overlayOpacity).stop()
-		    Animated.timing(
-		      this.state.overlayOpacity, 
-		      {
-		        toValue: 1,
-		        duration: SHORT_DURATION,	//hack
-		        easing: Easing.out(Easing.quad),
-		      }
-		    ).start()
-		}
-	}
-
-	_hideOverlay = () => {
-		// this.isOverlayVisible = false
-		Animated.timing(
-	      this.state.overlayOpacity, 
-	      {
-	        toValue: 0,
-	        duration: 0,
-	      }
-	    ).start()
-	}
-
-	// **
 	_clearBloomTimer = () => {
 		console.log("INFO ShelfTile :: _clearBloomTimer")
 		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
@@ -269,19 +253,19 @@ export default class ShelfTile extends Component {
 	_onAddToButtonClicked = (e) => {
 		console.log("INFO ShelfTile :: _onAddToButtonClicked")
 	}//_onAddToButtonClicked
+	//**********//
+
 
 	_find_dimesions = (layout) => {
 	    const {width, height} = layout
 	    // console.warn(height);
 	    console.log('INFO ShelfTile :: _find_dimensions (testing), width is ' + width)
 	    console.log('INFO ShelfTile :: _find_dimensions (testing), height is ' + height)
-	    //this.episodeWidth = Math.round(width) + 10/RATIO;
-	    // this.setState( { episodeIDWidth : Math.round (width) })
 	 }//_find_dimesions
 
 	_renderContent = () => {
-		console.log("INFO ShelfTile :: _renderContent =======================>")
-		const { tileKind, overlayOpacity, episodeIDWidth } = this.state
+		// console.log("INFO ShelfTile :: _renderContent =======================>")
+		const { tileKind, overlayOpacity } = this.state
 		const leftX0 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2			//-- leftEnd location (bc, image is transformed to TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2 xLocation)
 		const rightX0 = 10/RATIO
 		const textTopMargin0 = 4/RATIO
@@ -289,7 +273,7 @@ export default class ShelfTile extends Component {
 		//-- (imageSizeYIncrease)/2 for expandedImage
 		const expandedIDY = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1] + (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + textTopMargin0
 		const focusedTopY = -(TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
-		const showTitleWidth = TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]-episodeIDWidth
+		const showTitleWidth = TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]-this.episodeIDWidth
 		switch (tileKind) {
 			case TILE_KIND_OBJ.EXPANDED:
 				return (
@@ -302,23 +286,22 @@ export default class ShelfTile extends Component {
 								flexWrap: 'nowrap',
 								flexDirection: 'row',
 								alignItems: 'flex-start',
-								// borderWidth: .5, borderColor: 'blue',
+								// borderWidth: .5, borderColor: 'white',
 							}} >
-						<Text 	style={ {
-								... StyleSheet.flatten(shelfTileStyles.expandedEpisodeID),
-								} }
+						<Text 	style={ shelfTileStyles.boldText }
 								// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
 						>
 							{this.props.episodeID}
 
 						</Text>
 						<Text 	style={ {
-								... StyleSheet.flatten(shelfTileStyles.showTitle),
-								width: showTitleWidth,
+									... StyleSheet.flatten(shelfTileStyles.regularText),
+									width: showTitleWidth,
+									// borderWidth: .5, borderColor: 'blue',
 								} }
 								numberOfLines={1} 
 								ellipsizeMode={'tail'} >
-								{"  " + this.props.showTitle}
+							{"  " + this.props.showTitle}
 						</Text>
 					</View>
 				)
@@ -339,27 +322,25 @@ export default class ShelfTile extends Component {
 									// borderWidth: .5, borderColor: 'white',
 								}} >
 							<Text style={ {
-										... StyleSheet.flatten(shelfTileStyles.showTitle),
+										... StyleSheet.flatten(shelfTileStyles.regularText),
 										width: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0] - (CONTENT_X + rightX0),
 										position: 'absolute',
 										top: -focusedTopY + expandedIDY - (28/RATIO*2),
 										left: CONTENT_X,
-										//borderWidth: .5, borderColor: 'blue',
 										} }>
 								{this.props.showTitle}
 							</Text>
 							<Text style={ {
-										... StyleSheet.flatten(shelfTileStyles.focusedEpisodeTitle),
+										... StyleSheet.flatten(shelfTileStyles.boldText),
 										position: 'absolute',
 										top: -focusedTopY + expandedIDY - 28/RATIO,
 										left: CONTENT_X,
 										width: TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][0] - (CONTENT_X + rightX0),
-										//borderWidth: .5, borderColor: 'blue',
 										} }>
 								{this.props.episodeTitle}
 							</Text>
 							<Text style={ {
-										... StyleSheet.flatten(shelfTileStyles.focusedEpisodeID),
+										... StyleSheet.flatten(shelfTileStyles.regularText),
 										position: 'absolute',
 										top: -focusedTopY + expandedIDY,
 										left: CONTENT_X,
@@ -432,7 +413,6 @@ export default class ShelfTile extends Component {
 							height: TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1],
 							resizeMode: Image.resizeMode.cover,
 							zIndex: pZindex,
-							// borderColor: 'black', borderWidth: .5
 						}} />
 				{this._renderContent()}
 			</View>
@@ -442,54 +422,30 @@ export default class ShelfTile extends Component {
 
 
 const shelfTileStyles = StyleSheet.create({
-	// //-- "title" ----------------------//
-	
-	showTitle: {
+	regularText: {
 		fontFamily: 'Helvetica',
 		fontWeight: '400',
 	    fontSize: 24/RATIO,
-	    // textAlign: 'left',
+	    textAlign: 'left',
 	    color: '#fff',
-	    // margin: 0,
 	},
 
-	focusedEpisodeTitle: {
+	boldText: {
 		fontFamily: 'Helvetica-Bold',
 		fontWeight: '700',
 	    fontSize: 24/RATIO,
-	    // textAlign: 'left',
+	    textAlign: 'left',
 	    color: '#fff',
-	    // margin: 0,
-	},
-
-	focusedEpisodeID: {
-		fontFamily: 'Helvetica',
-		fontWeight: '400',
-	    fontSize: 24/RATIO,
-	    // textAlign: 'left',
-	    color: '#fff',
-	    // margin: 0,
-	},
-
-	expandedEpisodeID: {
-		fontFamily: 'Helvetica-Bold',
-		fontWeight: '700',
-	    fontSize: 24/RATIO,
-	    // textAlign: 'left',
-	    color: '#fff',
-	    // margin: 0,
 	},
 });
 
 ShelfTile.propTypes = {
 	index:  PropTypes.number,
-	homeShelfIndex: PropTypes.number,	//TODO: check, need?
 	showTitle: PropTypes.string,
 	episodeTitle: PropTypes.string,
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
-	imageURL: PropTypes.number,	/*	number!!!	*/
-
+	imageURL: PropTypes.number,	/*	number!!!*/
 	// callBackOnLargeBloomStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 }
@@ -497,7 +453,4 @@ ShelfTile.propTypes = {
 ShelfTile.defaultProps = {
 	// callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
 	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
-
-	// onFocus: () => {console.log("INFO ShelfTile :: please pass a function for onFocus")},
- 	// onBlur: () => {console.log("INFO ShelfTile :: please pass a function for onBlur")},
 }

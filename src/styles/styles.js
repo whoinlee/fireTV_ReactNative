@@ -36,8 +36,7 @@ const styles = StyleSheet.create({
 	    position: 'relative',	/* 'absolute' */
 	    width: '100%',
 	    height: config.initGlobalNavH/RATIO,
-	    borderWidth: 1,
-	    borderColor: '#000000',
+	    borderWidth: 1, borderColor: '#000000',
 	},
 
 	//-- HomeHeroPane
@@ -48,8 +47,7 @@ const styles = StyleSheet.create({
 	    position: 'absolute',
 	    width: '100%',
 	  	height: config.initHomeHeroH/RATIO,
-    	borderWidth: 1,
-    	borderColor: '#000000',
+    	borderWidth: 1, borderColor: '#000000',
 	},
 
 	//-- HomeShelvesPane
@@ -57,10 +55,7 @@ const styles = StyleSheet.create({
 	    position: 'absolute',
 	    width: '100%',
 	    height: '400%',	//-- hack!!!
-	    //-- for testing --//
-	    // borderWidth: 1,
-    	// borderColor: '#f00',
-    	//-----------------//
+	    // borderWidth: 1, borderColor: '#f00',		//-- for testing --//
 	}
 });
 

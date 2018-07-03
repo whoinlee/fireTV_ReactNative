@@ -51,6 +51,7 @@ const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;   //--
 
 const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //-- base tile height, on an unselected shelf
 const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //-- focused tile height, on a selected shelf
+const FOCUSED_BASE_TILE_H   = config.homeShelves.focusedBaseTileH/RATIO;    //-- unfocused tile height, on a selected shelf
 const BLOOMED_TILE_H        = config.homeShelves.bloomedTileH/RATIO;        //-- bloomed tile height, on a selected shelf
 
 const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
@@ -62,14 +63,10 @@ const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //--
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
-
-
-
-const SHELF_H           = BLOOMED_TILE_H
-const TILE_TOP          = (BLOOMED_TILE_H - BASE_TILE_H)/2
-const BASE_TITLE_TOP    = TILE_TOP - TITLE_TO_TILE_OFFSET
-const NEXT_SHELF_OFFSET = (SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2)         //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
-
+const SHELF_H               = BLOOMED_TILE_H;
+const TILE_TOP              = Math.floor((BLOOMED_TILE_H - BASE_TILE_H)/2);
+const BASE_TITLE_TOP        = Math.floor(TILE_TOP - TITLE_TO_TILE_OFFSET);
+const NEXT_SHELF_OFFSET     = Math.round((SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2));     //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
 /* ------------------------------------------ */
@@ -104,19 +101,17 @@ export default class POCContainerK extends Component {
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
 
     //-- up pane locations
-    // this.upHomeShelvesY = V_MIDDLE_Y - (INIT_SHELF_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET + BASE_TILE_H/2)    //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)                   //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
-    this.upHomeHeroY = this.upHomeShelvesY - INIT_HOME_HERO_H               //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
-
-    //TODO: recalculate
-    this.paneShiftOffsetY = this.initHomeShelvesY - this.upHomeShelvesY + (FOCUSED_TILE_H - BASE_TILE_H)/2        //bc, the fist shelf tile will be focused : (332-180)/2
-    this.upGlobalNavY = this.initGlobalNavY - this.paneShiftOffsetY     
+    const TILE_GROW = (FOCUSED_BASE_TILE_H - BASE_TILE_H)/2
+    const SHIFT_Y = Math.round(this.initHomeShelvesY - this.upHomeShelvesY + TILE_GROW)
+    this.upHomeHeroY = this.initHomeHeroY - SHIFT_Y                         //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
+    this.upGlobalNavY = this.initGlobalNavY - SHIFT_Y 
 
     //TODO: recalculate
     //-- mid-up and off the stage homeHero pane locations
     this.upMidHomeHeroY = this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y           //-- homeHeroPane shifts on the fist shelf being largeBloomed
-    //TODO: recalculate, -100: hack
-    this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y - 100    //-- homeHeroPane shifts/hides on the 2nd shelf being focused
+    // this.upOffHomeHeroY = this.upHomeHeroY - FOCUSED_SHELF_OFFSET_Y - 100 //-- homeHeroPane shifts/hides on the 2nd shelf being focused
+    this.upOffHomeHeroY = this.upHomeHeroY - SHELF_H                         //-- homeHeroPane shifts/hides on the 2nd shelf being focused
   }
 
   componentDidMount() {
@@ -168,9 +163,8 @@ export default class POCContainerK extends Component {
   }//_disableTVEventHandler
 */
   _setKeyListener = () => {
-    //console.log('INFO POCContainer :: _setKeyListener')
+    //console.log('INFO POCContainer :: _setKeyListener, keyCode ? : ' + keyEvent.keyCode);
     KeyEvent.onKeyDownListener((keyEvent) => {
-      //console.log('INFO POCContainer :: componentDidMount, keyCode ? : ' + keyEvent.keyCode);
       switch (keyEvent.keyCode) {
         case keyCodes.up:
           this.doUp()
@@ -192,9 +186,6 @@ export default class POCContainerK extends Component {
         case keyCodes.playPause:
           this._toggleGuide()
           break
-        case keyCodes.toggleOutline:
-          // this.selectablePanes[HOME_SHELVES_INDEX].toggleOutline()
-          break
         case keyCodes.reload:
           //-- for reloading the app: r, r
           //-- do nothing
@@ -212,8 +203,7 @@ export default class POCContainerK extends Component {
 
   doUp = () => {
     if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return //-- do nothing
-    console.log('INFO POCContainer :: doUp');
-
+    // console.log('INFO POCContainer :: doUp');
     switch (this.currFocusLocIndex) {
       case HOME_HERO_INDEX :
         this._onGlobalNavPaneFocus()
@@ -225,8 +215,7 @@ export default class POCContainerK extends Component {
   }//doUp
 
   doDown = () => {
-    console.log('INFO POCContainer :: doDown, this.currFocusLocIndex ? ' + this.currFocusLocIndex);
-
+    // console.log('INFO POCContainer :: doDown, this.currFocusLocIndex ? ' + this.currFocusLocIndex);
     switch (this.currFocusLocIndex) {
       case GLOBAL_NAV_INDEX :
         this._onHomeHeroPaneFocus()
@@ -303,7 +292,6 @@ export default class POCContainerK extends Component {
     this._changeLocation(HOME_SHELVES_INDEX, this.initHomeShelvesY)
     this._hideGuide()
     this.currFocusLocIndex = HOME_HERO_INDEX
-    // console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> currFocusLocIndex ? " + this.currFocusLocIndex)
   }//_onHomeHeroPaneFocus
 
   _onHomeShelvesPaneFocus = () => {
@@ -317,7 +305,6 @@ export default class POCContainerK extends Component {
     this._changeLocation(HOME_SHELVES_INDEX, this.upHomeShelvesY)
     //this._showGuide()
     this.currFocusLocIndex = HOME_SHELVES_INDEX
-    // console.log("INFO POCContainer :: _onHomeShelvesPaneFocus, ======================> currFocusLocIndex ? " + this.currFocusLocIndex)
     this.selectablePanes[HOME_SHELVES_INDEX].doDown()
   }//_onHomeShelvesPaneFocus
 
@@ -364,21 +351,21 @@ export default class POCContainerK extends Component {
     return (
         <View style={styles.pocContainer}>
             <Animated.View
-                      style={ { ...this.props.globalNavStyleObj,
+                      style={ { ...StyleSheet.flatten(styles.globalNavContainer),
                                 top: animLocation0,
                                 opacity: animOpacity0  } } >
                       <GlobalNavPane
                                 ref={node => {this.selectablePanes[GLOBAL_NAV_INDEX] = node}} /> 
             </Animated.View>
             <Animated.View
-                      style={ { ...this.props.homeHeroStyleObj,
+                      style={ { ...StyleSheet.flatten(styles.homeHeroContainer),
                                 top: animLocation1,
                                 opacity: animOpacity1  } } >
                       <HomeHeroPane
                                 ref={node => {this.selectablePanes[HOME_HERO_INDEX] = node}} />
             </Animated.View>
             <Animated.View
-                      style={ { ...this.props.homeShelvesStyleObj, 
+                      style={ { ...StyleSheet.flatten(styles.homeShelvesContainer), 
                                 top: animLocation2,
                                 opacity: animOpacity2  } } >
                       <HomeShelvesPane
@@ -390,20 +377,6 @@ export default class POCContainerK extends Component {
             </Animated.View>
             {this._renderGuide()}
         </View>
-
-    );
+    )
   }//render
 }//POCContainer
-
-
-POCContainerK.propTypes = {
-  globalNavStyleObj: PropTypes.object,
-  homeHeroStyleObj: PropTypes.object,
-  homeShelvesStyleObj: PropTypes.object
-}
-
-POCContainerK.defaultProps = {
-  globalNavStyleObj: StyleSheet.flatten(styles.globalNavContainer),
-  homeHeroStyleObj: StyleSheet.flatten(styles.homeHeroContainer),
-  homeShelvesStyleObj: StyleSheet.flatten(styles.homeShelvesContainer)
-}

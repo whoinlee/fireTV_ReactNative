@@ -5,8 +5,6 @@ import {
   Easing,
   StyleSheet,
   Text,
-  // TouchableNativeFeedback,
-  // TouchableWithoutFeedback,
   View
 } from 'react-native';
 import KeyEvent from 'react-native-keyevent';
@@ -64,9 +62,9 @@ const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //--
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
-const SHELF_H 				= BLOOMED_TILE_H
-const TILE_TOP 				= Math.floor((BLOOMED_TILE_H - BASE_TILE_H)/2)
-const BASE_TITLE_TOP 		= Math.floor(TILE_TOP - (TITLE_TO_TILE_OFFSET + BASE_TITLE_H))
+const SHELF_H 				= BLOOMED_TILE_H;
+const TILE_TOP 				= Math.floor((BLOOMED_TILE_H - BASE_TILE_H)/2);
+const BASE_TITLE_TOP 		= Math.floor(TILE_TOP - (TITLE_TO_TILE_OFFSET + BASE_TITLE_H));
 
 
 /* ------------------------------------------ */
@@ -203,8 +201,6 @@ export default class HomeShelf extends Component {
 			//-- special case with 2 tiles
 			this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
 		}
-
-		// console.log("INFO HomeShelf :: doLeft/moveToRight, this.tileIndexQueue after doLeft ? ===> ", this.tileIndexQueue)
 	}//doLeft
 
 	doRight = () => {
@@ -214,8 +210,6 @@ export default class HomeShelf extends Component {
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
 			//-- TODO
-			// console.log("INFO HomeShelf :: doRight, this.currTile.props.episodeTitle? " + this.currTile.props.episodeTitle) 
-			// this.currTile.doRight()
 			return
 		}
 
@@ -235,10 +229,6 @@ export default class HomeShelf extends Component {
 		if (prevPrevTileIndex !== -1) {
 			this._changeTileLocation(prevPrevTileIndex, prevPrevX)
 			prevPrevTile.toExpanded()
-			//TODO
-		    //-- give delay, then show as the last element
-		    //this._changeTileLocation(prevPrevTileIndex, targetX, STD_DURATION, STD_DURATION)	//stdDuration after
-		    //prevPrevTile.fadeIn(.3, .2)	//TODO
 		}
 
 		//-- update prevTile : currTile becomes the prevTile
@@ -264,7 +254,6 @@ export default class HomeShelf extends Component {
 		    	targetX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		    }
 		   
-		    // console.log("prevPrevTile???? " + prevPrevTile)
 		    if (prevPrevTile) {
 		    	//-- give delay, then show as the last element
 		    	if (this.changeTileLocationID) clearTimeout(this.changeTileLocationID)
@@ -283,7 +272,6 @@ export default class HomeShelf extends Component {
 	    //-- updateQueue
 	    let prevIndex = this.tileIndexQueue.shift()
 	    if (prevIndex !== -1) this.tileIndexQueue.push(prevIndex)
-	    // console.log("INFO HomeShelf :: doRight, this.tileIndexQueue  after ? ", this.tileIndexQueue)
 	}//doRight
 
 	doSelect = () => {
@@ -300,7 +288,6 @@ export default class HomeShelf extends Component {
 		const titleShiftOffset = Math.fround((FOCUSED_TILE_H - BASE_TILE_H)/2 + 16/RATIO)	//tileHeight increase + titleHeight increase (fontSize increase)
 		const titleUpY = BASE_TITLE_TOP - titleShiftOffset
 		this._changeTitleLocation(titleUpY)
-
 
 		//-- update prev, curr, and next tiles
 		const prevTileIndex = this.tileIndexQueue[0]
@@ -335,8 +322,7 @@ export default class HomeShelf extends Component {
 	}//onFocus
 
 	onBlur = (pIsDimmed = true) => {
-		console.log("INFO HomeShelf :: onBlur, shelf index is ? " + this.props.index + ", isDimmed ? " + pIsDimmed)
-
+		// console.log("INFO HomeShelf :: onBlur, shelf index is ? " + this.props.index + ", isDimmed ? " + pIsDimmed)
 		this.setState({isDimmed: pIsDimmed, shelfKind: SHELF_KIND_OBJ.BASE})
 
 		//-- update title
@@ -371,9 +357,8 @@ export default class HomeShelf extends Component {
 	}//onBlur
 
 	_reset = () => {
-		console.log("INFO HomeShelf :: _reset", this.props.index)
-
-		this._backToOrg()	//_clearBloomTimer will be handled here
+		// console.log("INFO HomeShelf :: _reset", this.props.index)
+		this._backToOrg()				//-- _clearBloomTimer will be handled here
 		this._buildTileQueue()
 
 		this.setState({isDimmed: false, titleYPosition: new Animated.Value(BASE_TITLE_TOP)})
@@ -385,8 +370,6 @@ export default class HomeShelf extends Component {
 
 	_buildTileIndexQueue = () => {
 		// console.log("INFO HomeShelf :: _buildTileIndexQueue, this.totalTiles ?? " + this.totalTiles)
-		//this.tileIndexQueue = this.tiles.slice(0)	//-- from 0 to end, i.e. the copy of whole array
-
 		const lastIndex = this.totalTiles - 1
 
 		//-- for the 1st element, -1: no prevTileIndex
@@ -403,29 +386,6 @@ export default class HomeShelf extends Component {
 			//-- last index goes to the last element
 			this.tileIndexQueue.push(lastIndex)
 		}
-
-		// console.log("INFO HomeShelf :: _buildTileIndexQueue, lastIndex ?? " + lastIndex)
-		// console.log("INFO HomeShelf :: _buildTileIndexQueue, MAX_TILE_INDEX ?? " + MAX_TILE_INDEX)
-		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.tileIndexQueue ? " + this.tileIndexQueue)
-		//const leftX = ( (i < MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
-		
-		/*
-		// console.log("INFO HomeShelf :: buildTileIndexQueue, this.props.shows.length ? ", this.props.shows.length)
-		for (var i=0; i<this.totalTiles; i++) {
-			const leftX = ( (i < maxTileIndex) || (i < (this.totalTiles - 1)) )? initX + tileBaseWidth[shelfKindObj.BASE]*i : initX - tileBaseWidth[shelfKindObj.BASE];
-			if (leftX < initX) {
-				//-- if prev tile exists
-				if (this.tileIndexQueue[0] === -1) {
-					this.tileIndexQueue[0] = i	//-- replace '-1' with 'i'
-				}
-			} else {
-				if (this.tileIndexQueue[i+1] === undefined) {
-					this.tileIndexQueue[i+1] = i
-				}
-			}
-		}
-		
-		*/
 	}//_buildTileIndexQueue
 
 	_buildTileXPositionArr = () => {
@@ -437,7 +397,6 @@ export default class HomeShelf extends Component {
 			tileXPositionArr.push(new Animated.Value(leftX))
 		}
 		this.setState({tileXPositionArr : tileXPositionArr})
-		// console.log("INFO HomeShelf :: _buildTileXPositionArr, tileXPositionArr.length ?? " + tileXPositionArr.length)
 	}//_buildTileXPositionArr
 
 	_changeTitleLocation = (targetValue, pDuration=SHORT_DURATION) => {
@@ -468,19 +427,8 @@ export default class HomeShelf extends Component {
 	    ).start()
 	}//_changeTitleLocation
 
-	// _fadeInTileAt = (tileIndex, targetValue, pDuration=STD_DURATION) => {
-	//     console.log("INFO HomeShelf :: _fadeInTile " + tileIndex + " at " + targetValue)
-	//     Animated.timing(
-	//       this.state.tileXPositionArr[tileIndex], 
-	//       {
-	//         toValue: targetValue,
-	//         delay:pDelay,
-	//         duration: pDuration,
-	//         easing: Easing.out(Easing.quad),
-	//       }
-	//     ).start();
-	// }//_fadeInTileAt
 
+	//**********//
 	_backToFocused = (pDir = "left") => {
 		console.log("INFO HomeShelf :: _backToFocused")
 	}//_backToFocused
@@ -517,11 +465,15 @@ export default class HomeShelf extends Component {
 	_clearBloomTimer = () => {
 		console.log("INFO HomeShelf :: _clearBloomTimer")
 	}//_clearBloomTimer
+	//**********//
+
 
 	_find_dimesions = (layout) => {
-	    const {height} = layout;
+	    const {width, height} = layout;
+	    // console.warn(width);
 	    // console.warn(height);
-	    //console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
+	    //console.log('INFO HomeShelf :: _find_dimensions (testing), width is ' + width);
+	    console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
 	 }//_find_dimesions
 
 	_renderEachShelfTile = (tileObj, i) => {
@@ -536,21 +488,17 @@ export default class HomeShelf extends Component {
 					style={ { 
 							position: pPosition,
 							left: leftX,
-							// borderColor: '#000000', 
-							// borderWidth: 1
+							// borderColor: '#000000', borderWidth: 1
 						} } >
 				<ShelfTile 	
 						ref={node => this.tiles.push(node)}
 				  		index={i}
-				  		homeShelfIndex={this.props.index}
+				  		// homeShelfIndex={this.props.index}
 				  		showTitle={tileObj.showTitle}
 				  		episodeTitle={tileObj.episodeTitle}
 				  		episodeID={tileObj.episode}
 				  		episodeDesc={" " + tileObj.episodeDesc}
 				  		imageURL={tileObj.imageURL}
-				  		// key={(i + 1).toString()}
-				  		// leftX={leftX}
-				  		// onFocus={this._onTileFocusCallBack}
 				  		// callBackOnLargeBloomStart={this._onLargeBloomStart}
 				  		// callBackOnNoMenuLeft={this._backToFocused}
 				/>
@@ -562,11 +510,6 @@ export default class HomeShelf extends Component {
 		// console.log("INFO HomeShelf :: render --------------------------------------------------------------->")
 		const { shelfKind, titleYPosition } = this.state
 		const titleStyle = (shelfKind === SHELF_KIND_OBJ.BASE) ? homeShelfStyles.shelfTitleBase : homeShelfStyles.shelfTitleFocused
-		//-- for testing
-		// const colorArr = ['darkcyan', 'darkred', 'darkorchid']
-		// let colorIndex = Math.floor(Math.random() * 3)
-		// let pColor = colorArr[colorIndex]
-		//--------------
 		return (
 			<View 
 				style={{ 
@@ -580,7 +523,6 @@ export default class HomeShelf extends Component {
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
 								top: titleYPosition,
 						 	} }
-					//-- for testing, to decide title height
 					//onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
 				>
 					<Text style={ titleStyle }>
@@ -603,9 +545,6 @@ const homeShelfStyles = StyleSheet.create({
 		position: 'absolute',
 		left: INIT_X,
 		top: BASE_TITLE_TOP,
-		//top: INIT_Y,
-	    // borderWidth: .5,
-    	// borderColor: 'darkgreen',
 	},
 
 	shelfTitleBase: {
@@ -631,10 +570,6 @@ const homeShelfStyles = StyleSheet.create({
 		position: 'absolute',
 		top: TILE_TOP,
     	flex: 1,
-    	//top: TITLE_TO_TILE_OFFSET,
-		// top: INIT_Y + BASE_TITLE_H + TITLE_TO_TILE_OFFSET,
-    	// borderWidth: .5,
-    	// borderColor: 'darkgreen',
 	},
 	//---------------------------------//
 });
