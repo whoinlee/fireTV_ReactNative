@@ -268,7 +268,7 @@ export default class HomeShelf extends Component {
 		    if (prevPrevTile) {
 		    	//-- give delay, then show as the last element
 		    	if (this.changeTileLocationID) clearTimeout(this.changeTileLocationID)
-		    	this.changeTileLocationID = setTimeout(() => this._changeTileLocation(prevPrevTileIndex, targetX, 0), (STD_DURATION - 100))
+		    	this.changeTileLocationID = setTimeout(() => this._changeTileLocation(prevPrevTileIndex, targetX, 0), (SHORT_DURATION - 100))
 		    	//prevPrevTile.fadeIn(.3, .2)	//TODO
 		    }
 		} else {
@@ -440,7 +440,7 @@ export default class HomeShelf extends Component {
 		// console.log("INFO HomeShelf :: _buildTileXPositionArr, tileXPositionArr.length ?? " + tileXPositionArr.length)
 	}//_buildTileXPositionArr
 
-	_changeTitleLocation = (targetValue, pDuration=STD_DURATION) => {
+	_changeTitleLocation = (targetValue, pDuration=SHORT_DURATION) => {
 	    // console.log("INFO HomeShelf :: _changeTitleLocation, to " + targetValue)
 	    Animated.timing(this.state.titleYPosition).stop()
 	    Animated.timing(
@@ -453,7 +453,7 @@ export default class HomeShelf extends Component {
 	    ).start()
 	}//_changeTitleLocation
 
-	_changeTileLocation = (tileIndex, targetValue, pDuration=STD_DURATION, pDelay=0) => {
+	_changeTileLocation = (tileIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
 		if (tileIndex === undefined) return
 	    // console.log("INFO HomeShelf :: _changeTile " + tileIndex + " xLocation, to " + targetValue)
 		Animated.timing(this.state.tileXPositionArr[tileIndex]).stop()

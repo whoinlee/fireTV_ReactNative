@@ -266,7 +266,7 @@ export default class POCContainerK extends Component {
     ).start()
   }//_changeOpacity
 
-  _changeLocation = (targetIndex, targetValue, pDuration=STD_DURATION) => {
+  _changeLocation = (targetIndex, targetValue, pDuration=SHORT_DURATION) => {
     //console.log("INFO POCContainer :: _changeLocation, " + targetIndex + ": " + FOCUS_LOC_ARR[targetIndex] + " change yLocation to " + targetValue)
     Animated.timing(this.state["animLocation" + targetIndex]).stop()
     Animated.timing(this.state["animLocation" + targetIndex], 

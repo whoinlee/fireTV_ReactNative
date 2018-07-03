@@ -8,7 +8,7 @@ export default {
 
   //-- animation related
   stdDuration: 500,             //-- in milliseconds = .5 sec,
-  shortDuration: 350,           //-- in milliseconds = .35 sec,
+  shortDuration: 250,           //-- in milliseconds = .35 sec,
   waitToLargeBloomDuration: 4000,
 
   //-- opacity related

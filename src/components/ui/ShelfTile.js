@@ -140,7 +140,7 @@ export default class ShelfTile extends Component {
 		this._hideOverlay()
 	}//backToOrg
 
-	toFocused = (pDuration=STD_DURATION) => {
+	toFocused = (pDuration=SHORT_DURATION) => {
 		// console.log("INFO ShelfTile :: toFocused, index: " + this.props.index)
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
@@ -149,14 +149,14 @@ export default class ShelfTile extends Component {
 		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--for testing
 	}//toFocused
 
-	toExpanded = (pDuration=STD_DURATION) => {
+	toExpanded = (pDuration=SHORT_DURATION) => {
 		// console.log("INFO ShelfTile :: toExpanded, index: " + this.props.index)
 		this._updateKind(TILE_KIND_OBJ.EXPANDED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
 		this._hideOverlay()
 	}//toExpanded
 
-	_toMedBloomed = (targetX, noScale=false, pDuration=STD_DURATION) => {
+	_toMedBloomed = (targetX, noScale=false, pDuration=SHORT_DURATION) => {
 		console.log("INFO ShelfTile :: _toMedBloomed")
 		this._hideOverlay()
 		// this.updateState(TILE_KIND_OBJ.MED_BLOOMED)
@@ -187,7 +187,7 @@ export default class ShelfTile extends Component {
 		// this.setState({ tileKind: pKind, isOverlayVisible: false })
 	}//_updateState
 
-	_changeScale = (targetValue, pDuration=STD_DURATION) => {
+	_changeScale = (targetValue, pDuration=SHORT_DURATION) => {
 	    console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
 	    // console.log("INFO ShelfTile :: pDuration, to " + pDuration)
 
@@ -213,7 +213,7 @@ export default class ShelfTile extends Component {
 		      this.state.overlayOpacity, 
 		      {
 		        toValue: 1,
-		        duration: STD_DURATION,	//hack
+		        duration: SHORT_DURATION,	//hack
 		        easing: Easing.out(Easing.quad),
 		      }
 		    ).start()
