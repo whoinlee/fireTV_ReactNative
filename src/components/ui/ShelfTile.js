@@ -64,7 +64,7 @@ export default class ShelfTile extends Component {
 			tileKind: TILE_KIND_OBJ.ORIGINAL,
 			imageScale: new Animated.Value(1),
 			overlayOpacity: new Animated.Value(0),
-			episodeIDWidth: 98/RATIO,
+			episodeIDWidth: 95/RATIO,
 			// isOverlayVisible: false,
 		}
 
@@ -274,14 +274,14 @@ export default class ShelfTile extends Component {
 	    const {width, height} = layout
 	    // console.warn(height);
 	    console.log('INFO ShelfTile :: _find_dimensions (testing), width is ' + width)
-	    // console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height)
+	    console.log('INFO ShelfTile :: _find_dimensions (testing), height is ' + height)
 	    //this.episodeWidth = Math.round(width) + 10/RATIO;
-	    this.setState( { episodeIDWidth : Math.round (width) })
+	    // this.setState( { episodeIDWidth : Math.round (width) })
 	 }//_find_dimesions
 
 	_renderContent = () => {
 		console.log("INFO ShelfTile :: _renderContent =======================>")
-		const { tileKind, overlayOpacity } = this.state
+		const { tileKind, overlayOpacity, episodeIDWidth } = this.state
 		const leftX0 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2			//-- leftEnd location (bc, image is transformed to TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]/2 xLocation)
 		const rightX0 = 10/RATIO
 		const textTopMargin0 = 4/RATIO
@@ -289,8 +289,7 @@ export default class ShelfTile extends Component {
 		//-- (imageSizeYIncrease)/2 for expandedImage
 		const expandedIDY = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1] + (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + textTopMargin0
 		const focusedTopY = -(TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
-		const expandedEpisodeIDWidth = 98/RATIO
-		const expandedShowTitleWidth = TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0] - expandedEpisodeIDWidth
+		const showTitleWidth = TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]-episodeIDWidth
 		switch (tileKind) {
 			case TILE_KIND_OBJ.EXPANDED:
 				return (
@@ -299,32 +298,30 @@ export default class ShelfTile extends Component {
 								left: leftX0,
 								top: expandedIDY,
 								width: TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0],
+								flex: 1,
+								flexWrap: 'nowrap',
+								flexDirection: 'row',
+								alignItems: 'flex-start',
 								// borderWidth: .5, borderColor: 'blue',
 							}} >
 						<Text 	style={ {
 								... StyleSheet.flatten(shelfTileStyles.expandedEpisodeID),
-								position: 'absolute',
-								left: 0,
-								width: this.state.episodeIDWidth,
-								// borderWidth: .5, borderColor: 'blue',
 								} }
-								onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
+								// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
 						>
 							{this.props.episodeID}
+
 						</Text>
 						<Text 	style={ {
 								... StyleSheet.flatten(shelfTileStyles.showTitle),
-								position: 'absolute',
-								left: this.state.episodeIDWidth,
-								width: TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]-this.state.episodeIDWidth,
-								overflow: 'hidden',
-								// borderWidth: .5, borderColor: 'blue',
-								} }>
-							{this.props.showTitle}
+								width: showTitleWidth,
+								} }
+								numberOfLines={1} 
+								ellipsizeMode={'tail'} >
+								{"  " + this.props.showTitle}
 						</Text>
 					</View>
 				)
-				// {this.props.episodeID}  <span className="baseEpisodeID">{this.props.showTitle}</span>
 			case TILE_KIND_OBJ.FOCUSED:
 				const leftX1 = leftX0 + CONTENT_X
 				const width1 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]*FOCUSED_SCALE
@@ -451,68 +448,37 @@ const shelfTileStyles = StyleSheet.create({
 		fontFamily: 'Helvetica',
 		fontWeight: '400',
 	    fontSize: 24/RATIO,
-	    textAlign: 'left',
+	    // textAlign: 'left',
 	    color: '#fff',
-	    margin: 0,
+	    // margin: 0,
 	},
 
 	focusedEpisodeTitle: {
 		fontFamily: 'Helvetica-Bold',
 		fontWeight: '700',
 	    fontSize: 24/RATIO,
-	    textAlign: 'left',
+	    // textAlign: 'left',
 	    color: '#fff',
-	    margin: 0,
+	    // margin: 0,
 	},
 
 	focusedEpisodeID: {
 		fontFamily: 'Helvetica',
 		fontWeight: '400',
 	    fontSize: 24/RATIO,
-	    textAlign: 'left',
+	    // textAlign: 'left',
 	    color: '#fff',
-	    margin: 0,
+	    // margin: 0,
 	},
 
 	expandedEpisodeID: {
 		fontFamily: 'Helvetica-Bold',
 		fontWeight: '700',
 	    fontSize: 24/RATIO,
-	    textAlign: 'left',
+	    // textAlign: 'left',
 	    color: '#fff',
-	    margin: 0,
+	    // margin: 0,
 	},
-	// homeShelfTitleContainer: {
-	// 	position: 'absolute',
-	// 	left: INIT_X,
-	// 	top: BASE_TITLE_TOP,
-	// },
-
-	// shelfTitleBase: {
-	// 	fontSize: 28/RATIO,
-	//     fontFamily: 'Helvetica-Light',
-	//     fontWeight: '100',	/*HelveticaLight*/
-	//     textAlign: 'left',
-	//     color: '#fff',
-	// },
-
-	// shelfTitleFocused: {
-	// 	fontSize: 40/RATIO,
-	//     fontFamily: 'Helvetica-Light',
-	//     fontWeight: '100',	/*HelveticaLight*/
-	//     textAlign: 'left',
-	//     color: '#fff',
-	// },
-	// //---------------------------------//
-
-
-	// //-- "tile" ----------------------//
-	// homeShelfTilesContainer: {
-	// 	position: 'absolute',
-	// 	top: TILE_TOP,
- //    	flex: 1,
-	// },
-	// //---------------------------------//
 });
 
 ShelfTile.propTypes = {
