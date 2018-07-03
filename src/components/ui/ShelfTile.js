@@ -19,7 +19,7 @@ import styles from '../../styles/styles';
 const RATIO                 = config.density;
 const STD_DURATION        	= config.stdDuration;
 const SHORT_DURATION      	= config.shortDuration;
-const WAIT_TO_LARGE_BLOOM_DURATION	= config.waitToLargeBloomDuration/1000;	//-- in seconds
+const WAIT_TO_LARGE_BLOOM_DURATION	= config.waitToLargeBloomDuration;	//-- in miliseconds
 const ASSET_URL				= '../../assets/';
 
 
@@ -109,13 +109,12 @@ export default class ShelfTile extends Component {
 	}//doSelect
 
 	onFocus = () => {
-		console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
+		// console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
       	this.toFocused()
 
       	const { onFocus } = this.props;
       	if (onFocus) {
-        	console.log('INFO ShelfTile :: onFocus calling back from ShelfTile');
-        	onFocus();
+        	onFocus()
       	}
 	}//onFocus
 
@@ -123,11 +122,11 @@ export default class ShelfTile extends Component {
 		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
 	}//onBlur
 
-	backToOrg = () => {
-		console.log("INFO ShelfTile :: backToOrg, index: " + this.props.index)
-
+	backToOrg = (pDuration=SHORT_DURATION) => {
+		// console.log("INFO ShelfTile :: backToOrg, index: " + this.props.index)
+		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.ORIGINAL)
-		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL])
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.ORIGINAL], pDuration)
 		this._hideOverlay()
 	}//backToOrg
 
@@ -136,12 +135,13 @@ export default class ShelfTile extends Component {
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.FOCUSED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.FOCUSED], pDuration)
-		//this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED])	//--for testing
 		this._hideOverlay()
+		this._waitToLargeBloom()
 	}//toFocused
 
 	toExpanded = (pDuration=SHORT_DURATION) => {
 		// console.log("INFO ShelfTile :: toExpanded, index: " + this.props.index)
+		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.EXPANDED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.EXPANDED], pDuration)
 		this._hideOverlay()
@@ -195,10 +195,27 @@ export default class ShelfTile extends Component {
 
 
 	//**********//
-	_toMedBloomed = (targetX, noScale=false, pDuration=SHORT_DURATION) => {
-		console.log("INFO ShelfTile :: _toMedBloomed")
+	_toLargeBloomed = (pDuration=SHORT_DURATION) => {
+		console.log("INFO ShelfTile :: _toLargeBloomed")
+		this._clearBloomTimer()
+		this._updateKind(TILE_KIND_OBJ.LG_BLOOMED)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED], pDuration)
 		this._hideOverlay()
-		// this.updateState(TILE_KIND_OBJ.MED_BLOOMED)
+
+		const { onBloomToLargeStart } = this.props;
+      	if (onBloomToLargeStart) {
+        	onBloomToLargeStart()
+      	}
+		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
+	}//_toLargeBloomed
+
+	// _toMedBloomed = (targetX, noScale=false, pDuration=SHORT_DURATION) => {
+	_toMedBloomed = (pDuration=SHORT_DURATION) => {
+		console.log("INFO ShelfTile :: _toMedBloomed")
+		this._clearBloomTimer()
+		this._updateKind(TILE_KIND_OBJ.MED_BLOOMED)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.MED_BLOOMED], pDuration)
+		this._hideOverlay()
 		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
 		// if (noScale) {
 		// 	TL.to(this.imageContainer, pDuration, {css: { '-webkit-filter': 'brightness(1)'}})
@@ -207,14 +224,7 @@ export default class ShelfTile extends Component {
 		// }
 	}//_toMedBloomed
 
-	_toLargeBloomed = () => {
-		console.log("INFO ShelfTile :: _toLargeBloomed")
-		this._hideOverlay()
-		// this.killToLargeBloom()
-		// this.updateState(TILE_KIND_OBJ.LG_BLOOMED)
-		// this.props.callBackOnLargeBloomStart()
-		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
-	}//_toLargeBloomed
+
 
 	_clearBloomTimer = () => {
 		console.log("INFO ShelfTile :: _clearBloomTimer")
@@ -223,24 +233,24 @@ export default class ShelfTile extends Component {
 
 	_waitToLargeBloom = () => {
 		console.log("INFO ShelfTile :: _waitToLargeBloom")
-		this._clearBloomTimer()
-		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION*1000)
+		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
+		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION)
 	}//_waitToLargeBloom
 
-	_showFocusedContent = () => { 
-		console.log("INFO ShelfTile :: _showFocusedContent")
-		// TL.to(this.focusedContent, stdDuration, {delay:.2, opacity:1, onComplete: this.waitToLargeBloom()}) 
-	}//_showFocusedContent
+	// _showFocusedContent = () => { 
+	// 	console.log("INFO ShelfTile :: _showFocusedContent")
+	// 	// TL.to(this.focusedContent, stdDuration, {delay:.2, opacity:1, onComplete: this.waitToLargeBloom()}) 
+	// }//_showFocusedContent
 
-	_hideFocusedContent = () => { 
-		console.log("INFO ShelfTile :: _hideFocusedContent")
-		// TL.to(this.focusedContent, 0, {opacity:0}) 
-	}//_hideFocusedContent
+	// _hideFocusedContent = () => { 
+	// 	console.log("INFO ShelfTile :: _hideFocusedContent")
+	// 	// TL.to(this.focusedContent, 0, {opacity:0}) 
+	// }//_hideFocusedContent
 
-	_showBloomedContent = () => {
-		console.log("INFO ShelfTile :: _showBloomedContent")
-		// TL.to(this.bloomedContent, stdDuration, {delay:stdDuration, css: {visibility: 'visible', opacity: 1}})
-	}//_showBloomedContent
+	// _showBloomedContent = () => {
+	// 	console.log("INFO ShelfTile :: _showBloomedContent")
+	// 	// TL.to(this.bloomedContent, stdDuration, {delay:stdDuration, css: {visibility: 'visible', opacity: 1}})
+	// }//_showBloomedContent
 
 	_onInfoButtonClicked = (e) => {
 		console.log("INFO ShelfTile :: _onInfoButtonClicked")
@@ -446,11 +456,11 @@ ShelfTile.propTypes = {
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!*/
-	// callBackOnLargeBloomStart: PropTypes.func,
+	onBloomToLargeStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 }
 
 ShelfTile.defaultProps = {
-	// callBackOnLargeBloomStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnLargeBloomStart")},
+	onBloomToLargeStart: () => {console.log("INFO ShelfTile :: please pass a function for onBloomToLargeStart")},
 	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
 }

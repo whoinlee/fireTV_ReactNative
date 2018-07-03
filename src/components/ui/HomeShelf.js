@@ -114,7 +114,7 @@ export default class HomeShelf extends Component {
 
 	doLeft = () => {
 		if (this.totalTiles <= 1) return
-		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> ", this.tileIndexQueue)
+		// console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> ", this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
@@ -153,14 +153,12 @@ export default class HomeShelf extends Component {
 
 		//-- update currTile : prevTile becomes the currTile
 		if (this.currTile) {
-			console.log("INFO HomeShelf :: doLeft, this.currTile ?????? " + this.currTile)
 			this._changeTileLocation(currTileIndex, INIT_X)
 			this.currTile.toFocused()
 		}
 
 		//-- update prevTile : prevPrev becomes the prevTile, or no prevTile
 		if (this.prevTile) {
-			console.log("INFO HomeShelf :: doLeft, this.prevTile ?????? " + this.prevTile)
 			this._changeTileLocation(prevTileIndex, prevX)
 			this.prevTile.toExpanded()
 		}
@@ -168,7 +166,6 @@ export default class HomeShelf extends Component {
 		//-- update nextTile : curr becomes the nextTile
 		let nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		if (this.nextTile) {
-			console.log("INFO HomeShelf :: doLeft, this.nextTile ?????? " + this.nextTile)
 			this._changeTileLocation(nextTileIndex, nextX)
 			this.nextTile.toExpanded()
 		}
@@ -279,9 +276,8 @@ export default class HomeShelf extends Component {
 	}//doSelect
 
 	onFocus = () => {
-		console.log("INFO HomeShelf :: onFocus, =================> focusedShelfIndex is ? " + this.props.index)
-
-		this._clearBloomTimer()
+		// console.log("INFO HomeShelf :: onFocus, =================> focusedShelfIndex is ? " + this.props.index)
+		//this._clearBloomTimer()
 		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})
 
 		//-- update title
@@ -433,12 +429,14 @@ export default class HomeShelf extends Component {
 		console.log("INFO HomeShelf :: _backToFocused")
 	}//_backToFocused
 
-	_onLargeBloomStart = () => {
-		console.log("INFO HomeShelf :: onLargeBloomStart")
-		// this.setState({isDimmed: false, isFocused: false, isBloomed: false, shelfKind: SHELF_KIND_OBJ.BLOOMED})
-		// this.setState({shelfKind: SHELF_KIND_OBJ.BLOOMED})
+	_onBloomToLargeStart = () => {
+		console.log("INFO HomeShelf :: _onBloomToLargeStart, this.props.index ? " + this.props.index)
+		this.setState({shelfKind: SHELF_KIND_OBJ.BLOOMED})
 
-		// this.props.callBackOnLargeBloomStart()
+		const { onBloomToLargeStart } = this.props;
+      	if (onBloomToLargeStart) {
+        	onBloomToLargeStart()
+      	}
 
 		// let prevX
 		// let nextX
@@ -460,10 +458,10 @@ export default class HomeShelf extends Component {
 	 //    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED]
 	 //    	targetTile.toMedBloomed(nextX, false, 0)
 	 //    }
-	}//__onLargeBloomStart
+	}//_onBloomToLargeStart
 
 	_clearBloomTimer = () => {
-		console.log("INFO HomeShelf :: _clearBloomTimer")
+		console.log("INFO HomeShelf :: _clearBloomTimer ???? ever called ???? need ????")
 	}//_clearBloomTimer
 	//**********//
 
@@ -499,7 +497,7 @@ export default class HomeShelf extends Component {
 				  		episodeID={tileObj.episode}
 				  		episodeDesc={" " + tileObj.episodeDesc}
 				  		imageURL={tileObj.imageURL}
-				  		// callBackOnLargeBloomStart={this._onLargeBloomStart}
+				  		onBloomToLargeStart={this._onBloomToLargeStart}
 				  		// callBackOnNoMenuLeft={this._backToFocused}
 				/>
 		    </Animated.View>
@@ -579,4 +577,10 @@ HomeShelf.propTypes = {
 	topY: PropTypes.number,
 	title: PropTypes.string,
 	shows: PropTypes.array,
+	onBloomToLargeStart: PropTypes.func,
 };
+
+ShelfTile.defaultProps = {
+	onBloomToLargeStart: () => {console.log("INFO HomeShelf :: please pass a function for onBloomToLargeStart")},
+	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
+}

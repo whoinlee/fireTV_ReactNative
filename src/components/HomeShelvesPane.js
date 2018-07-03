@@ -185,7 +185,7 @@ const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
-    this.state = {}
+    // this.state = {}
     this.shelves = []
     this.totalShelves = TOTAL_SHELVES
 
@@ -264,9 +264,10 @@ export default class HomeShelvesPane extends Component {
 
 
   //**********//
-  _onLargeBloomStart = () => {
-    //console.log("INFO HomeShelvesPane :: onLargeBloomStart")
-    console.log("INFO HomeShelvesPane :: _onLargeBloomStart, this.state.selectedShelfIndex? " + this.state.selectedShelfIndex)
+  _onBloomToLargeStart = () => {
+    console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.selectedShelfIndex ? " + this.selectedShelfIndex)
+
+    if (this.selectedShelfIndex == 0) this.props.updateHomeHeroLocation(this.selectedShelfIndex,true)
     // let prevY
     // let nextY
     // if (this.state.selectedShelfIndex === 0) {
@@ -317,7 +318,7 @@ export default class HomeShelvesPane extends Component {
             title={shelfObj.title}
             shows={shelfObj.shows}
             topY={i*NEXT_SHELF_OFFSET}
-            //callBackOnLargeBloomStart={this._onLargeBloomStart}
+            onBloomToLargeStart={this._onBloomToLargeStart}
             //callBackOnBackToFocused={this._moveBackAdjacentShelves} 
       />
     )
