@@ -147,6 +147,29 @@ export default class ShelfTile extends Component {
 		this._hideOverlay()
 	}//toExpanded
 
+	toLargeBloomed = (pDuration=SHORT_DURATION) => {
+		console.log("INFO ShelfTile :: toLargeBloomed")
+		this._clearBloomTimer()
+		this._updateKind(TILE_KIND_OBJ.LG_BLOOMED)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED], pDuration)
+		this._hideOverlay()
+
+		const { onBloomToLargeStart } = this.props;
+      	if (onBloomToLargeStart) {
+        	onBloomToLargeStart()
+      	}
+		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
+	}//toLargeBloomed
+
+	// _toMedBloomed = (targetX, noScale=false, pDuration=SHORT_DURATION) => {
+	toMedBloomed = (pDuration=SHORT_DURATION) => {
+		console.log("INFO ShelfTile :: toMedBloomed")
+		this._clearBloomTimer()
+		this._updateKind(TILE_KIND_OBJ.MED_BLOOMED)
+		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.MED_BLOOMED], pDuration)
+		this._hideOverlay()
+	}//toMedBloomed
+
 	_updateKind = (pKind) => {
 		if (pKind === this.state.tileKind) return
 		// console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
@@ -180,7 +203,7 @@ export default class ShelfTile extends Component {
 		      }
 		    ).start()
 		}
-	}
+	}//_showOverlay
 
 	_hideOverlay = () => {
 		Animated.timing(this.state.overlayOpacity).stop()
@@ -191,41 +214,10 @@ export default class ShelfTile extends Component {
 	        duration: 0,
 	      }
 	    ).start()
-	}
-
+	}//_hideOverlay
+	
 
 	//**********//
-	_toLargeBloomed = (pDuration=SHORT_DURATION) => {
-		console.log("INFO ShelfTile :: _toLargeBloomed")
-		this._clearBloomTimer()
-		this._updateKind(TILE_KIND_OBJ.LG_BLOOMED)
-		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED], pDuration)
-		this._hideOverlay()
-
-		const { onBloomToLargeStart } = this.props;
-      	if (onBloomToLargeStart) {
-        	onBloomToLargeStart()
-      	}
-		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
-	}//_toLargeBloomed
-
-	// _toMedBloomed = (targetX, noScale=false, pDuration=SHORT_DURATION) => {
-	_toMedBloomed = (pDuration=SHORT_DURATION) => {
-		console.log("INFO ShelfTile :: _toMedBloomed")
-		this._clearBloomTimer()
-		this._updateKind(TILE_KIND_OBJ.MED_BLOOMED)
-		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.MED_BLOOMED], pDuration)
-		this._hideOverlay()
-		// TL.to(this.containerDiv, stdDuration, {left: targetX+'px'})
-		// if (noScale) {
-		// 	TL.to(this.imageContainer, pDuration, {css: { '-webkit-filter': 'brightness(1)'}})
-		// } else {
-		// 	TL.to(this.imageContainer, pDuration, {css: {'-webkit-filter': 'brightness(1)', scale: toMedBloomedScale}})
-		// }
-	}//_toMedBloomed
-
-
-
 	_clearBloomTimer = () => {
 		console.log("INFO ShelfTile :: _clearBloomTimer")
 		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
@@ -234,7 +226,7 @@ export default class ShelfTile extends Component {
 	_waitToLargeBloom = () => {
 		console.log("INFO ShelfTile :: _waitToLargeBloom")
 		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
-		this.bloomToLargeTimerID = setTimeout(() => this._toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION)
+		this.bloomToLargeTimerID = setTimeout(() => this.toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION)
 	}//_waitToLargeBloom
 
 	// _showFocusedContent = () => { 
@@ -456,7 +448,7 @@ ShelfTile.propTypes = {
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!*/
-	
+
 	onBloomToLargeStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 }

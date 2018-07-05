@@ -30,7 +30,7 @@ const SELECTED_OPACITY      = config.selectedOpacity;
 //----------------------------------------------------------------- */
 const INIT_X				= config.initX/RATIO;							//-- UI element left alignment location
 const INIT_Y          		= config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
-const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
+// const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
 
 //-- title (headline)
 const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;          //-- unselected shelf title height (!!!not same as the font size, 28)  
@@ -49,15 +49,15 @@ const BLOOMED_BASE_TILE_W   = config.homeShelves.bloomedBaseTileW/RATIO;    //--
 const BLOOMED_BASE_TILE_H   = config.homeShelves.bloomedBaseTileH/RATIO;    //-- focused tile height, on a selected shelf
 
 //-- shelf related
-const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
-const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
+// const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
+// const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
 //
 const BASE_SHELF_OFFSET_X   = config.homeShelves.baseShelfOffsetX/RATIO;    //-- distance between tiles on an unselected shelf
 const FOCUSED_SHELF_OFFSET_X= config.homeShelves.focusedShelfOffsetX/RATIO; //-- distance between tiles on a focused shelf
 const BLOOMED_SHELF_OFFSET_X= config.homeShelves.bloomedShelfOffsetX/RATIO; //-- distance between tiles on a bloomed shelf
 //	
-const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
-const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
+// const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
+// const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
 //
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
@@ -352,6 +352,10 @@ export default class HomeShelf extends Component {
 	    }
 	}//onBlur
 
+	// updateLocation = (targetValue) => {
+	// 	console.log("INFO HomeShelf :: _updateLocation, to " + targetValue)
+	// }
+
 	_reset = () => {
 		// console.log("INFO HomeShelf :: _reset", this.props.index)
 		this._backToOrg()				//-- _clearBloomTimer will be handled here
@@ -408,12 +412,12 @@ export default class HomeShelf extends Component {
 	    ).start()
 	}//_changeTitleLocation
 
-	_changeTileLocation = (tileIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
-		if (tileIndex === undefined) return
-	    // console.log("INFO HomeShelf :: _changeTile " + tileIndex + " xLocation, to " + targetValue)
-		Animated.timing(this.state.tileXPositionArr[tileIndex]).stop()
+	_changeTileLocation = (targetIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
+		if (targetIndex === undefined) return
+	    console.log("INFO HomeShelf :: _changeTile " + targetIndex + " xLocation, to " + targetValue)
+		Animated.timing(this.state.tileXPositionArr[targetIndex]).stop()
 	    Animated.timing(
-	      this.state.tileXPositionArr[tileIndex], 
+	      this.state.tileXPositionArr[targetIndex], 
 	      {
 	        toValue: targetValue,
 	        delay:pDelay,
@@ -438,26 +442,35 @@ export default class HomeShelf extends Component {
         	onBloomToLargeStart()
       	}
 
-		// let prevX
-		// let nextX
-		// if (this.prevTile !== null) {
-		// 	prevX = INIT_X - (TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
-		// 	this.prevTile.toMedBloomed(prevX)
-		// }
-		// if (this.nextTile !== null) {
-		// 	nextX = INIT_X + (BLOOMED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
-		// 	this.nextTile.toMedBloomed(nextX)
-		// }
+		let prevX
+		let nextX
+		if (this.prevTile !== null) {
+			console.log("INFO HomeShelf :: _onBloomToLargeStart, this.prevTile ? " + this.prevTile)
+			prevX = INIT_X - (TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
+			const prevIndex = this.prevTile.props.index
+			this._changeTileLocation(prevIndex, prevX)
+			this.prevTile.toMedBloomed()
+		}
+		if (this.nextTile !== null) {
+			console.log("INFO HomeShelf :: _onBloomToLargeStart, this.nextTile ? " + this.nextTile)
+			nextX = INIT_X + (BLOOMED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
+			const nextIndex = this.nextTile.props.index
+			this._changeTileLocation(nextIndex, nextX)
+			this.nextTile.toMedBloomed()
+		}
 
-		// //-- the rest of tiles in the current shelf
-		// //console.log("INFO HomeShelf :: onLargeBloomStart, this.tileIndexQueue ?? " + this.tileIndexQueue)
-		// const lastTileIndex = (this.tileIndexQueue[0] === -1)? this.totalTiles : this.totalTiles - 1
-		// for (var j = 3; j <= lastTileIndex; j++) {
-	 //    	let nextTileIndex = this.tileIndexQueue[j]
-	 //    	let targetTile = this.tiles[nextTileIndex]
-	 //    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED]
-	 //    	targetTile.toMedBloomed(nextX, false, 0)
-	 //    }
+		//-- the rest of tiles in the current shelf
+		// const lastTileIndex = this.tileIndexQueue.length - 1
+		const lastTileIndex = (this.tileIndexQueue[0] === -1)? this.totalTiles : this.totalTiles - 1
+		for (var j = 3; j <= lastTileIndex; j++) {
+	    	let nextTileIndex = this.tileIndexQueue[j]
+	    	let targetTile = this.tiles[nextTileIndex]
+	    	nextX += TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED]
+	    	if (targetTile !== null) {
+		    	this._changeTileLocation(nextTileIndex, nextX)
+		    	targetTile.toMedBloomed()
+	    	}
+	    }
 	}//_onBloomToLargeStart
 
 	_clearBloomTimer = () => {
@@ -477,21 +490,16 @@ export default class HomeShelf extends Component {
 	_renderEachShelfTile = (tileObj, i) => {
 		// console.log("INFO HomeShelf :: _renderEachShelfTile")
 		const pPosition = (i === 0)? 'relative' : 'absolute'
-		let leftX = ( (i <= MAX_TILE_INDEX) || (i < (this.totalTiles - 1)) )? INIT_X + TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE]*i : INIT_X - TILE_WIDTH_ARR[SHELF_KIND_OBJ.BASE];
-		if (this.state.tileXPositionArr[i]) {
-			leftX = this.state.tileXPositionArr[i]
-		}
+		const leftX = this.state.tileXPositionArr[i]
 		return (
 			<Animated.View 	key={(i + 1).toString()}
 					style={ { 
 							position: pPosition,
 							left: leftX,
-							// borderColor: '#000000', borderWidth: 1
 						} } >
 				<ShelfTile 	
 						ref={node => this.tiles.push(node)}
 				  		index={i}
-				  		// homeShelfIndex={this.props.index}
 				  		showTitle={tileObj.showTitle}
 				  		episodeTitle={tileObj.episodeTitle}
 				  		episodeID={tileObj.episode}
@@ -511,11 +519,12 @@ export default class HomeShelf extends Component {
 		return (
 			<View 
 				style={{ 
-					position: (this.props.index === 0)? 'relative' : 'absolute',
-					top: this.props.topY,
-					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,
+					// position: 'absolute',			//-- Jul05
+					// top: this.props.topY,			//-- Jul05
+					opacity: this.state.isDimmed ? UNSELECTED_OPACITY:SELECTED_OPACITY,	//TODO: CHECK, from here? or from HomeShelvesPane
 					width: '100%',
 					height: BLOOMED_TILE_H,
+					// borderWidth: .5, borderColor: 'blue',
     		}} >
 				<Animated.View 
 					style={ {...StyleSheet.flatten(homeShelfStyles.homeShelfTitleContainer),
@@ -573,11 +582,10 @@ const homeShelfStyles = StyleSheet.create({
 });
 
 HomeShelf.propTypes = {
+	// topY: PropTypes.number,	//-- Jul05
 	index: PropTypes.number,
-	topY: PropTypes.number,
 	title: PropTypes.string,
 	shows: PropTypes.array,
-	
 	onBloomToLargeStart: PropTypes.func,
 };
 

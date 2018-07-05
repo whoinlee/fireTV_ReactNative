@@ -53,16 +53,16 @@ const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //--
 const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //-- focused tile height, on a selected shelf
 const FOCUSED_BASE_TILE_H   = config.homeShelves.focusedBaseTileH/RATIO;    //-- unfocused tile height, on a selected shelf
 const BLOOMED_TILE_H        = config.homeShelves.bloomedTileH/RATIO;        //-- bloomed tile height, on a selected shelf
-const BLOOMED_BBASE_TILE_H  = config.homeShelves.bloomedBaseTileH/RATIO;    //-- unbloomed tile height, on a selected shelf/RATIO;
+const BLOOMED_BASE_TILE_H   = config.homeShelves.bloomedBaseTileH/RATIO;    //-- unbloomed tile height, on a selected shelf/RATIO;
 
-const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
-const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
+// const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
+// const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
 
-const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
-const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
+// const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
+// const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
 
-const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
-const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
+const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedBaseTileH (210) - baseTileH (180))/2 = 15
+const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedBaseTileH (440) - focusedBaseTileH (210))/2 = 115
 
 const SHELF_H               = BLOOMED_TILE_H;
 const TILE_TOP              = Math.floor((BLOOMED_TILE_H - BASE_TILE_H)/2);
@@ -103,14 +103,12 @@ export default class POCContainerK extends Component {
 
     //-- up pane locations
     this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)                   //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
-    const BASE_TILE_GROW = (FOCUSED_BASE_TILE_H - BASE_TILE_H)/2
-    const SHIFT_Y = Math.round(this.initHomeShelvesY - this.upHomeShelvesY + BASE_TILE_GROW)
+    const SHIFT_Y = Math.round(this.initHomeShelvesY - this.upHomeShelvesY + FOCUSED_SHELF_SHIFT_Y)
     this.upHomeHeroY = Math.floor(this.initHomeHeroY - SHIFT_Y)             //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
     this.upGlobalNavY = Math.floor(this.initGlobalNavY - SHIFT_Y) 
 
     //-- mid-up and off the stage homeHero pane locations
-    const EXPANDED_TILE_GROW = (BLOOMED_BBASE_TILE_H - FOCUSED_BASE_TILE_H)/2
-    this.upMidHomeHeroY = Math.floor(this.upHomeHeroY - EXPANDED_TILE_GROW)  //-- homeHeroPane shifts on the fist shelf being largeBloomed
+    this.upMidHomeHeroY = Math.floor(this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y)  //-- homeHeroPane shifts on the fist shelf being largeBloomed
     this.upOffHomeHeroY = Math.floor(this.upHomeHeroY - SHELF_H)             //-- homeHeroPane shifts/hides on the 2nd shelf being focused
   }
 
