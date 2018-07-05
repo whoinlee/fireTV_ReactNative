@@ -308,20 +308,16 @@ export default class HomeShelvesPane extends Component {
     //-- handle prevShelf
     if (this.prevShelf) {
       // console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.prevShelf.props.index ? " + this.prevShelf.props.index)
-      // const prevY = this.prevShelf.props.topY - BLOOMED_SHELF_SHIFT_Y
-      // this.prevShelf.updateLocation(prevY)
       const prevShelfIndex = this.selectedShelfIndex-1
       const prevY = prevShelfIndex*NEXT_SHELF_OFFSET - BLOOMED_SHELF_SHIFT_Y
-      // this.isPrevShifted = true
       this._changeShelfLocation(prevShelfIndex, prevY)
     }
     
     //-- handle nextShelf
     if (this.nextShelf) {
-      console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.nextShelf.props.index ? " + this.nextShelf.props.index)
+      // console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.nextShelf.props.index ? " + this.nextShelf.props.index)
       const nextShelfIndex = this.selectedShelfIndex+1
       const nextY = nextShelfIndex*NEXT_SHELF_OFFSET + BLOOMED_SHELF_SHIFT_Y
-      // this.isNextShifted = true
       this._changeShelfLocation(nextShelfIndex, nextY)
     }
   }//_onLargeBloomStart
@@ -384,8 +380,6 @@ export default class HomeShelvesPane extends Component {
               // topY={i*NEXT_SHELF_OFFSET}       //-- Jul05
               onBloomToLargeStart={this._onBloomToLargeStart}
               onBackToFocused={this._moveBackAdjacentShelves}
-              onBackToOrg={this._moveBackAdjacentShelves}
-              //callBackOnBackToFocused={this._moveBackAdjacentShelves} 
         />
       </Animated.View>
     )

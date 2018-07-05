@@ -587,5 +587,4 @@ HomeShelf.propTypes = {
 ShelfTile.defaultProps = {
 	onBloomToLargeStart: () => {console.log("INFO HomeShelf :: please pass a function for onBloomToLargeStart")},
 	onBackToFocused: () => {console.log("INFO HomeShelf :: please pass a function for onBackToFocused")},
-	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
 }
