@@ -30,7 +30,6 @@ const SELECTED_OPACITY      = config.selectedOpacity;
 //----------------------------------------------------------------- */
 const INIT_X				= config.initX/RATIO;							//-- UI element left alignment location
 const INIT_Y          		= config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
-// const INIT_SHELF_Y          = config.homeShelves.initShelfY/RATIO;          //-- distance from the top of homeShelvesPane container to the top of 1st shelf container
 
 //-- title (headline)
 const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;          //-- unselected shelf title height (!!!not same as the font size, 28)  
@@ -49,16 +48,10 @@ const BLOOMED_BASE_TILE_W   = config.homeShelves.bloomedBaseTileW/RATIO;    //--
 const BLOOMED_BASE_TILE_H   = config.homeShelves.bloomedBaseTileH/RATIO;    //-- focused tile height, on a selected shelf
 
 //-- shelf related
-// const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
-// const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
-//
 const BASE_SHELF_OFFSET_X   = config.homeShelves.baseShelfOffsetX/RATIO;    //-- distance between tiles on an unselected shelf
 const FOCUSED_SHELF_OFFSET_X= config.homeShelves.focusedShelfOffsetX/RATIO; //-- distance between tiles on a focused shelf
 const BLOOMED_SHELF_OFFSET_X= config.homeShelves.bloomedShelfOffsetX/RATIO; //-- distance between tiles on a bloomed shelf
-//	
-// const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
-// const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
-//
+
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
@@ -117,13 +110,16 @@ export default class HomeShelf extends Component {
 		// console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> ", this.tileIndexQueue)
 		// this.clearBloomTimer()
 
-		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-			//-- TODO
-			return
-		}
-
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		const prevX = INIT_X - leftOffset
+		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
+			//-- TODO : move the prev and the next shelf locations to the org
+			const { onBackToFocused } = this.props;
+	      	if (onBackToFocused) {
+	        	onBackToFocused()
+	      	}
+		}
+
 		let leftMostX
 		let currTileIndex
 		let prevTileIndex
@@ -206,8 +202,10 @@ export default class HomeShelf extends Component {
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-			//-- TODO
-			return
+			const { onBackToFocused } = this.props;
+	      	if (onBackToFocused) {
+	        	onBackToFocused()
+	      	}
 		}
 
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
@@ -351,10 +349,6 @@ export default class HomeShelf extends Component {
 	    	this._changeTileLocation(nextTileIndex, nextX)
 	    }
 	}//onBlur
-
-	// updateLocation = (targetValue) => {
-	// 	console.log("INFO HomeShelf :: _updateLocation, to " + targetValue)
-	// }
 
 	_reset = () => {
 		// console.log("INFO HomeShelf :: _reset", this.props.index)
@@ -587,9 +581,11 @@ HomeShelf.propTypes = {
 	title: PropTypes.string,
 	shows: PropTypes.array,
 	onBloomToLargeStart: PropTypes.func,
+	onBackToFocused: PropTypes.func,
 };
 
 ShelfTile.defaultProps = {
 	onBloomToLargeStart: () => {console.log("INFO HomeShelf :: please pass a function for onBloomToLargeStart")},
+	onBackToFocused: () => {console.log("INFO HomeShelf :: please pass a function for onBackToFocused")},
 	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
 }

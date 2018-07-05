@@ -41,18 +41,11 @@ const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //--
 const BLOOMED_TILE_H        = config.homeShelves.bloomedTileH/RATIO;        //-- bloomed tile height, on a selected shelf
 
 //-- shelf related
-// const BASE_SHELF_H          = config.homeShelves.baseShelfH/RATIO;          //-- baseTitleH (40) + titleToTileOffset (10) + baseTileH (180) + baseShelfOffsetY (106) = 336
-// const FOCUSED_SHELF_H       = config.homeShelves.focusedShelfH/RATIO;       //-- focusedTitleH (60) + titleToTileOffset (10) + focusedTileH (332) + focusedShelfOffsetY (182) = 584
-//
-// const BASE_SHELF_OFFSET_Y   = config.homeShelves.baseShelfOffsetY/RATIO;    //-- TODO: not used
-// const FOCUSED_SHELF_OFFSET_Y= config.homeShelves.focusedShelfOffsetY/RATIO; //-- baseShelfOffsetY (106) + focusedShelfShiftY (76) = 182
-//
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedTileH (332) - baseTileH (180))/2 = 76
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 
 const SHELF_H               = BLOOMED_TILE_H;
-// const NEXT_SHELF_OFFSET     = Math.round((SHELF_H-(BLOOMED_TILE_H-BASE_TILE_H)/2));     //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
-const NEXT_SHELF_OFFSET     = Math.round(-(BLOOMED_TILE_H-BASE_TILE_H)/2);     //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
+const NEXT_SHELF_OFFSET     = Math.round(-(BLOOMED_TILE_H-BASE_TILE_H)/2);  //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
 /* ------------------------------------------ */
@@ -285,16 +278,17 @@ export default class HomeShelvesPane extends Component {
 
     this._changeShelfLocation(this.selectedShelfIndex, this.shelfYPositionOrgArr[this.selectedShelfIndex])
     this.currShelf.onFocus()
-    //
+    
     if (this.prevShelf) {
-      this._changeShelfLocation(this.selectedShelfIndex-1, this.shelfYPositionOrgArr[this.selectedShelfIndex-1])
+      //this._changeShelfLocation(this.selectedShelfIndex-1, this.shelfYPositionOrgArr[this.selectedShelfIndex-1])
       this.prevShelf.onBlur()
     }
     //
     if (this.nextShelf) {
-      this._changeShelfLocation(this.selectedShelfIndex+1, this.shelfYPositionOrgArr[this.selectedShelfIndex+1])
+      //this._changeShelfLocation(this.selectedShelfIndex+1, this.shelfYPositionOrgArr[this.selectedShelfIndex+1])
       this.nextShelf.onBlur()
     }
+    this._moveBackAdjacentShelves()
 
     //-- when the 1st/2nd shelf is selected/bloomed, homeHeroPane changes its location
     if (pIndex <= 1) this.props.updateHomeHeroLocation(pIndex,false)  
@@ -306,8 +300,9 @@ export default class HomeShelvesPane extends Component {
     console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.selectedShelfIndex ? " + this.selectedShelfIndex)
 
     if (this.selectedShelfIndex == 0) {
-      //-- when the 1st shelf bloomed
-      this.props.updateHomeHeroLocation(this.selectedShelfIndex,true)
+      //-- when the 1st shelf is bloomed
+      const isBloomed = true
+      this.props.updateHomeHeroLocation(this.selectedShelfIndex, isBloomed)
     } 
 
     //-- handle prevShelf
@@ -346,15 +341,24 @@ export default class HomeShelvesPane extends Component {
       ).start()
   }//_changeShelfLocation
 
-
-  //**********//
   _moveBackAdjacentShelves = () => {
     console.log("INFO HomeShelvesPane :: _moveBackAdjacentShelves")
-    // this.moveBackPrevShelf()
-    // this.moveBackNextShelf()
-  }//_moveBackAdjacentShelves
-  //**********//
 
+    
+    if (this.selectedShelfIndex == 0) {
+      //-- when the 1st shelf is backTo Focused from Bloomed
+      const isBloomed = false
+      this.props.updateHomeHeroLocation(this.selectedShelfIndex, isBloomed)
+    } 
+
+    if (this.prevShelf) {
+      this._changeShelfLocation(this.selectedShelfIndex-1, this.shelfYPositionOrgArr[this.selectedShelfIndex-1])
+    }
+    //
+    if (this.nextShelf) {
+      this._changeShelfLocation(this.selectedShelfIndex+1, this.shelfYPositionOrgArr[this.selectedShelfIndex+1])
+    }
+  }//_moveBackAdjacentShelves
 
   _find_dimesions = (layout) => {
     //-- used for testing

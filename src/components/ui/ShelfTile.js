@@ -161,7 +161,6 @@ export default class ShelfTile extends Component {
 		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
 	}//toLargeBloomed
 
-	// _toMedBloomed = (targetX, noScale=false, pDuration=SHORT_DURATION) => {
 	toMedBloomed = (pDuration=SHORT_DURATION) => {
 		console.log("INFO ShelfTile :: toMedBloomed")
 		this._clearBloomTimer()
