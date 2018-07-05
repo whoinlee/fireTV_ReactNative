@@ -185,7 +185,6 @@ const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 export default class HomeShelvesPane extends Component {
   constructor(props){
     super(props);
-    // this.state = {}
     this.shelves = []
     this.totalShelves = TOTAL_SHELVES
 
@@ -196,9 +195,9 @@ export default class HomeShelvesPane extends Component {
   }
 
   doUp = () => {
-    if (this.selectedShelfIndex < 0) return //ERROR
+    if (this.selectedShelfIndex < 0) return
+
     this.selectedShelfIndex--
-    // console.log("INFO HomeShelvesPane :: doUp, this.selectedShelfIndex? " + this.selectedShelfIndex)
     if (this.selectedShelfIndex < 0) {
       this.onBlur()
     } else {
@@ -208,37 +207,42 @@ export default class HomeShelvesPane extends Component {
 
   doDown = () => {
     if (this.selectedShelfIndex >= MAX_SHELF_INDEX) return
+
     this.selectedShelfIndex++
-    // console.log("INFO HomeShelvesPane :: doDown, 2 this.selectedShelfIndex? " + this.selectedShelfIndex)
     this._onShelfFocus(this.selectedShelfIndex)
   }//doDown
 
   doLeft = () => {
-    // console.log('INFO HomeShelvesPane :: doLeft');
     this.shelves[this.selectedShelfIndex].doLeft()
   }//doLeft
 
   doRight = () => {
-    // console.log('INFO HomeShelvesPane :: doRight');
     this.shelves[this.selectedShelfIndex].doRight()
   }//doRight
 
   doSelect = () => {
-    // console.log('INFO HomeShelvesPane :: doSelect');
     this.shelves[this.selectedShelfIndex].doSelect()
   }//doSelect
 
+/*
+  //-- TODO: CHECK, need?
   onFocus = () => {
     // console.log("INFO HomeShelvesPane :: onFocus")
+    //-- on homeShelves pane focus, i.e. the 1st shelf of the pane gets focused
     const { onFocus } = this.props;
     if (onFocus) {
       onFocus()
     }
   }//onFocus
+  */
 
+  //-- TODO: CHECK, need?
   onBlur = () => {
     // console.log("INFO HomeShelvesPane :: onBlur")
-    if (this.currShelf) this.currShelf.onBlur(false)  //-- isDimmed===flase
+    //-- on homeShelves pane blur, i.e. the 1st shelf gets unfocused and focus moves up (to the heroPane)
+    const isDimmed = false
+    if (this.currShelf) this.currShelf.onBlur(isDimmed)
+
     const { onBlur } = this.props;
     if (onBlur) {
       onBlur()
@@ -246,9 +250,9 @@ export default class HomeShelvesPane extends Component {
   }//onBlur
 
   _onShelfFocus = (pIndex) => {
-    if (pIndex < 0) return //ERROR
-    //console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
+    if (pIndex < 0) return
 
+    //console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
     this.selectedShelfIndex = pIndex    //-- to confirm (duplicate, as it's already done in doUp/doDown)
     this.currShelf = this.shelves[pIndex]
     this.prevShelf = (pIndex > 0)? this.shelves[pIndex - 1] : null
@@ -258,7 +262,9 @@ export default class HomeShelvesPane extends Component {
     if (this.prevShelf) this.prevShelf.onBlur()
     if (this.nextShelf) this.nextShelf.onBlur()
 
-    if (pIndex <= 1) this.props.updateHomeHeroLocation(pIndex,false)  //-- when the 1st/2nd shelf is selected/bloomed, homeHeroPane changes its location
+    //-- when the 1st/2nd shelf is selected/bloomed, homeHeroPane changes its location
+    if (pIndex <= 1) this.props.updateHomeHeroLocation(pIndex,false)  
+
     this.props.updateHomeShelvesLocation(pIndex)
   }//_onShelfFocus
 
@@ -267,7 +273,9 @@ export default class HomeShelvesPane extends Component {
   _onBloomToLargeStart = () => {
     console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.selectedShelfIndex ? " + this.selectedShelfIndex)
 
+    //-- when the 1st shelf bloomed
     if (this.selectedShelfIndex == 0) this.props.updateHomeHeroLocation(this.selectedShelfIndex,true)
+
     // let prevY
     // let nextY
     // if (this.state.selectedShelfIndex === 0) {
@@ -309,7 +317,7 @@ export default class HomeShelvesPane extends Component {
   }//_find_dimensions
 
   _renderEachHomeShelf = (shelfObj, i) => {
-    //console.log("INFO HomeShelvesPane :: _eachHomeShelf, i ? " + i)
+    //console.log("INFO HomeShelvesPane :: _renderEachHomeShelf, i ? " + i)
     return (
       <HomeShelf
             ref={node => this.shelves.push(node)}
@@ -336,13 +344,7 @@ export default class HomeShelvesPane extends Component {
 
 
 HomeShelvesPane.propTypes = {
-  onBlur : PropTypes.func.isRequired,
+  onBlur : PropTypes.func,
   updateHomeHeroLocation : PropTypes.func.isRequired,
   updateHomeShelvesLocation : PropTypes.func.isRequired,
-}
-
-HomeShelvesPane.defaultProps = {
-  onBlur: () => {console.log("INFO HomeShelvesPane :: please pass a function for onBlur")},
-  updateHomeHeroLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeHeroLocation")}, 
-  updateHomeShelvesLocation: () => {console.log("INFO HomeShelvesPane :: please pass a function for updateHomeShelvesLocation")}, 
 }

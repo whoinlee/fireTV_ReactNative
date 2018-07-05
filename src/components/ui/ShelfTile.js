@@ -456,6 +456,7 @@ ShelfTile.propTypes = {
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!*/
+	
 	onBloomToLargeStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 }

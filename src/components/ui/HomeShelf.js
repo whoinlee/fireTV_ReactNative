@@ -577,6 +577,7 @@ HomeShelf.propTypes = {
 	topY: PropTypes.number,
 	title: PropTypes.string,
 	shows: PropTypes.array,
+	
 	onBloomToLargeStart: PropTypes.func,
 };
 

@@ -30,29 +30,31 @@ export default class GlobalNavPane extends Component {
     console.log("INFO GlobalNavPane :: onUp")
   }
 
-  onFocus = () => {
-    console.log("INFO GlobalNavPane :: onFocus =================================> GlobalNavPane")
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus();
-    }
-  }//onFocus
+/*
+  // onFocus = () => {
+  //   // console.log("INFO GlobalNavPane :: onFocus =================================> GlobalNavPane")
+  //   const { onFocus } = this.props;
+  //   if (onFocus) {
+  //     onFocus();
+  //   }
+  // }//onFocus
 
-  onBlur = () => {
-    console.log("INFO GlobalNavPane :: onBlur =================================> GlobalNavPane")
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur();
-    }
-  }//onBlur
+  // onBlur = () => {
+  //   // console.log("INFO GlobalNavPane :: onBlur =================================> GlobalNavPane")
+  //   const { onBlur } = this.props;
+  //   if (onBlur) {
+  //     onBlur();
+  //   }
+  // }//onBlur
 
-  onSelect = () => {
-    console.log("INFO GlobalNavPane :: onSelect =================================> GlobalNavPane")
-    const { onSelect } = this.props;
-    if (onSelect) {
-      onSelect();
-    }
-  }//onSelect
+  // onSelect = () => {
+  //   // console.log("INFO GlobalNavPane :: onSelect =================================> GlobalNavPane")
+  //   const { onSelect } = this.props;
+  //   if (onSelect) {
+  //     onSelect();
+  //   }
+  // }//onSelect
+*/
 
   render() {
     return (
@@ -64,13 +66,3 @@ export default class GlobalNavPane extends Component {
     )
   }//render
 }
-
-
-GlobalNavPane.propTypes = {
-  onFocus : PropTypes.func,
-  onBlur : PropTypes.func,
-  onSelect : PropTypes.func,
-}
-
-// GlobalNavPane.defaultProps = {
-// }

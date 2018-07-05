@@ -32,29 +32,31 @@ export default class HomeHeroPane extends Component {
     console.log("INFO HomeHeroPane :: onUp")
   }
 
-  onFocus = () => {
-    console.log("INFO HomeHeroPane :: onFocus =================================> HomeHeroPane")
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus();
-    }
-  }//onFocus
+/*
+  // onFocus = () => {
+  //   // console.log("INFO HomeHeroPane :: onFocus =================================> HomeHeroPane")
+  //   const { onFocus } = this.props;
+  //   if (onFocus) {
+  //     onFocus();
+  //   }
+  // }//onFocus
 
-  onBlur = () => {
-    console.log("INFO HomeHeroPane :: onBlur =================================> HomeHeroPane")
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur();
-    }
-  }//onBlur
+  // onBlur = () => {
+  //   // console.log("INFO HomeHeroPane :: onBlur =================================> HomeHeroPane")
+  //   const { onBlur } = this.props;
+  //   if (onBlur) {
+  //     onBlur();
+  //   }
+  // }//onBlur
 
-  onSelect = () => {
-    console.log("INFO HomeHeroPane :: onSelect =================================> HomeHeroPane")
-    const { onSelect } = this.props;
-    if (onSelect) {
-      onSelect();
-    }
-  }//onSelect
+  // onSelect = () => {
+  //   // console.log("INFO HomeHeroPane :: onSelect =================================> HomeHeroPane")
+  //   const { onSelect } = this.props;
+  //   if (onSelect) {
+  //     onSelect();
+  //   }
+  // }//onSelect
+*/
 
   render() {
     return (
@@ -67,12 +69,3 @@ export default class HomeHeroPane extends Component {
     )
   }//render
 }
-
-HomeHeroPane.propTypes = {
-  onFocus : PropTypes.func,
-  onBlur : PropTypes.func,
-  onSelect : PropTypes.func,
-}
-
-// HomeHeroPane.defaultProps = {
-// }
