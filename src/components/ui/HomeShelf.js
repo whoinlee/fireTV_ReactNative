@@ -107,7 +107,7 @@ export default class HomeShelf extends Component {
 
 	doLeft = () => {
 		if (this.totalTiles <= 1) return
-		// console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> ", this.tileIndexQueue)
+		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> " + this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
@@ -184,7 +184,6 @@ export default class HomeShelf extends Component {
 		    	const prevIndex = this.tileIndexQueue.pop()
 		    	this.tileIndexQueue.unshift(prevIndex)
 		    } else {
-		    	//let leftQueue = [-1]	//for null prevTile index
 		    	let rightQueue = this.tileIndexQueue.slice(1)
 		    	const prevIndex = rightQueue.pop()
 		    	rightQueue.unshift(prevIndex)
@@ -194,11 +193,12 @@ export default class HomeShelf extends Component {
 			//-- special case with 2 tiles
 			this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
 		}
+		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue after doLeft ?  ===> " + this.tileIndexQueue)
 	}//doLeft
 
 	doRight = () => {
 		if (this.totalTiles <= 1) return
-		console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> ", this.tileIndexQueue)
+		console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> " + this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
@@ -267,6 +267,7 @@ export default class HomeShelf extends Component {
 	    //-- updateQueue
 	    let prevIndex = this.tileIndexQueue.shift()
 	    if (prevIndex !== -1) this.tileIndexQueue.push(prevIndex)
+	    console.log("INFO HomeShelf :: doRight, this.tileIndexQueue after doRight ?  ===> " + this.tileIndexQueue)
 	}//doRight
 
 	doSelect = () => {
@@ -408,7 +409,7 @@ export default class HomeShelf extends Component {
 
 	_changeTileLocation = (targetIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
 		if (targetIndex === undefined) return
-	    console.log("INFO HomeShelf :: _changeTile " + targetIndex + " xLocation, to " + targetValue)
+	    console.log("INFO HomeShelf :: _changeTile " + targetIndex + " location to " + targetValue)
 		Animated.timing(this.state.tileXPositionArr[targetIndex]).stop()
 	    Animated.timing(
 	      this.state.tileXPositionArr[targetIndex], 
@@ -422,7 +423,7 @@ export default class HomeShelf extends Component {
 	}//_changeTitleLocation
 
 	_onBloomToLargeStart = () => {
-		console.log("INFO HomeShelf :: _onBloomToLargeStart, this.props.index ? " + this.props.index)
+		console.log("INFO HomeShelf :: _onBloomToLargeStart, shelfIndex ? " + this.props.index)
 		this.setState({shelfKind: SHELF_KIND_OBJ.BLOOMED})
 
 		const { onBloomToLargeStart } = this.props;
@@ -433,14 +434,14 @@ export default class HomeShelf extends Component {
 		let prevX
 		let nextX
 		if (this.prevTile !== null) {
-			console.log("INFO HomeShelf :: _onBloomToLargeStart, this.prevTile ? " + this.prevTile)
+			// console.log("INFO HomeShelf :: _onBloomToLargeStart, this.prevTile ? " + this.prevTile)
 			prevX = INIT_X - (TILE_WIDTH_ARR[SHELF_KIND_OBJ.BLOOMED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
 			const prevIndex = this.prevTile.props.index
 			this._changeTileLocation(prevIndex, prevX)
 			this.prevTile.toMedBloomed()
 		}
 		if (this.nextTile !== null) {
-			console.log("INFO HomeShelf :: _onBloomToLargeStart, this.nextTile ? " + this.nextTile)
+			// console.log("INFO HomeShelf :: _onBloomToLargeStart, this.nextTile ? " + this.nextTile)
 			nextX = INIT_X + (BLOOMED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.BLOOMED])
 			const nextIndex = this.nextTile.props.index
 			this._changeTileLocation(nextIndex, nextX)

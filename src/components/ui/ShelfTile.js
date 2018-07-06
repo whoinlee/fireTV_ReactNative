@@ -141,7 +141,7 @@ export default class ShelfTile extends Component {
 	}//toExpanded
 
 	toLargeBloomed = (pDuration=SHORT_DURATION) => {
-		console.log("INFO ShelfTile :: toLargeBloomed")
+		console.log("INFO ShelfTile :: toLargeBloomed, tileIndex is " + this.props.index)
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.LG_BLOOMED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED], pDuration)
@@ -155,7 +155,7 @@ export default class ShelfTile extends Component {
 	}//toLargeBloomed
 
 	toMedBloomed = (pDuration=SHORT_DURATION) => {
-		console.log("INFO ShelfTile :: toMedBloomed")
+		console.log("INFO ShelfTile :: toMedBloomed, tileIndex is " + this.props.index)
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.MED_BLOOMED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.MED_BLOOMED], pDuration)
@@ -209,7 +209,7 @@ export default class ShelfTile extends Component {
 	}//_hideOverlay
 	
 	_clearBloomTimer = () => {
-		console.log("INFO ShelfTile :: _clearBloomTimer")
+		// console.log("INFO ShelfTile :: _clearBloomTimer")
 		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
 	}//_clearBloomTimer
 

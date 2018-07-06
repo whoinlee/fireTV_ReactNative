@@ -40,6 +40,7 @@ const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //--
 const BLOOMED_TILE_H        = config.homeShelves.bloomedTileH/RATIO;        //-- bloomed tile height, on a selected shelf
 
 //-- shelf related
+const BLOOMED_SHELF_SHIFT_Y = Math.round(config.homeShelves.bloomedShelfShiftY/RATIO);  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedTileH (594) - focusedTileH (332))/2 = 131
 const NEXT_SHELF_OFFSET     = Math.round(-(BLOOMED_TILE_H-BASE_TILE_H)/2);  //-- (BLOOMED_TILE_H - BASE_TILE_H)/2 : distance (offset) between prev and next shelf tiles
 
 
