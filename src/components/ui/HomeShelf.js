@@ -198,7 +198,7 @@ export default class HomeShelf extends Component {
 
 	doRight = () => {
 		if (this.totalTiles <= 1) return
-		// console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> ", this.tileIndexQueue)
+		console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> ", this.tileIndexQueue)
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
@@ -275,7 +275,6 @@ export default class HomeShelf extends Component {
 
 	onFocus = () => {
 		// console.log("INFO HomeShelf :: onFocus, =================> focusedShelfIndex is ? " + this.props.index)
-		//this._clearBloomTimer()
 		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})
 
 		//-- update title
@@ -294,7 +293,8 @@ export default class HomeShelf extends Component {
 		}
 		if (currTileIndex >= 0) {
 			this.currTile = this.tiles[currTileIndex]
-			this.currTile.onFocus()
+			//this.currTile.onFocus()
+			this.currTile.toFocused()
 		}
 		//
 		let nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
@@ -352,7 +352,7 @@ export default class HomeShelf extends Component {
 
 	_reset = () => {
 		// console.log("INFO HomeShelf :: _reset", this.props.index)
-		this._backToOrg()				//-- _clearBloomTimer will be handled here
+		this._backToOrg()
 		this._buildTileQueue()
 
 		this.setState({isDimmed: false, titleYPosition: new Animated.Value(BASE_TITLE_TOP)})
@@ -421,12 +421,6 @@ export default class HomeShelf extends Component {
 	    ).start()
 	}//_changeTitleLocation
 
-
-	//**********//
-	_backToFocused = (pDir = "left") => {
-		console.log("INFO HomeShelf :: _backToFocused")
-	}//_backToFocused
-
 	_onBloomToLargeStart = () => {
 		console.log("INFO HomeShelf :: _onBloomToLargeStart, this.props.index ? " + this.props.index)
 		this.setState({shelfKind: SHELF_KIND_OBJ.BLOOMED})
@@ -467,12 +461,6 @@ export default class HomeShelf extends Component {
 	    }
 	}//_onBloomToLargeStart
 
-	_clearBloomTimer = () => {
-		console.log("INFO HomeShelf :: _clearBloomTimer ???? ever called ???? need ????")
-	}//_clearBloomTimer
-	//**********//
-
-
 	_find_dimesions = (layout) => {
 	    const {width, height} = layout;
 	    // console.warn(width);
@@ -500,7 +488,6 @@ export default class HomeShelf extends Component {
 				  		episodeDesc={" " + tileObj.episodeDesc}
 				  		imageURL={tileObj.imageURL}
 				  		onBloomToLargeStart={this._onBloomToLargeStart}
-				  		// callBackOnNoMenuLeft={this._backToFocused}
 				/>
 		    </Animated.View>
 		)
@@ -576,7 +563,6 @@ const homeShelfStyles = StyleSheet.create({
 });
 
 HomeShelf.propTypes = {
-	// topY: PropTypes.number,	//-- Jul05
 	index: PropTypes.number,
 	title: PropTypes.string,
 	shows: PropTypes.array,

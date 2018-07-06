@@ -79,6 +79,9 @@ export default class ShelfTile extends Component {
 
 	doLeft = () => {
 		console.log("INFO ShelfTile :: doLeft, to the menu in the left, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
+
+		//-- for menu handling
+
 		// if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
 		// if (this.state.selectedMenuIndex !== 0) {
 		// 	this.setState({selectedMenuIndex: this.state.selectedMenuIndex - 1 })
@@ -91,6 +94,9 @@ export default class ShelfTile extends Component {
 
 	doRight = () => {
 		console.log("INFO ShelfTile :: doRight, to the menu in the right, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
+		
+		//-- for menu handling
+
 		// const totalMenu = this.menus.length
 		// const totalMenu = 3
 		// console.log("INFO ShelfTile :: _doRight, totalMenu ?? " + totalMenu)
@@ -106,21 +112,8 @@ export default class ShelfTile extends Component {
 
 	doSelect = () => {
 		console.log("INFO ShelfTile :: doSelect, tile " + this.props.index)
+		//
 	}//doSelect
-
-	onFocus = () => {
-		// console.log("INFO ShelfTile :: onFocus, tile " + this.props.index)
-      	this.toFocused()
-
-      	const { onFocus } = this.props;
-      	if (onFocus) {
-        	onFocus()
-      	}
-	}//onFocus
-
-	onBlur = () => {
-		console.log("INFO ShelfTile :: onBlur, shelf", this.props.index)
-	}//onBlur
 
 	backToOrg = (pDuration=SHORT_DURATION) => {
 		// console.log("INFO ShelfTile :: backToOrg, index: " + this.props.index)
@@ -215,8 +208,6 @@ export default class ShelfTile extends Component {
 	    ).start()
 	}//_hideOverlay
 	
-
-	//**********//
 	_clearBloomTimer = () => {
 		console.log("INFO ShelfTile :: _clearBloomTimer")
 		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
@@ -224,20 +215,11 @@ export default class ShelfTile extends Component {
 
 	_waitToLargeBloom = () => {
 		console.log("INFO ShelfTile :: _waitToLargeBloom")
-		if (this.bloomToLargeTimerID) clearTimeout(this.bloomToLargeTimerID) 
 		this.bloomToLargeTimerID = setTimeout(() => this.toLargeBloomed(), WAIT_TO_LARGE_BLOOM_DURATION)
 	}//_waitToLargeBloom
 
-	// _showFocusedContent = () => { 
-	// 	console.log("INFO ShelfTile :: _showFocusedContent")
-	// 	// TL.to(this.focusedContent, stdDuration, {delay:.2, opacity:1, onComplete: this.waitToLargeBloom()}) 
-	// }//_showFocusedContent
 
-	// _hideFocusedContent = () => { 
-	// 	console.log("INFO ShelfTile :: _hideFocusedContent")
-	// 	// TL.to(this.focusedContent, 0, {opacity:0}) 
-	// }//_hideFocusedContent
-
+	//**********//
 	// _showBloomedContent = () => {
 	// 	console.log("INFO ShelfTile :: _showBloomedContent")
 	// 	// TL.to(this.bloomedContent, stdDuration, {delay:stdDuration, css: {visibility: 'visible', opacity: 1}})
@@ -447,7 +429,6 @@ ShelfTile.propTypes = {
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
 	imageURL: PropTypes.number,	/*	number!!!*/
-
 	onBloomToLargeStart: PropTypes.func,
 	// callBackOnNoMenuLeft: PropTypes.func,
 }

@@ -50,10 +50,7 @@ const BASE_TITLE_H          = config.homeShelves.baseTitleH/RATIO;          //--
 const TITLE_TO_TILE_OFFSET  = config.homeShelves.titleToTileOffset/RATIO;   //-- distance from the bottom of shelf title to the top of shelf tile
 
 const BASE_TILE_H           = config.homeShelves.baseTileH/RATIO;           //-- base tile height, on an unselected shelf
-const FOCUSED_TILE_H        = config.homeShelves.focusedTileH/RATIO;        //-- focused tile height, on a selected shelf
-const FOCUSED_BASE_TILE_H   = config.homeShelves.focusedBaseTileH/RATIO;    //-- unfocused tile height, on a selected shelf
 const BLOOMED_TILE_H        = config.homeShelves.bloomedTileH/RATIO;        //-- bloomed tile height, on a selected shelf
-const BLOOMED_BASE_TILE_H   = config.homeShelves.bloomedBaseTileH/RATIO;    //-- unbloomed tile height, on a selected shelf/RATIO;
 
 const FOCUSED_SHELF_SHIFT_Y = config.homeShelves.focusedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being focused: (focusedBaseTileH (210) - baseTileH (180))/2 = 15
 const BLOOMED_SHELF_SHIFT_Y = config.homeShelves.bloomedShelfShiftY/RATIO;  //-- the y location shift of unselected shelves on selected shelf being large bloomed: (bloomedBaseTileH (440) - focusedBaseTileH (210))/2 = 115
