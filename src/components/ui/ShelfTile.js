@@ -21,6 +21,7 @@ const STD_DURATION        	= config.stdDuration;
 const SHORT_DURATION      	= config.shortDuration;
 const WAIT_TO_LARGE_BLOOM_DURATION	= config.waitToLargeBloomDuration;	//-- in miliseconds
 const ASSET_URL				= '../../assets/';
+// const ASSET_URL				= './src/assets/';
 
 
 /* ------------------------------------------ */
@@ -48,12 +49,15 @@ const MED_BLOOMED_SCALE 	= Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.MED_BLOOMED][0
 const LG_BLOOMED_SCALE 		= Math.round(TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][0]*100/TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0])/100;		//3.30
 const SCALE_ARR				= [ORIGINAL_SCALE, EXPANDED_SCALE, FOCUSED_SCALE, MED_BLOOMED_SCALE, LG_BLOOMED_SCALE];
 //
-const infoIconPath = '../../assets/images/icons/infoIcon.png';
-const playIconPath = '../../assets/images/icons/playIcon.png';
-const addToIconPath = '../../assets/images/icons/addToIcon.png';
-const selectedInfoIconPath = '../../assets/images/icons/infoIconSelected.png';
-const selectedPlayIconPath = '../../assets/images/icons/playIconSelected.png';
-const selectedAddToIconPath = '../../assets/images/icons/addToIconSelected.png';
+const infoIconPath 			= require(ASSET_URL + 'images/icons/infoIcon.png');
+const playIconPath 			= require(ASSET_URL + 'images/icons/playIcon.png');
+const addToIconPath 		= require(ASSET_URL + 'images/icons/addToIcon.png');
+const selectedInfoIconPath 	= require(ASSET_URL + 'images/icons/infoIconSelected.png');
+const selectedPlayIconPath 	= require(ASSET_URL + 'images/icons/playIconSelected.png');
+const selectedAddToIconPath = require(ASSET_URL + 'images/icons/addToIconSelected.png');
+
+const ICON_SIZE				= 60/RATIO
+const ICON_XOFFSET			= 100/RATIO
 
 
 export default class ShelfTile extends Component {
@@ -184,7 +188,7 @@ export default class ShelfTile extends Component {
 	}//_changeScale
 
 	_showOverlay = () => {
-		if (this.state.tileKind === TILE_KIND_OBJ.FOCUSED) {
+		if (this.state.tileKind === TILE_KIND_OBJ.FOCUSED || this.state.tileKind === TILE_KIND_OBJ.LG_BLOOMED) {
 			Animated.timing(this.state.overlayOpacity).stop()
 		    Animated.timing(
 		      this.state.overlayOpacity, 
@@ -220,11 +224,6 @@ export default class ShelfTile extends Component {
 
 
 	//**********//
-	// _showBloomedContent = () => {
-	// 	console.log("INFO ShelfTile :: _showBloomedContent")
-	// 	// TL.to(this.bloomedContent, stdDuration, {delay:stdDuration, css: {visibility: 'visible', opacity: 1}})
-	// }//_showBloomedContent
-
 	_onInfoButtonClicked = (e) => {
 		console.log("INFO ShelfTile :: _onInfoButtonClicked")
 	}//_onInfoButtonClicked
@@ -255,7 +254,6 @@ export default class ShelfTile extends Component {
 		const offsetY0 = (TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
 		//-- (imageSizeYIncrease)/2 for expandedImage
 		const expandedIDY = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1] + (TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2 + textTopMargin0
-		const focusedTopY = -(TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
 		const showTitleWidth = TILE_SIZE_ARR[TILE_KIND_OBJ.EXPANDED][0]-this.episodeIDWidth
 		switch (tileKind) {
 			case TILE_KIND_OBJ.EXPANDED:
@@ -289,9 +287,10 @@ export default class ShelfTile extends Component {
 					</View>
 				)
 			case TILE_KIND_OBJ.FOCUSED:
-				const leftX1 = leftX0 + CONTENT_X
+				// const leftX1 = leftX0 + CONTENT_X
 				const width1 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]*FOCUSED_SCALE
 				const height1 = TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1]
+				const focusedTopY = -(TILE_SIZE_ARR[TILE_KIND_OBJ.FOCUSED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
 				return (
 						<Animated.View 	style={{
 									position: 'absolute',
@@ -335,6 +334,92 @@ export default class ShelfTile extends Component {
 						</Animated.View>
 				)
 			case TILE_KIND_OBJ.LG_BLOOMED:
+				// const leftX2 = leftX0 + CONTENT_X
+				const width2 = TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][0]*LG_BLOOMED_SCALE
+				const height2 = TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][1]
+				const bloomedTopY = -(TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][1] - TILE_SIZE_ARR[TILE_KIND_OBJ.ORIGINAL][1])/2
+				const bloomedShowTitleY = 20/RATIO
+				const bloomedButtonContainerY = 374/RATIO
+				const bloomedEpisodeTitleY = 52/RATIO
+				const bloomedBodyY = 463/RATIO
+				return (
+						<Animated.View 	style={{
+									position: 'absolute',
+									left: leftX0,
+									top: bloomedTopY,
+									width: width2,
+									height: height2,
+									zIndex: 1000,
+									opacity: overlayOpacity,
+									backgroundColor: 'rgba(0, 0, 0, .3)',
+									// borderWidth: .5, borderColor: 'white',
+								}} >
+							<Text style={ {
+										... StyleSheet.flatten(shelfTileStyles.superShowTitleSemibold),
+										width: TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][0] - (CONTENT_X + rightX0),
+										position: 'absolute',
+										top: bloomedShowTitleY,
+										left: CONTENT_X,
+										} }>
+								{this.props.showTitle}
+							</Text>
+							<Text style={ {
+										... StyleSheet.flatten(shelfTileStyles.superEpisodeTitleMedium),
+										position: 'absolute',
+										top: bloomedEpisodeTitleY,
+										left: CONTENT_X,
+										width: TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][0] - (CONTENT_X + rightX0),
+										} }>
+								{this.props.episodeTitle}
+							</Text>
+							<View style={ {
+										position: 'absolute',
+										top: bloomedButtonContainerY,
+										left: CONTENT_X,
+										flex: 1,
+										flexDirection: 'row',
+										} }>
+			         			<ImageButton 	ref={node => this.menus.push(node)}
+			         							id="infoButton" top={0} left={ICON_XOFFSET*0} 
+			         							isSelected={(this.selectedMenuIndex === 0)? true: false} 
+			         							imageURL={infoIconPath}
+			         							selectedImageURL={selectedInfoIconPath}
+			         							iconWidth={ICON_SIZE}
+			         							iconHeight={ICON_SIZE}
+			         							onSelect={this._onInfoButtonClicked} 
+			         							/>
+			         			<ImageButton 	ref={node => this.menus.push(node)} 
+			         							id="playButton" top={0} left={ICON_XOFFSET*1} 
+			         							isSelected={(this.selectedMenuIndex === 1)? true: false} 
+			         							imageURL={playIconPath}
+			         							selectedImageURL={selectedPlayIconPath}
+			         							iconWidth={ICON_SIZE}
+			         							iconHeight={ICON_SIZE}
+			         							onSelect={this._onPlayButtonClicked} 
+			         							/>
+			         			<ImageButton 	ref={node => this.menus.push(node)}
+			         							id="addToButton" top={0} left={ICON_XOFFSET*2} 
+			         							isSelected={(this.selectedMenuIndex === 2)? true: false} 
+			         							imageURL={addToIconPath}
+			         							selectedImageURL={addToIconPath}
+			         							iconWidth={ICON_SIZE}
+			         							iconHeight={ICON_SIZE}
+			         							onSelect={this._onAddToButtonClicked} 
+			         							/>
+							</View>
+							<Text style={ {
+										... StyleSheet.flatten(shelfTileStyles.bodyTextBold),
+										position: 'absolute',
+										top: bloomedBodyY,
+										left: CONTENT_X,
+										width: TILE_SIZE_ARR[TILE_KIND_OBJ.LG_BLOOMED][0] - (CONTENT_X + rightX0),
+										} }
+								numberOfLines={4} 
+								ellipsizeMode={'tail'}
+							>{this.props.episodeID}<Text style={shelfTileStyles.bodyTextRegular}>{" " + this.props.episodeDesc}</Text>
+							</Text>
+						</Animated.View>
+				)
 		// 		console.log("INFO ShelfTile :: renderContent, TILE_KIND_OBJ.LG_BLOOMED, this.state.selectedMenuIndex?? " + this.state.selectedMenuIndex)
 		// 		this.menus = []
 		// 		return (
@@ -366,15 +451,43 @@ export default class ShelfTile extends Component {
 		//       	)
 			break
 		    case TILE_KIND_OBJ.MED_BLOOMED:
-		//     	console.log("ever????????????")
-		//     	//return null
-		    	break
+				// return (
+				// 	<View 	style={{
+				// 				position: 'absolute',
+				// 				left: leftX0,
+				// 				top: expandedIDY,
+				// 				width: TILE_SIZE_ARR[TILE_KIND_OBJ.MED_BLOOMED][0],
+				// 				flex: 1,
+				// 				flexWrap: 'nowrap',
+				// 				flexDirection: 'row',
+				// 				alignItems: 'flex-start',
+				// 				// borderWidth: .5, borderColor: 'white',
+				// 			}} >
+				// 		<Text 	style={ shelfTileStyles.boldText }
+				// 				// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
+				// 		>
+				// 			{this.props.episodeID}
+
+				// 		</Text>
+				// 		<Text 	style={ {
+				// 					... StyleSheet.flatten(shelfTileStyles.regularText),
+				// 					width: showTitleWidth,
+				// 					// borderWidth: .5, borderColor: 'blue',
+				// 				} }
+				// 				numberOfLines={1} 
+				// 				ellipsizeMode={'tail'} >
+				// 			{"  " + this.props.showTitle}
+				// 		</Text>
+				// 	</View>
+				// )
+		  //   	break
 		    default:
 		}//switch
 	}//_renderContent
 
 	render() {
 		// console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
+		console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
 		const { imageScale } = this.state
 		//-- bring up the selected tile to front
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 100
@@ -416,6 +529,38 @@ const shelfTileStyles = StyleSheet.create({
 	boldText: {
 		fontFamily: 'Helvetica-Bold',
 		fontWeight: '700',
+	    fontSize: 24/RATIO,
+	    textAlign: 'left',
+	    color: '#fff',
+	},
+
+	superShowTitleSemibold: {
+		fontFamily: 'Poppins',
+		fontWeight: '600',
+	    fontSize: 24/RATIO,
+	    textAlign: 'left',
+	    color: '#fff',
+	},
+
+	superEpisodeTitleMedium: {
+		fontFamily: 'Poppins',
+		fontWeight: '500',
+	    fontSize: 64/RATIO,
+	    textAlign: 'left',
+	    color: '#fff',
+	},
+
+	bodyTextBold: {
+		fontFamily: 'Lato',
+		fontWeight: '700',
+	    fontSize: 24/RATIO,
+	    textAlign: 'left',
+	    color: '#fff',
+	},
+
+	bodyTextRegular: {
+		fontFamily: 'Poppins',
+		fontWeight: '500',
 	    fontSize: 24/RATIO,
 	    textAlign: 'left',
 	    color: '#fff',
