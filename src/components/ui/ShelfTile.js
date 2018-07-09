@@ -67,12 +67,13 @@ export default class ShelfTile extends Component {
 			tileKind: TILE_KIND_OBJ.ORIGINAL,
 			imageScale: new Animated.Value(1),
 			overlayOpacity: new Animated.Value(0),
+			selectedMenuIndex: 1,
 		}
 
 		this.menus= []
 		this.totalMenus = 3
 
-		this.selectedMenuIndex = -1					//-- reset, no menu selected
+		// this.selectedMenuIndex = 1					//-- reset, default menu, the 2nd, selected
 		this.prevMenu = null
 		this.currMenu = null
 		this.nextMenu = null
@@ -82,36 +83,35 @@ export default class ShelfTile extends Component {
 	}
 
 	doLeft = () => {
-		console.log("INFO ShelfTile :: doLeft, to the menu in the left, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
+		if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
+		console.log("INFO ShelfTile :: doLeft, to the menu in the left, this.selectedMenuIndex? " + this.state.selectedMenuIndex)
 
 		//-- for menu handling
-
-		// if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
-		// if (this.state.selectedMenuIndex !== 0) {
-		// 	this.setState({selectedMenuIndex: this.state.selectedMenuIndex - 1 })
-		// 	console.log("INFO ShelfTile :: doLeft, after setState, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
-		// } else {
-		// 	console.log("INFO ShelfTile :: doLeft, calling callBackOnNoMenuLeft")
-		// 	this.props.callBackOnNoMenuLeft("left")
-		// }
+		if (this.state.selectedMenuIndex !== 0) {
+			this.setState({selectedMenuIndex: this.state.selectedMenuIndex - 1 })
+			// this.state.selectedMenuIndex--
+			console.log("INFO ShelfTile :: doLeft, to the menu in the left, this.selectedMenuIndex? " + this.state.selectedMenuIndex)
+		} else {
+			console.log("INFO ShelfTile :: doLeft, calling callBackOnNoMenuLeft")
+			//-- TODO
+			this.props.callBackOnNoMenuLeft("left")
+		}
 	}//doLeft
 
 	doRight = () => {
-		console.log("INFO ShelfTile :: doRight, to the menu in the right, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
+		if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
+		console.log("INFO ShelfTile :: doRight, to the menu in the right, this.selectedMenuIndex? " + this.state.selectedMenuIndex + ", totalMenus ?? " + this.totalMenus)
 		
 		//-- for menu handling
-
-		// const totalMenu = this.menus.length
-		// const totalMenu = 3
-		// console.log("INFO ShelfTile :: _doRight, totalMenu ?? " + totalMenu)
-		// if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
-		// if (this.state.selectedMenuIndex < (totalMenu - 1)) {
-		// 	this.setState({selectedMenuIndex: this.state.selectedMenuIndex + 1 })
-		// 	console.log("INFO ShelfTile :: _doRight, after setState, this.state.selectedMenuIndex? " + this.state.selectedMenuIndex)
-		// } else {
-		// 	console.log("INFO ShelfTile :: _doRight, calling callBackOnNoMenuLeft")
-		// 	this.props.callBackOnNoMenuLeft("right")
-		// }
+		if (this.state.selectedMenuIndex < (this.totalMenus - 1)) {
+			this.setState({selectedMenuIndex: this.state.selectedMenuIndex + 1 })
+			// this.selectedMenuIndex++
+			console.log("INFO ShelfTile :: doRight, to the menu in the right, this.selectedMenuIndex? " + this.state.selectedMenuIndex)
+		} else {
+			console.log("INFO ShelfTile :: _doRight, calling callBackOnNoMenuLeft")
+			//-- TODO
+			this.props.callBackOnNoMenuLeft("right")
+		}
 	}//doRight
 
 	doSelect = () => {
@@ -145,21 +145,21 @@ export default class ShelfTile extends Component {
 	}//toExpanded
 
 	toLargeBloomed = (pDuration=SHORT_DURATION) => {
-		console.log("INFO ShelfTile :: toLargeBloomed, tileIndex is " + this.props.index)
+		// console.log("INFO ShelfTile :: toLargeBloomed, tileIndex is " + this.props.index)
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.LG_BLOOMED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.LG_BLOOMED], pDuration)
 		this._hideOverlay()
 
-		const { onBloomToLargeStart } = this.props;
-      	if (onBloomToLargeStart) {
-        	onBloomToLargeStart()
+		const { callBackOnBloomToLargeStart } = this.props;
+      	if (callBackOnBloomToLargeStart) {
+        	callBackOnBloomToLargeStart()
       	}
 		// TL.to(this.imageContainer, stdDuration, {css: {scale: toLgBloomedScale}, onComplete: this.showBloomedContent()})
 	}//toLargeBloomed
 
 	toMedBloomed = (pDuration=SHORT_DURATION) => {
-		console.log("INFO ShelfTile :: toMedBloomed, tileIndex is " + this.props.index)
+		// console.log("INFO ShelfTile :: toMedBloomed, tileIndex is " + this.props.index)
 		this._clearBloomTimer()
 		this._updateKind(TILE_KIND_OBJ.MED_BLOOMED)
 		this._changeScale(SCALE_ARR[TILE_KIND_OBJ.MED_BLOOMED], pDuration)
@@ -170,8 +170,8 @@ export default class ShelfTile extends Component {
 		if (pKind === this.state.tileKind) return
 		// console.log("INFO ShelfTile :: _updateKind, index: " + this.props.index + ", tileKind: " + pKind)
 		this._hideOverlay()
-		this.selectedMenuIndex = (pKind === TILE_KIND_OBJ.LG_BLOOMED)? 1 : -1
-		this.setState({ tileKind: pKind })
+		// const selectedMenuIndex = (pKind === TILE_KIND_OBJ.LG_BLOOMED)? 1 : -1
+		this.setState({ tileKind: pKind, selectedMenuIndex: 1 })
 	}//_updateState
 
 	_changeScale = (targetValue, pDuration=SHORT_DURATION) => {
@@ -381,7 +381,7 @@ export default class ShelfTile extends Component {
 										} }>
 			         			<ImageButton 	ref={node => this.menus.push(node)}
 			         							id="infoButton" top={0} left={ICON_XOFFSET*0} 
-			         							isSelected={(this.selectedMenuIndex === 0)? true: false} 
+			         							isSelected={(this.state.selectedMenuIndex === 0)? true: false} 
 			         							imageURL={infoIconPath}
 			         							selectedImageURL={selectedInfoIconPath}
 			         							iconWidth={ICON_SIZE}
@@ -390,7 +390,7 @@ export default class ShelfTile extends Component {
 			         							/>
 			         			<ImageButton 	ref={node => this.menus.push(node)} 
 			         							id="playButton" top={0} left={ICON_XOFFSET*1} 
-			         							isSelected={(this.selectedMenuIndex === 1)? true: false} 
+			         							isSelected={(this.state.selectedMenuIndex === 1)? true: false} 
 			         							imageURL={playIconPath}
 			         							selectedImageURL={selectedPlayIconPath}
 			         							iconWidth={ICON_SIZE}
@@ -399,9 +399,9 @@ export default class ShelfTile extends Component {
 			         							/>
 			         			<ImageButton 	ref={node => this.menus.push(node)}
 			         							id="addToButton" top={0} left={ICON_XOFFSET*2} 
-			         							isSelected={(this.selectedMenuIndex === 2)? true: false} 
+			         							isSelected={(this.state.selectedMenuIndex === 2)? true: false} 
 			         							imageURL={addToIconPath}
-			         							selectedImageURL={addToIconPath}
+			         							selectedImageURL={selectedAddToIconPath}
 			         							iconWidth={ICON_SIZE}
 			         							iconHeight={ICON_SIZE}
 			         							onSelect={this._onAddToButtonClicked} 
@@ -420,74 +420,14 @@ export default class ShelfTile extends Component {
 							</Text>
 						</Animated.View>
 				)
-		// 		console.log("INFO ShelfTile :: renderContent, TILE_KIND_OBJ.LG_BLOOMED, this.state.selectedMenuIndex?? " + this.state.selectedMenuIndex)
-		// 		this.menus = []
-		// 		return (
-		//          	<div className="bloomedTileContent" ref={node => this.bloomedContent = node}>
-		//          		<div className="bloomedShowTitle">{this.props.showTitle}</div>
-		//          		<div className="bloomedEpisodeTitle">{this.props.episodeTitle}</div>
-		//          		<div className="bloomedButtons">
-		//          			<ImageButton id="infoButton" top={0} left={0} 
-		//          				isSelected={(this.state.selectedMenuIndex === 0)? true: false} 
-		//          				imageURL={infoIconPath}
-		//          				selectedImageURL={selectedInfoIconPath}
-		//          				onSelect={this.onInfoButtonClicked} 
-		//          				ref={node => this.menus.push(node)} />
-		//          			<ImageButton id="playButton" top={0} left={94} 
-		//          				isSelected={(this.state.selectedMenuIndex === 1)? true: false} 
-		//          				imageURL={playIconPath}
-		//          				selectedImageURL={selectedPlayIconPath}
-		//          				onSelect={this.onPlayButtonClicked} 
-		//          				ref={node => this.menus.push(node)} />
-		//          			<ImageButton id="addToButton" top={0} left={188} 
-		//          				isSelected={(this.state.selectedMenuIndex === 2)? true: false} 
-		//          				imageURL={addToIconPath}
-		//          				selectedImageURL={selectedAddToIconPath}
-		//          				onSelect={this.onAddToButtonClicked} 
-		//          				ref={node => this.menus.push(node)} />
-		//          		</div>
-		//             	<div className="bloomedEpisodeID">{this.props.episodeID}&nbsp;<span className="bloomedEpisodeDesc">{this.props.episodeDesc}</span></div>
-		//           	</div>
-		//       	)
 			break
 		    case TILE_KIND_OBJ.MED_BLOOMED:
-				// return (
-				// 	<View 	style={{
-				// 				position: 'absolute',
-				// 				left: leftX0,
-				// 				top: expandedIDY,
-				// 				width: TILE_SIZE_ARR[TILE_KIND_OBJ.MED_BLOOMED][0],
-				// 				flex: 1,
-				// 				flexWrap: 'nowrap',
-				// 				flexDirection: 'row',
-				// 				alignItems: 'flex-start',
-				// 				// borderWidth: .5, borderColor: 'white',
-				// 			}} >
-				// 		<Text 	style={ shelfTileStyles.boldText }
-				// 				// onLayout={(event) => { this._find_dimesions(event.nativeEvent.layout) }}
-				// 		>
-				// 			{this.props.episodeID}
-
-				// 		</Text>
-				// 		<Text 	style={ {
-				// 					... StyleSheet.flatten(shelfTileStyles.regularText),
-				// 					width: showTitleWidth,
-				// 					// borderWidth: .5, borderColor: 'blue',
-				// 				} }
-				// 				numberOfLines={1} 
-				// 				ellipsizeMode={'tail'} >
-				// 			{"  " + this.props.showTitle}
-				// 		</Text>
-				// 	</View>
-				// )
-		  //   	break
 		    default:
 		}//switch
 	}//_renderContent
 
 	render() {
 		// console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
-		console.log("INFO ShelfTile :: render, this.props.index ? " + this.props.index)
 		const { imageScale } = this.state
 		//-- bring up the selected tile to front
 		const pZindex = (this.state.tileKind === TILE_KIND_OBJ.ORIGINAL) ? this.props.index : 100
@@ -573,12 +513,12 @@ ShelfTile.propTypes = {
 	episodeTitle: PropTypes.string,
 	episodeID: PropTypes.string,
 	episodeDesc: PropTypes.string,
-	imageURL: PropTypes.number,	/*	number!!!*/
-	onBloomToLargeStart: PropTypes.func,
-	// callBackOnNoMenuLeft: PropTypes.func,
+	imageURL: PropTypes.number,	/*	require('string') = number!!!*/
+	callBackOnBloomToLargeStart: PropTypes.func,
+	callBackOnNoMenuLeft: PropTypes.func,
 }
 
 ShelfTile.defaultProps = {
-	onBloomToLargeStart: () => {console.log("INFO ShelfTile :: please pass a function for onBloomToLargeStart")},
-	// callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
+	callBackOnBloomToLargeStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnBloomToLargeStart")},
+	callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
 }

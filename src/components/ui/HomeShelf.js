@@ -114,10 +114,12 @@ export default class HomeShelf extends Component {
 		const prevX = INIT_X - leftOffset
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
 			//-- TODO : move the prev and the next shelf locations to the org
-			const { onBackToFocused } = this.props;
-	      	if (onBackToFocused) {
-	        	onBackToFocused()
-	      	}
+			// const { onBackToFocused } = this.props;
+	  //     	if (onBackToFocused) {
+	  //       	onBackToFocused()
+	  //     	}
+	  		this.currTile.doLeft()
+	  		return
 		}
 
 		let leftMostX
@@ -202,10 +204,12 @@ export default class HomeShelf extends Component {
 		// this.clearBloomTimer()
 
 		if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-			const { onBackToFocused } = this.props;
-	      	if (onBackToFocused) {
-	        	onBackToFocused()
-	      	}
+			// const { onBackToFocused } = this.props;
+	  //     	if (onBackToFocused) {
+	  //       	onBackToFocused()
+	  //     	}
+	  		this.currTile.doRight()
+	  		return
 		}
 
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
@@ -409,7 +413,7 @@ export default class HomeShelf extends Component {
 
 	_changeTileLocation = (targetIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
 		if (targetIndex === undefined) return
-	    console.log("INFO HomeShelf :: _changeTile " + targetIndex + " location to " + targetValue)
+	    // console.log("INFO HomeShelf :: _changeTileLocation " + targetIndex + " location to " + targetValue)
 		Animated.timing(this.state.tileXPositionArr[targetIndex]).stop()
 	    Animated.timing(
 	      this.state.tileXPositionArr[targetIndex], 
@@ -462,6 +466,21 @@ export default class HomeShelf extends Component {
 	    }
 	}//_onBloomToLargeStart
 
+	_onNoTileMenuLeft = (pDir="right") => {
+		console.log("INFO HomeShelf :: _onNoTileMenuLeft, pDir ??  " + pDir)
+
+		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})
+		const { onBackToFocused } = this.props;
+      	if (onBackToFocused) {
+        	onBackToFocused()
+      	}
+		if (pDir === "right") {
+			this.doRight()
+		} else {
+			this.doLeft()
+		}
+	}
+
 	_find_dimesions = (layout) => {
 	    const {width, height} = layout;
 	    // console.warn(width);
@@ -488,7 +507,8 @@ export default class HomeShelf extends Component {
 				  		episodeID={tileObj.episode}
 				  		episodeDesc={" " + tileObj.episodeDesc}
 				  		imageURL={tileObj.imageURL}
-				  		onBloomToLargeStart={this._onBloomToLargeStart}
+				  		callBackOnBloomToLargeStart={this._onBloomToLargeStart}
+				  		callBackOnNoMenuLeft={this._onNoTileMenuLeft}
 				/>
 		    </Animated.View>
 		)
