@@ -65,4 +65,4 @@ export default class GlobalNavPane extends Component {
       </View>
     )
   }//render
-}
+};

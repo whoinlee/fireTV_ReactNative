@@ -479,15 +479,13 @@ export default class HomeShelf extends Component {
 		} else {
 			this.doLeft()
 		}
-	}
+	}//_onNoTileMenuLeft
 
 	_find_dimesions = (layout) => {
 	    const {width, height} = layout;
-	    // console.warn(width);
-	    // console.warn(height);
-	    //console.log('INFO HomeShelf :: _find_dimensions (testing), width is ' + width);
-	    console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height);
-	 }//_find_dimesions
+	    console.log('INFO HomeShelf :: _find_dimensions (testing), height is ' + height)
+	    //console.log('INFO HomeShelf :: _find_dimensions (testing), width is ' + width)
+	}//_find_dimesions
 
 	_renderEachShelfTile = (tileObj, i) => {
 		// console.log("INFO HomeShelf :: _renderEachShelfTile")
@@ -545,7 +543,7 @@ export default class HomeShelf extends Component {
 			</View>
 		)
 	}//render
-}
+};
 
 
 const homeShelfStyles = StyleSheet.create({
@@ -594,4 +592,4 @@ HomeShelf.propTypes = {
 ShelfTile.defaultProps = {
 	onBloomToLargeStart: () => {console.log("INFO HomeShelf :: please pass a function for onBloomToLargeStart")},
 	onBackToFocused: () => {console.log("INFO HomeShelf :: please pass a function for onBackToFocused")},
-}
+};

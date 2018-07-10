@@ -68,4 +68,4 @@ export default class HomeHeroPane extends Component {
       </View>
     )
   }//render
-}
+};

@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import {
-  
   Image,
   Text,
-  TouchableNativeFeedback,
+  // TouchableNativeFeedback,
   View
 } from 'react-native';
 
@@ -19,29 +18,13 @@ const SHORT_DURATION      	= config.shortDuration;
 export default class ImageButton extends Component {
 	constructor(props) {
 		super(props)
-		// this.state = {
-		// 	isSelected: this.props.isSelected
-		// }
-		// this._onClick = this._onClick.bind(this)
-	}
-
-	componentWillMount() {
-
 	}
 
 	doSelect = () => {
 		console.log("INFO ImageButton :: doSelect")
 
-		if (this.props.isSelected)
-		this.props.onSelect()
-	}
-
-	_onClick = (e) => {
-		console.log("INFO ImageButton :: _onClick")
-		//this.setState({isSelected: !this.state.isSelected})
-		if (this.props.isSelected)
-		this.props.onSelect(e)
-	}
+		if (this.props.isSelected) this.props.onSelect()
+	}//doSelect
 
 	render() {
 		// console.log("INFO ImageButton :: render, this.props.imageURL ? " + this.props.imageURL)
@@ -53,17 +36,12 @@ export default class ImageButton extends Component {
 					left:this.props.left,
 					}}>
 				<Image 	style={ {width:this.props.iconWidth, height:this.props.iconHeight} }
-						source={ iconSource } 
-						/>
+						source={ iconSource } />
 			</View>
 		)
 	}//render
-}
+};
 
-/*
-style={{position:'absolute', top:this.props.top + 'px', left:this.props.left + 'px'}}
-<Image source={ (this.props.isSelected === true) ? this.props.selectedImageURL : this.props.imageURL } />
-*/
 
 ImageButton.propTypes = {
 	id: PropTypes.string,

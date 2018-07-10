@@ -370,4 +370,4 @@ export default class POCContainerK extends Component {
         </View>
     )
   }//render
-}//POCContainer
+};

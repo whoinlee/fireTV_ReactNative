@@ -13,7 +13,7 @@ import ImageButton from './ImageButton';
 
 import config from '../../config';
 import keyCodes from '../../keyCodes';
-import styles from '../../styles/styles';
+// import styles from '../../styles/styles';
 
 
 const RATIO                 = config.density;
@@ -21,7 +21,6 @@ const STD_DURATION        	= config.stdDuration;
 const SHORT_DURATION      	= config.shortDuration;
 const WAIT_TO_LARGE_BLOOM_DURATION	= config.waitToLargeBloomDuration;	//-- in miliseconds
 const ASSET_URL				= '../../assets/';
-// const ASSET_URL				= './src/assets/';
 
 
 /* ------------------------------------------ */
@@ -56,8 +55,8 @@ const selectedInfoIconPath 	= require(ASSET_URL + 'images/icons/infoIconSelected
 const selectedPlayIconPath 	= require(ASSET_URL + 'images/icons/playIconSelected.png');
 const selectedAddToIconPath = require(ASSET_URL + 'images/icons/addToIconSelected.png');
 
-const ICON_SIZE				= 60/RATIO
-const ICON_XOFFSET			= 100/RATIO
+const ICON_SIZE				= 60/RATIO;
+const ICON_XOFFSET			= 100/RATIO;
 
 
 export default class ShelfTile extends Component {
@@ -454,7 +453,7 @@ export default class ShelfTile extends Component {
 			</View>
 		)
 	}//render
-}
+};
 
 
 const shelfTileStyles = StyleSheet.create({
@@ -516,9 +515,9 @@ ShelfTile.propTypes = {
 	imageURL: PropTypes.number,	/*	require('string') = number!!!*/
 	callBackOnBloomToLargeStart: PropTypes.func,
 	callBackOnNoMenuLeft: PropTypes.func,
-}
+};
 
 ShelfTile.defaultProps = {
 	callBackOnBloomToLargeStart: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnBloomToLargeStart")},
 	callBackOnNoMenuLeft: () => {console.log("INFO ShelfTile :: please pass a function for callBackOnNoMenuLeft")},
-}
+};

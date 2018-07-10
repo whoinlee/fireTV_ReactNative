@@ -12,7 +12,7 @@ import HomeShelf from './ui/HomeShelf';
 
 import config from '../config';
 import keyCodes from '../keyCodes';
-import styles from '../styles/styles';
+// import styles from '../styles/styles';
 
 
 
@@ -47,6 +47,7 @@ const NEXT_SHELF_OFFSET     = Math.round(-(BLOOMED_TILE_H-BASE_TILE_H)/2);  //--
 /* ------------------------------------------ */
 /* HomeShelvesPane test data                  */
 /* ------------------------------------------ */
+//-- hardcoded test data
 const SHELVES_DATA_ARR      = [
   {
     title:'up next (7)',
@@ -167,7 +168,7 @@ const SHELVES_DATA_ARR      = [
        imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
-];//-- hardcoded test data
+];
 const TOTAL_SHELVES         = SHELVES_DATA_ARR.length;
 const MAX_SHELF_INDEX       = TOTAL_SHELVES - 1;
 
@@ -371,11 +372,11 @@ export default class HomeShelvesPane extends Component {
       </View>
     )//return
   }//render
-}
+};
 
 
 HomeShelvesPane.propTypes = {
   onBlur : PropTypes.func,
   updateHomeHeroLocation : PropTypes.func.isRequired,
   updateHomeShelvesLocation : PropTypes.func.isRequired,
-}
+};
