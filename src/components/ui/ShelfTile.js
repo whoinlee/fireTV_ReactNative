@@ -458,7 +458,7 @@ export default class ShelfTile extends Component {
 
 const shelfTileStyles = StyleSheet.create({
 	regularText: {
-		fontFamily: 'Helvetica',
+		fontFamily: 'Helvetica',	//Helvetica Regular
 		fontWeight: '400',
 	    fontSize: 24/RATIO,
 	    textAlign: 'left',
@@ -466,7 +466,7 @@ const shelfTileStyles = StyleSheet.create({
 	},
 
 	boldText: {
-		fontFamily: 'Helvetica-Bold',
+		fontFamily: 'Helvetica',	//Helvetica Bold
 		fontWeight: '700',
 	    fontSize: 24/RATIO,
 	    textAlign: 'left',
@@ -474,23 +474,23 @@ const shelfTileStyles = StyleSheet.create({
 	},
 
 	superShowTitleSemibold: {
-		fontFamily: 'Poppins',
-		fontWeight: '600',
+		fontFamily: 'Poppins-SemiBold',
+		// fontWeight: '600',
 	    fontSize: 24/RATIO,
 	    textAlign: 'left',
 	    color: '#fff',
 	},
 
 	superEpisodeTitleMedium: {
-		fontFamily: 'Poppins',
-		fontWeight: '500',
+		fontFamily: 'Poppins-Medium',
+		// fontWeight: '500',
 	    fontSize: 64/RATIO,
 	    textAlign: 'left',
 	    color: '#fff',
 	},
 
 	bodyTextBold: {
-		fontFamily: 'Lato',
+		fontFamily: 'Lato-Bold',
 		fontWeight: '700',
 	    fontSize: 24/RATIO,
 	    textAlign: 'left',
@@ -498,8 +498,8 @@ const shelfTileStyles = StyleSheet.create({
 	},
 
 	bodyTextRegular: {
-		fontFamily: 'Poppins',
-		fontWeight: '500',
+		fontFamily: 'Lato-Regular',
+		fontWeight: '400',
 	    fontSize: 24/RATIO,
 	    textAlign: 'left',
 	    color: '#fff',
