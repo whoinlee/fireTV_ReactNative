@@ -193,7 +193,7 @@ export default class HomeShelvesPane extends Component {
 
   componentDidMount() {
     this._buildShelfYPositionArr()
-  }//componentDidMount
+  }
 
   _buildShelfYPositionArr = () => {
     // console.log("INFO HomeShelvesPane :: _buildShelfYPositionArr, this.totalShelves ?? " + this.totalShelves)
@@ -212,7 +212,7 @@ export default class HomeShelvesPane extends Component {
 
     this.selectedShelfIndex--
     if (this.selectedShelfIndex < 0) {
-      this.onBlur()
+      this._onPaneBlur()
     } else {
       this._onShelfFocus(this.selectedShelfIndex)
     }
@@ -237,52 +237,41 @@ export default class HomeShelvesPane extends Component {
     this.shelves[this.selectedShelfIndex].doSelect()
   }//doSelect
 
-  //-- TODO: CHECK, need?
-  onBlur = () => {
-    // console.log("INFO HomeShelvesPane :: onBlur")
+  _onPaneBlur = () => {
+    // console.log("INFO HomeShelvesPane :: _onPaneBlur")
     //-- on homeShelves pane blur, i.e. the 1st shelf gets unfocused and focus moves up (to the heroPane)
     const isDimmed = false
+    const { onBlur } = this.props
     if (this.currShelf) this.currShelf.onBlur(isDimmed)
-
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur()
-    }
+    if (onBlur) onBlur()
   }//onBlur
 
   _onShelfFocus = (pIndex) => {
     if (pIndex < 0) return
-
     //console.log("INFO HomeShelvesPane :: _onShelfFocus, ===========> selectedShelfIndex is ? " + pIndex)
+
     this.selectedShelfIndex = pIndex    //-- to confirm (duplicate, as it's already done in doUp/doDown)
     this.currShelf = this.shelves[pIndex]
     this.prevShelf = (pIndex > 0)? this.shelves[pIndex - 1] : null
     this.nextShelf = (pIndex >= MAX_SHELF_INDEX)? null : this.shelves[pIndex + 1]
 
     this._changeShelfLocation(this.selectedShelfIndex, this.shelfYPositionOrgArr[this.selectedShelfIndex])
+
     this.currShelf.onFocus()
-    
-    if (this.prevShelf) {
-      //this._changeShelfLocation(this.selectedShelfIndex-1, this.shelfYPositionOrgArr[this.selectedShelfIndex-1])
-      this.prevShelf.onBlur()
-    }
-    //
-    if (this.nextShelf) {
-      //this._changeShelfLocation(this.selectedShelfIndex+1, this.shelfYPositionOrgArr[this.selectedShelfIndex+1])
-      this.nextShelf.onBlur()
-    }
+    if (this.prevShelf) this.prevShelf.onBlur()
+    if (this.nextShelf) this.nextShelf.onBlur()
+
     this._moveBackAdjacentShelves()
 
     //-- when the 1st/2nd shelf is selected/bloomed, homeHeroPane changes its location
     if (pIndex <= 1) this.props.updateHomeHeroLocation(pIndex,false)  
-
     this.props.updateHomeShelvesLocation(pIndex)
   }//_onShelfFocus
 
   _onBloomToLargeStart = () => {
     console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.selectedShelfIndex ? " + this.selectedShelfIndex)
 
-    if (this.selectedShelfIndex == 0) {
+    if (this.selectedShelfIndex === 0) {
       //-- when the 1st shelf is bloomed
       const isBloomed = true
       this.props.updateHomeHeroLocation(this.selectedShelfIndex, isBloomed)
@@ -305,22 +294,22 @@ export default class HomeShelvesPane extends Component {
 
   _changeShelfLocation = (targetIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
     if (targetIndex === undefined) return
-      // console.log("INFO HomeShelvesPane :: _changeShelfLocation " + targetIndex + " yLocation, to " + targetValue)
+    // console.log("INFO HomeShelvesPane :: _changeShelfLocation " + targetIndex + " yLocation, to " + targetValue)
+
     Animated.timing(this.state.shelfYPositionArr[targetIndex]).stop()
-      Animated.timing(
-        this.state.shelfYPositionArr[targetIndex], 
-        {
-          toValue: targetValue,
-          delay:pDelay,
-          duration: pDuration,
-          easing: Easing.out(Easing.quad),
-        }
-      ).start()
+    Animated.timing(
+      this.state.shelfYPositionArr[targetIndex], 
+      {
+        toValue: targetValue,
+        delay:pDelay,
+        duration: pDuration,
+        easing: Easing.out(Easing.quad),
+      }
+    ).start()
   }//_changeShelfLocation
 
   _moveBackAdjacentShelves = () => {
-    console.log("INFO HomeShelvesPane :: _moveBackAdjacentShelves")
-
+    // console.log("INFO HomeShelvesPane :: _moveBackAdjacentShelves")
     
     if (this.selectedShelfIndex == 0) {
       //-- when the 1st shelf is backTo Focused from Bloomed
@@ -328,13 +317,8 @@ export default class HomeShelvesPane extends Component {
       this.props.updateHomeHeroLocation(this.selectedShelfIndex, isBloomed)
     } 
 
-    if (this.prevShelf) {
-      this._changeShelfLocation(this.selectedShelfIndex-1, this.shelfYPositionOrgArr[this.selectedShelfIndex-1])
-    }
-    //
-    if (this.nextShelf) {
-      this._changeShelfLocation(this.selectedShelfIndex+1, this.shelfYPositionOrgArr[this.selectedShelfIndex+1])
-    }
+    if (this.prevShelf) this._changeShelfLocation(this.selectedShelfIndex-1, this.shelfYPositionOrgArr[this.selectedShelfIndex-1])
+    if (this.nextShelf) this._changeShelfLocation(this.selectedShelfIndex+1, this.shelfYPositionOrgArr[this.selectedShelfIndex+1])
   }//_moveBackAdjacentShelves
 
   _find_dimesions = (layout) => {
@@ -347,11 +331,12 @@ export default class HomeShelvesPane extends Component {
     //console.log("INFO HomeShelvesPane :: _renderEachHomeShelf, i ? " + i)
     const topY = this.state.shelfYPositionArr[i]  //-- Jul05
     return (
-      <Animated.View  key={(i + 1).toString()}
+      <Animated.View  
+          key={(i + 1).toString()}
           style={ { 
               top: topY,
               // borderColor: '#f00', borderWidth: 1
-            } } >
+      } }>
         <HomeShelf
               ref={node => this.shelves.push(node)}
               index={i}

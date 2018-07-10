@@ -21,8 +21,7 @@ export default class ImageButton extends Component {
 	}
 
 	doSelect = () => {
-		console.log("INFO ImageButton :: doSelect")
-
+		// console.log("INFO ImageButton :: doSelect")
 		if (this.props.isSelected) this.props.onSelect()
 	}//doSelect
 
@@ -44,14 +43,13 @@ export default class ImageButton extends Component {
 
 
 ImageButton.propTypes = {
-	id: PropTypes.string,
 	top: PropTypes.number,
 	left: PropTypes.number,
 	isSelected: PropTypes.bool,
 	imageURL: PropTypes.number,
+	selectedImageURL: PropTypes.number,
 	iconWidth: PropTypes.number,
 	iconHeight: PropTypes.number,
-	selectedImageURL: PropTypes.number,
 	onSelect: PropTypes.func.isRequired,
 };
 

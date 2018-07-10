@@ -105,11 +105,11 @@ export default class POCContainerK extends Component {
 
   componentDidMount() {
     this._setKeyListener()
-  }//componentDidMount
+  }
 
   componentWillUnmount() {
     this._removeKeyListener()
-  }//componentWillUnmount
+  }
 /*
   _enableTVEventHandler() {
     this.tvEventHandler.enable(this, function(cmp, evt) {
@@ -186,7 +186,6 @@ export default class POCContainerK extends Component {
   }//_setKeyListener
 
   _removeKeyListener = () => {
-    // console.log('INFO POCContainer :: _removeKeyListener')
     KeyEvent.removeKeyDownListener()
   }//_removeKeyListener
 
@@ -257,8 +256,8 @@ export default class POCContainerK extends Component {
 
   _onGlobalNavPaneFocus = () => {
     if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return   //-- do nothing
-
     //console.log("INFO POCContainer :: _onGlobalNavPaneFocus, ====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
+
     this._changeOpacity(GLOBAL_NAV_INDEX, SELECTED_OPACITY)
     this._changeOpacity(HOME_HERO_INDEX, SELECTED_OPACITY)
     this._changeOpacity(HOME_SHELVES_INDEX, SELECTED_OPACITY)
@@ -271,8 +270,8 @@ export default class POCContainerK extends Component {
 
   _onHomeHeroPaneFocus = () => {
     if (this.currFocusLocIndex === HOME_HERO_INDEX) return    //-- do nothing
-
     //console.log("INFO POCContainer :: _onHomeHeroPaneFocus, =====================> prevFocusLocIndex ? " + this.currFocusLocIndex)
+
     this._changeOpacity(GLOBAL_NAV_INDEX, UNSELECTED_OPACITY)
     this._changeOpacity(HOME_HERO_INDEX, SELECTED_OPACITY)
     this._changeOpacity(HOME_SHELVES_INDEX, UNSELECTED_OPACITY)
