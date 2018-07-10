@@ -82,7 +82,7 @@ export default class ShelfTile extends Component {
 
 	doLeft = () => {
 		if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
-		console.log("INFO ShelfTile :: doLeft, tile " + this.props.index)
+		// console.log("INFO ShelfTile :: doLeft, tile " + this.props.index)
 		//-- for menu handling
 		if (this.state.selectedMenuIndex !== 0) {
 			this.setState({selectedMenuIndex: this.state.selectedMenuIndex - 1 })
@@ -95,7 +95,7 @@ export default class ShelfTile extends Component {
 
 	doRight = () => {
 		if (this.state.tileKind !== TILE_KIND_OBJ.LG_BLOOMED) return
-		console.log("INFO ShelfTile :: doRight, tile " + this.props.index)
+		// console.log("INFO ShelfTile :: doRight, tile " + this.props.index)
 		//-- for menu handling
 		if (this.state.selectedMenuIndex < (this.totalMenus - 1)) {
 			this.setState({selectedMenuIndex: this.state.selectedMenuIndex + 1 })
