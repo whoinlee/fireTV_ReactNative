@@ -191,8 +191,8 @@ export default class POCContainerK extends Component {
 
   doUp = () => {
     if (this.currFocusLocIndex === GLOBAL_NAV_INDEX) return   //-- do nothing
-
     // console.log('INFO POCContainer :: doUp');
+  
     switch (this.currFocusLocIndex) {
       case HOME_HERO_INDEX :
         this._onGlobalNavPaneFocus()

@@ -109,23 +109,14 @@ export default class HomeShelf extends Component {
 		let currTileIndex = this.tileIndexQueue[1]
 		this.currTile = this.tiles[currTileIndex]
 		if (this.totalTiles == 1 || this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-			console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> " + this.tileIndexQueue)
+			// console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> " + this.tileIndexQueue)
 			this.currTile.doLeft()
 			return
 		}
-		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> " + this.tileIndexQueue)
+		// console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue before doLeft ? ===> " + this.tileIndexQueue)
 
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		const prevX = INIT_X - leftOffset
-		// if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-		// 	// console.log("INFO HomeShelf :: doRight, this.currTile.props.index ? " + this.currTile.props.index)
-		// 	//currTileIndex = this.tileIndexQueue[1]
-		// 	// console.log("INFO HomeShelf :: doLeft, currTileIndex ? " + currTileIndex)
-		// 	//this.currTile = this.tiles[currTileIndex]
-	 //  		this.currTile.doLeft()
-	 //  		return
-		// }
-
 		let leftMostX
 		let prevTileIndex
 		let nextTileIndex = this.tileIndexQueue[1]
@@ -198,7 +189,7 @@ export default class HomeShelf extends Component {
 			//-- special case with 2 tiles
 			this.tileIndexQueue = leftQueue.concat(this.tileIndexQueue)
 		}
-		console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue after doLeft ?  ===> " + this.tileIndexQueue)
+		// console.log("INFO HomeShelf :: doLeft, this.tileIndexQueue after doLeft ?  ===> " + this.tileIndexQueue)
 	}//doLeft
 
 	doRight = () => {
@@ -207,30 +198,18 @@ export default class HomeShelf extends Component {
 		let currTileIndex = this.tileIndexQueue[1]
 		this.currTile = this.tiles[currTileIndex]
 		if (this.totalTiles == 1 || this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-			console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doLeft ? ===> " + this.tileIndexQueue)
+			// console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doLeft ? ===> " + this.tileIndexQueue)
 			this.currTile.doRight()
 			return
 		}
+		// console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> " + this.tileIndexQueue)
 
-		console.log("INFO HomeShelf :: doRight, this.tileIndexQueue before doRight ?  ===> " + this.tileIndexQueue)
-
-		// if (this.state.shelfKind === SHELF_KIND_OBJ.BLOOMED) {
-		// 	// console.log("INFO HomeShelf :: doRight, this.currTile.props.index ? " + this.currTile.props.index)
-		// 	// const currTileIndex = this.tileIndexQueue[1]
-		// 	// console.log("INFO HomeShelf :: doRight, currTileIndex ? " + currTileIndex)
-		// 	// this.currTile = this.tiles[currTileIndex]
-	 //  		this.currTile.doRight()
-	 //  		return
-		// }
-
-		//***** from HERE
 		const leftOffset = TILE_WIDTH_ARR[SHELF_KIND_OBJ.FOCUSED] + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		const prevX = INIT_X - leftOffset
-
 		let nextX = INIT_X + FOCUSED_TILE_W + TILE_OFFSET_ARR[SHELF_KIND_OBJ.FOCUSED]
 		let leftMostX
 		let prevTileIndex = this.tileIndexQueue[1]	//-- currTileIndex becomes the prevTileIndex
-		currTileIndex = this.tileIndexQueue[2]	//-- nextTileIndex becomes the currTileIndex
+		currTileIndex = this.tileIndexQueue[2]		//-- nextTileIndex becomes the currTileIndex
 		let nextTileIndex
 
 		//-- prevTile, if there is, becomes prevPrevTile
@@ -281,11 +260,14 @@ export default class HomeShelf extends Component {
 	    //-- updateQueue
 	    let prevIndex = this.tileIndexQueue.shift()
 	    if (prevIndex !== -1) this.tileIndexQueue.push(prevIndex)
-	    console.log("INFO HomeShelf :: doRight, this.tileIndexQueue after doRight ?  ===> " + this.tileIndexQueue)
+	    // console.log("INFO HomeShelf :: doRight, this.tileIndexQueue after doRight ?  ===> " + this.tileIndexQueue)
 	}//doRight
 
 	doSelect = () => {
-		console.log("\nINFO HomeShelf :: doSelect, shelf", this.props.index)
+		console.log("INFO HomeShelf :: doSelect, shelfIndex ? ", this.props.index)
+		const currTileIndex = this.tileIndexQueue[1]
+		this.currTile = this.tiles[currTileIndex]
+		this.currTile.doSelect()
 	}//doSelect
 
 	onFocus = () => {
@@ -424,7 +406,7 @@ export default class HomeShelf extends Component {
 	_changeTileLocation = (targetIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
 		if (targetIndex === undefined) return
 		if (this.state.shelfKind !== SHELF_KIND_OBJ.BASE)
-	    console.log("INFO HomeShelf :: _changeTileLocation " + targetIndex + " location to " + targetValue) 
+	    // console.log("INFO HomeShelf :: _changeTileLocation " + targetIndex + " location to " + targetValue) 
 
 		Animated.timing(this.state.tileXPositionArr[targetIndex]).stop()
 	    Animated.timing(
@@ -439,7 +421,7 @@ export default class HomeShelf extends Component {
 	}//_changeTitleLocation
 
 	_onBloomToLargeStart = () => {
-		console.log("INFO HomeShelf :: _onBloomToLargeStart, shelfIndex ? " + this.props.index + ", calling onBloomToLargeStart")
+		// console.log("INFO HomeShelf :: _onBloomToLargeStart, shelfIndex ? " + this.props.index + ", calling onBloomToLargeStart")
 
 		this.setState({shelfKind: SHELF_KIND_OBJ.BLOOMED})
 
@@ -485,7 +467,7 @@ export default class HomeShelf extends Component {
 
 	_onNoTileMenuLeft = (pDir="right") => {
 		if (this.totalTiles <= 1) return
-		console.log("INFO HomeShelf :: _onNoTileMenuLeft, pDir ??  " + pDir)
+		// console.log("INFO HomeShelf :: _onNoTileMenuLeft, pDir ??  " + pDir)
 
 		this.setState({isDimmed: false, shelfKind: SHELF_KIND_OBJ.FOCUSED})
 		const { onBackToFocused } = this.props

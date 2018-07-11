@@ -56,22 +56,22 @@ const SHELVES_DATA_ARR      = [
             episodeDesc: "For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks. For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks.",
             imageURL: require('../assets/images/shows/topChef-s15e06-1056x594.jpg') }
           ,{ showTitle: "Top Chef", episodeTitle: "Something Old, Something New", episode: 'S14 E1', 
-            episodeDesc: "Episode Description for S14 E1 goes here",
+            episodeDesc: "Episode description for S14 E1 goes here",
             imageURL: require('../assets/images/shows/topChef-s14e01-1056x594.jpg') }
           ,{ showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
-            episodeDesc: "Episode Description for S5 E11 goes here",
+            episodeDesc: "Episode description for S5 E11 goes here",
             imageURL: require('../assets/images/shows/belowDeck-s05e11-1056x594.jpg') }
           ,{ showTitle: "The Real Housewives of New Jersey", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
-            episodeDesc: "Episode Description for S8 E9 goes here",
+            episodeDesc: "Episode description for S8 E9 goes here",
             imageURL: require('../assets/images/shows/rhofNJ-s08e09-1056x594.jpg') }
           ,{ showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
-            episodeDesc: "Episode Description for S1 E10 goes here",
+            episodeDesc: "Episode description for S1 E10 goes here",
             imageURL: require('../assets/images/shows/imposters-s01e10-1056x594.jpg') }
           ,{ showTitle: "The Real Housewives of Atlanta", episodeTitle: "Another Spin Around the Block", episode: 'S9 E4', 
-            episodeDesc: "Episode Description for S9 E4 goes here",
+            episodeDesc: "Episode description for S9 E4 goes here",
             imageURL: require('../assets/images/shows/rhofAT-s09e04-1056x594.jpg') }
           ,{ showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-            episodeDesc: "Episode Description for S14 E10 goes here",
+            episodeDesc: "Episode description for S14 E10 goes here",
             imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
@@ -82,19 +82,19 @@ const SHELVES_DATA_ARR      = [
           episodeDesc: "For the Quickfire, Padma and Richard Blais inspire the chefs using Tasty online videos and challenge them to transform the most laborious dishes from their own menus into accessible thirty minute dishes for home cooks.",
           imageURL: require('../assets/images/shows/topChef-s15e06-1056x594.jpg') }
         ,{ showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
-          episodeDesc: "Episode Description for S15 E6 goes here",
+          episodeDesc: "Episode description for S15 E6 goes here",
           imageURL: require('../assets/images/shows/belowDeck-s05e11-1056x594.jpg') }
         ,{ showTitle: "The Real Housewives of New Jersey", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
-          episodeDesc: "Episode Description for S15 E6 goes here",
+          episodeDesc: "Episode description for S15 E6 goes here",
           imageURL: require('../assets/images/shows/rhofNJ-s08e09-1056x594.jpg') }
         ,{ showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
-          episodeDesc: "Episode Description for S15 E6 goes here",
+          episodeDesc: "Episode description for S15 E6 goes here",
           imageURL: require('../assets/images/shows/imposters-s01e10-1056x594.jpg') }
         ,{ showTitle: "The Real Housewives of Atlanta", episodeTitle: "Another Spin Around the Block", episode: 'S9 E4', 
-          episodeDesc: "Episode Description for S9 E4 goes here",
+          episodeDesc: "Episode description for S9 E4 goes here",
           imageURL: require('../assets/images/shows/rhofAT-s09e04-1056x594.jpg') }
         ,{ showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-          episodeDesc: "Episode Description for S14 E10 goes here",
+          episodeDesc: "Episode description for S14 E10 goes here",
           imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
@@ -102,19 +102,19 @@ const SHELVES_DATA_ARR      = [
     title:'category 3 (5)',
     shows:[
         {showTitle: "Top Chef", episodeTitle: "Episode Title", episode: 'S00 E0', 
-        episodeDesc: "Episode Description for S00 E0 goes here",
+        episodeDesc: "Episode description for S00 E0 goes here",
         imageURL: require('../assets/images/shows/topChef-general-1056x594.jpg') },
         {showTitle: "Top Chef", episodeTitle: "The Curse of the Bambino", episode: 'S12 E3', 
-        episodeDesc: "Episode Description for S12 E3 goes here",
+        episodeDesc: "Episode description for S12 E3 goes here",
         imageURL: require('../assets/images/shows/topChef-s12e03-1056x594.jpg') },
         {showTitle: "The Real Housewives of New Jersey", episodeTitle: "House of Shade and Dust", episode: 'S9 E1', 
-        episodeDesc: "Episode Description for S9 E1 goes here",
+        episodeDesc: "Episode description for S9 E1 goes here",
         imageURL: require('../assets/images/shows/rhofAT-s09e01-1056x594.jpg') },
         {showTitle: "The Real Housewives of New Jersey", episodeTitle: "Reunion, Part 3", episode: 'S9 E23', 
-        episodeDesc: "Episode Description for S9 E23 goes here",
+        episodeDesc: "Episode description for S9 E23 goes here",
         imageURL: require('../assets/images/shows/rhofAT-s09e23-1056x594.jpg') },
         {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-        episodeDesc: "Episode Description for S14 E10 goes here",
+        episodeDesc: "Episode description for S14 E10 goes here",
         imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
@@ -122,16 +122,16 @@ const SHELVES_DATA_ARR      = [
     title:'category 4 (4)',
     shows:[
         {showTitle: "Top Chef", episodeTitle: "The Curse of the Bambino", episode: 'S12 E3', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/topChef-s12e03-1056x594.jpg') },
         {showTitle: "Imposters", episodeTitle: "Always Forward, Never Back", episode: 'S1 E10', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/imposters-s01e10-1056x594.jpg') },
         {showTitle: "The Real Housewives of New Jersey", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/rhofNJ-s08e09-1056x594.jpg') },
         {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
@@ -139,13 +139,13 @@ const SHELVES_DATA_ARR      = [
     title:'category 5 (3)',
     shows:[
         {showTitle: "Below Deck", episodeTitle: "Only Doing It for the Money", episode: 'S5 E11', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/belowDeck-s05e11-1056x594.jpg') },
         {showTitle: "The Real Housewives of New Jersey", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/rhofNJ-s08e09-1056x594.jpg') },
         {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
@@ -153,10 +153,10 @@ const SHELVES_DATA_ARR      = [
     title:'category 6 (2)',
     shows:[
         {showTitle: "The Real Housewives of New Jersey", episodeTitle: "When Chairs Fly", episode: 'S8 E9', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/rhofNJ-s08e09-1056x594.jpg') },
         {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-        episodeDesc: "Episode Description goes here",
+        episodeDesc: "Episode description goes here",
         imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
@@ -164,7 +164,7 @@ const SHELVES_DATA_ARR      = [
     title:'category 7(1)',
     shows:[
        {showTitle: "Top Chef", episodeTitle: "Shrimp Boats and Hat Ladies", episode: 'S14 E10', 
-       episodeDesc: "Episode Description goes here",
+       episodeDesc: "Episode description goes here",
        imageURL: require('../assets/images/shows/topChef-s14e10-1056x594.jpg') }
       ]
   }
@@ -269,7 +269,7 @@ export default class HomeShelvesPane extends Component {
   }//_onShelfFocus
 
   _onBloomToLargeStart = () => {
-    console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.selectedShelfIndex ? " + this.selectedShelfIndex)
+    // console.log("INFO HomeShelvesPane :: _onBloomToLargeStart, this.selectedShelfIndex ? " + this.selectedShelfIndex)
 
     if (this.selectedShelfIndex === 0) {
       //-- when the 1st shelf is bloomed

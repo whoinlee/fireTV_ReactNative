@@ -21,7 +21,7 @@ export default class ImageButton extends Component {
 	}
 
 	doSelect = () => {
-		// console.log("INFO ImageButton :: doSelect")
+		console.log("INFO ImageButton :: doSelect, this.props.kind ?? " + this.props.kind)
 		if (this.props.isSelected) this.props.onSelect()
 	}//doSelect
 
@@ -45,6 +45,7 @@ export default class ImageButton extends Component {
 ImageButton.propTypes = {
 	top: PropTypes.number,
 	left: PropTypes.number,
+	kind: PropTypes.string,
 	isSelected: PropTypes.bool,
 	imageURL: PropTypes.number,
 	selectedImageURL: PropTypes.number,
