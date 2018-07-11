@@ -175,7 +175,7 @@ export default class ShelfTile extends Component {
 		this.setState({ tileKind: pKind, selectedMenuIndex: 1 })
 	}//_updateState
 
-	_changeScale = (targetValue, pDuration=SHORT_DURATION) => {
+	_changeScale = (targetValue, pDuration=(SHORT_DURATION)) => {
 	    // console.log("INFO ShelfTile :: _changeScale, to " + targetValue)
 	    Animated.timing(this.state.imageScale).stop()
 	    Animated.timing(

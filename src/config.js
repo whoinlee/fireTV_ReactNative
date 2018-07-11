@@ -9,7 +9,7 @@ export default {
   //-- animation related
   stdDuration: 500,             //-- in milliseconds = .5 sec,
   shortDuration: 250,           
-  waitToLargeBloomDuration: 4000,
+  waitToLargeBloomDuration: 3000,
 
   //-- opacity related
   unselectedOpacity: .6,        //-- .6 -> .5, for testing

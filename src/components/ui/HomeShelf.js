@@ -403,7 +403,7 @@ export default class HomeShelf extends Component {
 	    ).start()
 	}//_changeTitleLocation
 
-	_changeTileLocation = (targetIndex, targetValue, pDuration=SHORT_DURATION, pDelay=0) => {
+	_changeTileLocation = (targetIndex, targetValue, pDuration=(SHORT_DURATION-50), pDelay=0) => {
 		if (targetIndex === undefined) return
 		if (this.state.shelfKind !== SHELF_KIND_OBJ.BASE)
 	    // console.log("INFO HomeShelf :: _changeTileLocation " + targetIndex + " location to " + targetValue) 
@@ -415,7 +415,7 @@ export default class HomeShelf extends Component {
 	        toValue: targetValue,
 	        delay:pDelay,
 	        duration: pDuration,
-	        easing: Easing.out(Easing.quad),
+	        //easing: Easing.out(Easing.quad),
 	      }
 	    ).start()
 	}//_changeTitleLocation
