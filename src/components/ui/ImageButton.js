@@ -2,18 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import {
   Image,
-  Text,
-  // TouchableNativeFeedback,
   View
 } from 'react-native';
 
-import config from '../../config';
-import keyCodes from '../../keyCodes';
-
-
-const RATIO                 = config.density;
-const STD_DURATION        	= config.stdDuration;
-const SHORT_DURATION      	= config.shortDuration;
 
 export default class ImageButton extends Component {
 	constructor(props) {

@@ -13,7 +13,6 @@ import ImageButton from './ImageButton';
 
 import config from '../../config';
 import keyCodes from '../../keyCodes';
-// import styles from '../../styles/styles';
 
 
 const RATIO                 = config.density;

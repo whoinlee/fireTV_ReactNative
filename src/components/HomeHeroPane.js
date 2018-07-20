@@ -32,6 +32,10 @@ export default class HomeHeroPane extends Component {
     console.log("INFO HomeHeroPane :: onUp")
   }
 
+  doSelect = () => {
+    console.log("INFO HomeHeroPane :: doSelect")
+  }//doSelect
+
 /*
   // onFocus = () => {
   //   // console.log("INFO HomeHeroPane :: onFocus =================================> HomeHeroPane")

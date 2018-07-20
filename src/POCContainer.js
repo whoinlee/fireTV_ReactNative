@@ -93,14 +93,14 @@ export default class POCContainerK extends Component {
     this.initHomeShelvesY = INIT_HOME_SHELVES_Y
 
     //-- up pane locations
-    this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)                   //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
+    this.upHomeShelvesY = V_MIDDLE_Y - (BLOOMED_TILE_H/2)                     //-- top of the homeShelves pane location, where the fist shelf is v-aligned with the center of the stage
     const SHIFT_Y = Math.round(this.initHomeShelvesY - this.upHomeShelvesY + FOCUSED_SHELF_SHIFT_Y)
-    this.upHomeHeroY = Math.floor(this.initHomeHeroY - SHIFT_Y)             //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
+    this.upHomeHeroY = Math.floor(this.initHomeHeroY - SHIFT_Y)               //-- homeHeroPane shifts on homeShelves pane and its first shelf being focused
     this.upGlobalNavY = Math.floor(this.initGlobalNavY - SHIFT_Y) 
 
     //-- mid-up and off the stage homeHero pane locations
-    this.upMidHomeHeroY = Math.floor(this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y)  //-- homeHeroPane shifts on the fist shelf being largeBloomed
-    this.upOffHomeHeroY = Math.floor(this.upHomeHeroY - SHELF_H)             //-- homeHeroPane shifts/hides on the 2nd shelf being focused
+    this.upMidHomeHeroY = Math.floor(this.upHomeHeroY - BLOOMED_SHELF_SHIFT_Y)//-- homeHeroPane shifts on the fist shelf being largeBloomed
+    this.upOffHomeHeroY = Math.floor(this.upHomeHeroY - SHELF_H)              //-- homeHeroPane shifts/hides on the 2nd shelf being focused
   }
 
   componentDidMount() {
@@ -337,7 +337,7 @@ export default class POCContainerK extends Component {
 
   render() {
     //console.log("INFO POCContainer :: render --------------------------------------------------------------->")
-    const { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2, isOutlineVisible } = this.state
+    const { animOpacity0, animOpacity1, animOpacity2, animLocation0, animLocation1, animLocation2} = this.state
     return (
         <View style={styles.pocContainer}>
             <Animated.View

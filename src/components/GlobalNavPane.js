@@ -30,6 +30,10 @@ export default class GlobalNavPane extends Component {
     console.log("INFO GlobalNavPane :: onUp")
   }
 
+  doSelect = () => {
+    console.log("INFO GlobalNavPane :: doSelect")
+  }//doSelect
+
 /*
   // onFocus = () => {
   //   // console.log("INFO GlobalNavPane :: onFocus =================================> GlobalNavPane")

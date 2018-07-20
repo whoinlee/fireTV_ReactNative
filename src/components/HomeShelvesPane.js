@@ -12,7 +12,6 @@ import HomeShelf from './ui/HomeShelf';
 
 import config from '../config';
 import keyCodes from '../keyCodes';
-// import styles from '../styles/styles';
 
 
 
