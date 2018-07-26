@@ -145,7 +145,7 @@ dependencies {
     //...-v7:23.0.1
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:26.0.2"    //23.0.1 (not working), 26.0.2
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.facebook.react:react-native:+"          // From node_modules
 }
 
 // Run this once to be able to run the application with BUCK
